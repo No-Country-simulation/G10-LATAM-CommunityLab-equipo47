@@ -62,7 +62,7 @@ _Reemplazar por el diagrama real del pipeline una vez definida la arquitectura f
 | Orquestación de flujos | n8n / LangChain / LangGraph |
 | Interfaz | Streamlit / Gradio |
 | Almacenamiento | OCI Object Storage (Always Free) |
-| Backend | |
+| Backend | Python |
 | Despliegue (opcional) | OCI Compute Instance (Always Free) |
 
 ## ⚙️ Cómo ejecutarlo localmente
