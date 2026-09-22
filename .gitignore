@@ -216,3 +216,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Documentos locales
+hackcathon_proyecto.pdf
+*.pdf

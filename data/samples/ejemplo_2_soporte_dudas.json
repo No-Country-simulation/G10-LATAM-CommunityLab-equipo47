@@ -1,0 +1,24 @@
+{
+  "origen_comunidad": "Foro_Alura_ONE",
+  "periodo_referencia": "Semana_05",
+  "interacciones": [
+    {
+      "autor": "Martín Giménez",
+      "canal": "#dudas-oci",
+      "tipo": "pregunta_tecnica",
+      "texto": "Hola a todos, estoy intentando subir los JSON generados por mi aplicación a un Bucket de OCI Object Storage usando el SDK de Python, pero me da error de autenticación con el archivo config. ¿El fingerprint debe ir entre comillas o con la clave pem directa? Me vendría genial un tip rápido."
+    },
+    {
+      "autor": "Valeria Morales",
+      "canal": "#dudas-ia-generativa",
+      "tipo": "pregunta_tecnica",
+      "texto": "¿Cuál es la mejor práctica para limitar los tokens de salida en la API de Google Gemini para que no corte la respuesta JSON en medio del parseo? ¿Recomiendan usar response_schema con Pydantic o regex de limpieza?"
+    },
+    {
+      "autor": "Andrés Silva",
+      "canal": "#feedback-cursos",
+      "tipo": "sugerencia",
+      "texto": "Me encantó la clase de RAG, pero sería genial que agregaran una plantilla o boilerplate en GitHub para conectar Streamlit con bases de datos vectoriales. Muchos nos trabamos al inicio configurando el entorno."
+    }
+  ]
+}

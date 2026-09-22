@@ -1,0 +1,24 @@
+{
+  "origen_comunidad": "Slack_Talentos_Tech",
+  "periodo_referencia": "Semana_06",
+  "interacciones": [
+    {
+      "autor": "Camila Rivas",
+      "canal": "#proyectos-destacados",
+      "tipo": "testimonio",
+      "texto": "Les comparto mi proyecto final del curso: un agente inteligente que categoriza tickets de soporte y redacta respuestas automáticas en Zendesk. ¡Lo presenté en mi empresa actual y lo van a implementar en producción el mes que viene! El acompañamiento de los mentores en las sesiones en vivo fue fundamental."
+    },
+    {
+      "autor": "Diego Navarro",
+      "canal": "#dificultades-y-apoyo",
+      "tipo": "alerta_apoyo",
+      "texto": "Siento que me quedé atrás con la entrega del sprint de agentes autónomos. Trabajo todo el día y los tiempos me están resultando muy justos para entender LangGraph desde cero. ¿Alguien para armar grupo de estudio este fin de semana?"
+    },
+    {
+      "autor": "Florencia Costa",
+      "canal": "#recursos-compartidos",
+      "tipo": "recurso",
+      "texto": "Armé una pequeña guía en Markdown con los 5 comandos esenciales del CLI de OCI para la capa Always Free que me salvaron la vida al configurar la VM Linux. ¡Espero que le sirva a alguien más!"
+    }
+  ]
+}

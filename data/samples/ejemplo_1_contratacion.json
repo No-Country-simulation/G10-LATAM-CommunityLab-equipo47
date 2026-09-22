@@ -1,0 +1,24 @@
+{
+  "origen_comunidad": "Discord_Grupo_ONE_G10",
+  "periodo_referencia": "Semana_04",
+  "interacciones": [
+    {
+      "autor": "Mariana Souza",
+      "canal": "#logros-y-empleos",
+      "tipo": "testimonio",
+      "texto": "¡Comunidad, no me lo creo todavía! Quedé seleccionada para el puesto de Desarrolladora Junior de IA en una consultora internacional. En la entrevista técnica les encantó el proyecto con LangChain y OCI que armé para mi portfolio en el curso. Muy agradecida con los mentores y con todos por el aguante y la buena onda siempre. ¡Sí se puede!"
+    },
+    {
+      "autor": "Lucas Albuquerque",
+      "canal": "#dudas-langgraph",
+      "tipo": "pregunta_tecnica",
+      "texto": "Buenas tardes equipo, tengo dudas sobre cómo estructurar los nodos condicionales en LangGraph cuando la respuesta del LLM necesita reintento por formato inválido. ¿Alguien tiene un snippet o ejemplo práctico de router con validación Pydantic?"
+    },
+    {
+      "autor": "Sofía Benítez",
+      "canal": "#general",
+      "tipo": "agradecimiento",
+      "texto": "Acabo de terminar mi primera función serverless en Oracle Cloud y conectarla con un webhook. Para los que venimos de cero en cloud, las clases grabadas de esta semana fueron oro puro. ¡Gracias profe!"
+    }
+  ]
+}
