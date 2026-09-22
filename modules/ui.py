@@ -1,9 +1,12 @@
 """
 Módulo de interfaz visual y diseño humanizado para CommunityLab.
 Integración completa con iconos vectoriales oficiales de Lucide (lucide.dev).
-Cero emojis artificiales: diseño limpio, moderno, cálido y profesional.
+Diseño modular para división de trabajo por Sprints y roles de equipo.
 """
 import streamlit as st
+
+# Repositorio oficial del equipo
+GITHUB_REPO_URL = "https://github.com/No-Country-simulation/G10-LATAM-CommunityLab-equipo47/"
 
 # Catálogo completo de iconos SVG de lucide.dev
 LUCIDE_ICONS = {
@@ -26,10 +29,10 @@ LUCIDE_ICONS = {
     "message-square": '<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
     "cpu": '<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cpu"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/></svg>',
     "git-fork": '<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-git-fork"><circle cx="12" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><path d="M18 9v2c0 .6-.4 1-1 1H7c-.6 0-1-.4-1-1V9"/><path d="M12 12v3"/></svg>',
-    "share-2": '<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-share-2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>',
-    "alert-circle": '<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-alert-circle"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>',
-    "log-out": '<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-out"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>',
-    "users": '<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>'
+    "github": '<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-github"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>',
+    "users": '<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+    "layers": '<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layers"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 12.5-8.58 3.91a2 2 0 0 1-1.66 0L2.6 12.5"/><path d="m22 17.5-8.58 3.91a2 2 0 0 1-1.66 0L2.6 17.5"/></svg>',
+    "external-link": '<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-external-link"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>'
 }
 
 def get_lucide(name: str, size: int = 18, color: str = "currentColor") -> str:
@@ -40,11 +43,10 @@ def get_lucide(name: str, size: int = 18, color: str = "currentColor") -> str:
 def badge_header(icon_name: str, title: str, subtitle: str = None, color: str = "#2563EB"):
     """
     Renderiza un encabezado limpio y elegante con el icono oficial de Lucide.
-    Reemplaza títulos con emojis por un diseño de producto moderno.
     """
     icon_svg = get_lucide(icon_name, size=24, color=color)
     html = f"""
-    <div style="display: flex; align-items: flex-start; gap: 14px; margin-bottom: 1.2rem; padding: 4px 0;">
+    <div style="display: flex; align-items: flex-start; gap: 14px; margin-bottom: 0.8rem; padding: 4px 0;">
         <div style="background-color: {color}14; border: 1px solid {color}30; padding: 10px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px;">
             {icon_svg}
         </div>
@@ -56,6 +58,63 @@ def badge_header(icon_name: str, title: str, subtitle: str = None, color: str = 
     """
     st.markdown(html, unsafe_allow_html=True)
 
+def render_sprint_card(sprint_label: str, goal: str, role_responsible: str, who_processes: str):
+    """
+    Tarjeta de contexto ágil para el equipo: explica el Sprint, el objetivo,
+    quién es el rol responsable y quién procesa los casos en esta pantalla.
+    """
+    layers_svg = get_lucide("layers", size=16, color="#4338CA")
+    user_svg = get_lucide("user", size=16, color="#059669")
+    cpu_svg = get_lucide("cpu", size=16, color="#7C3AED")
+
+    html = f"""
+    <div style="background-color: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 12px 16px; margin-bottom: 1.2rem;">
+        <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                {layers_svg}
+                <span style="font-weight: 700; color: #1E293B; font-size: 0.9rem;">{sprint_label}</span>
+                <span style="color: #64748B; font-size: 0.85rem;">| {goal}</span>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 14px; font-size: 0.82rem;">
+                <div style="display: flex; align-items: center; gap: 5px; color: #047857;">
+                    {user_svg}
+                    <span><strong>Responsable:</strong> {role_responsible}</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 5px; color: #6D28D9;">
+                    {cpu_svg}
+                    <span><strong>Ejecuta:</strong> {who_processes}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    """
+    st.markdown(html, unsafe_allow_html=True)
+
 def render_tag(text: str, bg_color: str = "#EEF2FF", text_color: str = "#4338CA"):
     """Renderiza una etiqueta o tag limpio estilo SaaS moderno."""
     return f'<span style="background-color: {bg_color}; color: {text_color}; padding: 3px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; margin-right: 6px; display: inline-block;">{text}</span>'
+
+def render_footer():
+    """Renderiza el pie de página institucional con autoría de equipo y enlace al repositorio de GitHub."""
+    gh_svg = get_lucide("github", size=16, color="#0F172A")
+    link_svg = get_lucide("external-link", size=13, color="#64748B")
+
+    html = f"""
+    <div style="margin-top: 3.5rem; padding-top: 1.2rem; border-top: 1px solid #E2E8F0; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; font-size: 0.82rem; color: #64748B;">
+        <div>
+            <strong style="color: #1E293B;">Hackathon ONE G10 - LATAM · Equipo 47</strong>
+            <span style="margin: 0 6px;">•</span>
+            <span>Motor Inteligente CommunityLab</span>
+            <span style="margin: 0 6px;">•</span>
+            <span>Oracle Cloud Infrastructure (Always Free)</span>
+        </div>
+        <div>
+            <a href="{GITHUB_REPO_URL}" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: #0F172A; font-weight: 600; background: #F1F5F9; padding: 6px 12px; border-radius: 6px; border: 1px solid #E2E8F0;">
+                {gh_svg}
+                <span>Repositorio GitHub</span>
+                {link_svg}
+            </a>
+        </div>
+    </div>
+    """
+    st.markdown(html, unsafe_allow_html=True)

@@ -1,24 +1,27 @@
 {
-  "origen_comunidad": "Discord_Grupo_ONE_G10",
-  "periodo_referencia": "Semana_04",
+  "origen_comunidad": "Discord_ONE_LATAM",
+  "periodo_referencia": "Semana_04_Sprints",
   "interacciones": [
     {
       "autor": "Mariana Souza",
+      "pais": "Colombia",
       "canal": "#logros-y-empleos",
       "tipo": "testimonio",
-      "texto": "¡Comunidad, no me lo creo todavía! Quedé seleccionada para el puesto de Desarrolladora Junior de IA en una consultora internacional. En la entrevista técnica les encantó el proyecto con LangChain y OCI que armé para mi portfolio en el curso. Muy agradecida con los mentores y con todos por el aguante y la buena onda siempre. ¡Sí se puede!"
+      "texto": "¡Hola a todos! Les quiero compartir una noticia que todavía me tiene temblando de emoción. Hoy firmé mi contrato como Desarrolladora Junior de IA en una software factory internacional. En el live coding me pidieron explicar arquitectura de agentes y les mostré exactamente el proyecto que construimos aquí con LangChain y los buckets de Oracle Cloud. Los entrevistadores quedaron impresionados con el despliegue real en la nube. ¡No bajen los brazos, las noches sin dormir valen la pena!"
     },
     {
       "autor": "Lucas Albuquerque",
+      "pais": "Argentina",
       "canal": "#dudas-langgraph",
       "tipo": "pregunta_tecnica",
-      "texto": "Buenas tardes equipo, tengo dudas sobre cómo estructurar los nodos condicionales en LangGraph cuando la respuesta del LLM necesita reintento por formato inválido. ¿Alguien tiene un snippet o ejemplo práctico de router con validación Pydantic?"
+      "texto": "Buenas tardes profes y compas. Estoy trabado con los nodos condicionales de LangGraph. Cuando el LLM me devuelve una salida con formato JSON incompleto, quiero que el router lo detecte y vuelva a intentar con un prompt de corrección en vez de romper la aplicación. ¿Alguien tiene un ejemplo simple de validación con Pydantic dentro del grafo?"
     },
     {
-      "autor": "Sofía Benítez",
+      "autor": "Mateo Gómez",
+      "pais": "México",
       "canal": "#general",
       "tipo": "agradecimiento",
-      "texto": "Acabo de terminar mi primera función serverless en Oracle Cloud y conectarla con un webhook. Para los que venimos de cero en cloud, las clases grabadas de esta semana fueron oro puro. ¡Gracias profe!"
+      "texto": "Mil gracias al profe por la clase de ayer sobre OCI Always Free. Venía con mucho miedo de que me cobraran por error en la tarjeta, pero con los límites de presupuesto y las alertas que nos enseñaron a configurar me quedé súper tranquilo. Ya tengo mi primera máquina virtual corriendo en São Paulo."
     }
   ]
 }

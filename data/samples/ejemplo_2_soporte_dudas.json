@@ -1,24 +1,27 @@
 {
-  "origen_comunidad": "Foro_Alura_ONE",
-  "periodo_referencia": "Semana_05",
+  "origen_comunidad": "Foro_Alura_ONE_LATAM",
+  "periodo_referencia": "Semana_05_Sprints",
   "interacciones": [
     {
-      "autor": "Martín Giménez",
-      "canal": "#dudas-oci",
+      "autor": "Valeria Morales",
+      "pais": "Chile",
+      "canal": "#soporte-oci",
       "tipo": "pregunta_tecnica",
-      "texto": "Hola a todos, estoy intentando subir los JSON generados por mi aplicación a un Bucket de OCI Object Storage usando el SDK de Python, pero me da error de autenticación con el archivo config. ¿El fingerprint debe ir entre comillas o con la clave pem directa? Me vendría genial un tip rápido."
+      "texto": "Hola equipo, estoy implementando la subida automática de archivos con el SDK de OCI en Python y me salta el error 'ServiceError: 401 NotAuthenticated'. Ya verifiqué el OCID de mi usuario y el fingerprint de la clave pública, pero sospecho que la ruta del archivo .pem tiene problemas en Windows con las barras invertidas. ¿A alguien más le pasó?"
     },
     {
-      "autor": "Valeria Morales",
+      "autor": "Carlos Méndez",
+      "pais": "Perú",
       "canal": "#dudas-ia-generativa",
       "tipo": "pregunta_tecnica",
-      "texto": "¿Cuál es la mejor práctica para limitar los tokens de salida en la API de Google Gemini para que no corte la respuesta JSON en medio del parseo? ¿Recomiendan usar response_schema con Pydantic o regex de limpieza?"
+      "texto": "Una consulta para los que ya implementaron Google Gemini o GPT en el pipeline: cuando el modelo redacta textos largos para LinkedIn, a veces corta los hashtags al final o se pasa de la ventana de contexto. ¿Cómo le están pasando el system prompt para que respete estrictamente una longitud máxima sin perder tono persuasivo?"
     },
     {
-      "autor": "Andrés Silva",
-      "canal": "#feedback-cursos",
+      "autor": "Laura Restrepo",
+      "pais": "Colombia",
+      "canal": "#proyectos-finales",
       "tipo": "sugerencia",
-      "texto": "Me encantó la clase de RAG, pero sería genial que agregaran una plantilla o boilerplate en GitHub para conectar Streamlit con bases de datos vectoriales. Muchos nos trabamos al inicio configurando el entorno."
+      "texto": "Chicos, armé una plantilla base en GitHub para conectar Streamlit con OCI Object Storage usando variables de entorno limpias con python-dotenv. Si a los mentores les parece bien, la comparto por acá para que los que recién empiezan no pierdan tiempo peleando con la autenticación."
     }
   ]
 }

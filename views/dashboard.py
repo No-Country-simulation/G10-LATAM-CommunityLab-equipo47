@@ -1,7 +1,7 @@
 """
 Vista 4: Dashboard de Salud y Sentimiento de la Comunidad.
 Monitorea indicadores clave de satisfacción, canales con mayor actividad y alertas tempranas.
-Diseño humano y profesional con iconos de Lucide (lucide.dev).
+Diseño modular y fácil de entender.
 """
 import streamlit as st
 import pandas as pd
@@ -30,7 +30,7 @@ def render_dashboard_view():
     col1, col2, col3, col4 = st.columns(4)
     col1.metric("Total Interacciones", total_msg)
     col2.metric("Logros y Testimonios", testimonios_cnt, delta="Impacto positivo")
-    col3.metric("Dudas Técnicas", dudas_cnt, delta="Atención de mentores" if dudas_cnt > 0 else "Al día")
+    col3.metric("Dudas Técnicas", dudas_cnt, delta="Atención requerida" if dudas_cnt > 0 else "Al día")
     col4.metric("Canales Activos", len(set(i.get("canal", "") for i in interacciones)) if interacciones else 0)
 
     st.divider()
@@ -70,7 +70,8 @@ def render_dashboard_view():
         if alertas:
             for a in alertas:
                 with st.container(border=True):
-                    st.markdown(f"**{a.get('autor')}** en `{a.get('canal')}`")
+                    pais_tag = f" ({a.get('pais')})" if a.get('pais') else ""
+                    st.markdown(f"**{a.get('autor')}**{pais_tag} en `{a.get('canal')}`")
                     st.caption(f"_{a.get('texto')[:130]}..._")
         else:
             st.markdown(

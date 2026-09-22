@@ -1,24 +1,27 @@
 {
-  "origen_comunidad": "Slack_Talentos_Tech",
-  "periodo_referencia": "Semana_06",
+  "origen_comunidad": "Slack_Talentos_ONE_LATAM",
+  "periodo_referencia": "Semana_06_Sprints",
   "interacciones": [
     {
-      "autor": "Camila Rivas",
-      "canal": "#proyectos-destacados",
+      "autor": "Sofía Benítez",
+      "pais": "Uruguay",
+      "canal": "#historias-de-exito",
       "tipo": "testimonio",
-      "texto": "Les comparto mi proyecto final del curso: un agente inteligente que categoriza tickets de soporte y redacta respuestas automáticas en Zendesk. ¡Lo presenté en mi empresa actual y lo van a implementar en producción el mes que viene! El acompañamiento de los mentores en las sesiones en vivo fue fundamental."
+      "texto": "¡Compañeros! Quería contarles que ayer le presenté a mi jefe el prototipo de agente de triaje que construimos en el sprint. Le encantó tanto que nos dio luz verde para integrarlo con la API de atención al cliente el próximo mes. Llegué al programa ONE sin saber casi nada de cloud y hoy siento que tengo herramientas reales para competir en el mercado."
     },
     {
       "autor": "Diego Navarro",
+      "pais": "México",
       "canal": "#dificultades-y-apoyo",
       "tipo": "alerta_apoyo",
-      "texto": "Siento que me quedé atrás con la entrega del sprint de agentes autónomos. Trabajo todo el día y los tiempos me están resultando muy justos para entender LangGraph desde cero. ¿Alguien para armar grupo de estudio este fin de semana?"
+      "texto": "Les soy muy honesto: vengo bastante atrasado con las actividades de esta semana. Entre el trabajo de 9 a 18 y la familia me cuesta un montón hacerme el tiempo para entender los grafos de LangGraph desde cero. ¿Alguien tiene disponibilidad para armar una sala de Discord el sábado y estudiar juntos los conceptos básicos?"
     },
     {
       "autor": "Florencia Costa",
-      "canal": "#recursos-compartidos",
+      "pais": "Argentina",
+      "canal": "#recursos-comunidad",
       "tipo": "recurso",
-      "texto": "Armé una pequeña guía en Markdown con los 5 comandos esenciales del CLI de OCI para la capa Always Free que me salvaron la vida al configurar la VM Linux. ¡Espero que le sirva a alguien más!"
+      "texto": "¡Ánimo Diego y a todos los que sientan que van a las corridas! Les dejo un resumen con los 5 comandos esenciales del CLI de Oracle Cloud y un diagrama que hice a mano de cómo se conectan los nodos condicionales. Espero que les sirva para destrabar el sprint."
     }
   ]
 }

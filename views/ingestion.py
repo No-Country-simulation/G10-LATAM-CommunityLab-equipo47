@@ -1,7 +1,7 @@
 """
 Vista 1: Ingestión de Actividad Comunitaria.
 Permite cargar y revisar los mensajes de la comunidad antes de pasarlos al motor de IA.
-Diseño humano y profesional con iconos de Lucide (lucide.dev).
+Diseño humano y modular (fácil de editar o desacoplar).
 """
 import streamlit as st
 import json
@@ -22,7 +22,7 @@ def render_ingestion_view():
 
     st.markdown(
         """
-        En esta primera etapa, el sistema recibe el flujo de conversaciones de los estudiantes. 
+        En esta primera etapa, el sistema recibe las conversaciones de los estudiantes. 
         Puedes seleccionar uno de los **3 casos preparados para el hackathon** o cargar tu propio archivo de datos.
         """
     )
@@ -41,12 +41,12 @@ def render_ingestion_view():
             f"""
             <div style="display: flex; align-items: center; gap: 8px; margin: 1rem 0 0.5rem 0;">
                 {get_lucide('file-text', size=18, color='#475569')}
-                <h4 style="margin: 0; font-size: 1.05rem; font-weight: 600; color: #1E293B;">Selecciona un Caso de Prueba</h4>
+                <h4 style="margin: 0; font-size: 1.05rem; font-weight: 600; color: #1E293B;">Selecciona un Caso de Prueba Realista</h4>
             </div>
             """,
             unsafe_allow_html=True
         )
-        st.caption("Cada caso simula un escenario típico de la comunidad ONE (empleabilidad, soporte técnico o balance mixto):")
+        st.caption("Interacciones de estudiantes de la comunidad ONE LATAM (empleabilidad, soporte técnico y recursos):")
 
         col1, col2, col3 = st.columns(3)
 
@@ -61,7 +61,6 @@ def render_ingestion_view():
             if st.button("Caso 3: Proyectos de la Comunidad", use_container_width=True, help="Presentación de proyecto destacado y pedido de apoyo"):
                 ejemplo_seleccionado = "ejemplo_3_feedback_mixto.json"
 
-        # Si aún no seleccionó nada pero no hay payload en sesión, cargar el primero por defecto
         if not ejemplo_seleccionado and "raw_payload" not in st.session_state:
             ejemplo_seleccionado = "ejemplo_1_contratacion.json"
 
@@ -133,7 +132,7 @@ def render_ingestion_view():
         interacciones = payload.get("interacciones", [])
         if interacciones:
             df_interacciones = pd.DataFrame(interacciones)
-            cols_orden = [c for c in ["autor", "canal", "tipo", "texto"] if c in df_interacciones.columns]
+            cols_orden = [c for c in ["autor", "pais", "canal", "tipo", "texto"] if c in df_interacciones.columns]
             st.dataframe(df_interacciones[cols_orden], use_container_width=True, hide_index=True)
 
         with st.expander("Ver estructura técnica en JSON (según la pág. 4 del PDF)"):

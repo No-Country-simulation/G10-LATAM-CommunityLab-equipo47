@@ -1,7 +1,7 @@
 """
 Vista 2: Pipeline de Inteligencia Artificial & Router Condicional.
 Ejecuta el análisis de sentimiento, categorización de temas y orquestación de copys.
-Diseño humano y profesional con iconos de Lucide (lucide.dev).
+Diseño modular y fácil de entender.
 """
 import streamlit as st
 import time
@@ -27,14 +27,14 @@ def render_pipeline_view():
         st.markdown(
             f"""
             <div style="background: #F8FAFC; border: 1px solid #E2E8F0; padding: 10px 14px; border-radius: 8px;">
-                <span style="color: #64748B; font-size: 0.85rem;">Lote cargado:</span>
+                <span style="color: #64748B; font-size: 0.85rem;">Lote cargado para procesar:</span>
                 <strong style="color: #0F172A; display: block;">{payload.get('origen_comunidad')} ({len(payload.get('interacciones', []))} interacciones)</strong>
             </div>
             """,
             unsafe_allow_html=True
         )
     with col_cfg2:
-        modelo = st.selectbox("Motor de Lenguaje", ["Google Gemini 2.5 Flash", "OpenAI GPT-4o", "Modo Simulado / Demostración"])
+        modelo = st.selectbox("Motor de Lenguaje Seleccionado", ["Google Gemini 2.5 Flash", "OpenAI GPT-4o", "Modo Simulado / Demostración"])
 
     if st.button("Ejecutar Análisis y Generación de Contenidos", type="primary", use_container_width=True):
         with st.status("Orquestando flujo de inteligencia artificial...", expanded=True) as status:

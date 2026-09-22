@@ -1,10 +1,10 @@
 """
 Módulo de autenticación simple para CommunityLab.
 Permite inicio de sesión en memoria (admin / admin) sin base de datos externa.
-Diseño humano y limpio con iconos oficiales de Lucide.
+Diseño humano y profesional con iconos de Lucide (lucide.dev).
 """
 import streamlit as st
-from modules.ui import get_lucide
+from modules.ui import get_lucide, GITHUB_REPO_URL
 
 def check_login():
     """Verifica si el usuario está autenticado en la sesión actual."""
@@ -20,6 +20,7 @@ def render_login_form():
     with col2:
         sparkles_svg = get_lucide("sparkles", size=32, color="#E04F16")
         lock_svg = get_lucide("lock", size=18, color="#475569")
+        gh_svg = get_lucide("github", size=14, color="#475569")
         
         st.markdown(
             f"""
@@ -31,9 +32,11 @@ def render_login_form():
                 <p style="color: #64748B; font-size: 1.05rem; margin-top: 6px;">
                     Motor de Transformación y Curaduría para Comunidades Digitales
                 </p>
-                <span style="background-color: #F1F5F9; color: #334155; padding: 5px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; border: 1px solid #E2E8F0;">
-                    Oracle Next Education · Alura · Grupo 10
-                </span>
+                <div style="display: inline-flex; gap: 8px; margin-top: 4px;">
+                    <span style="background-color: #F1F5F9; color: #1E293B; padding: 5px 12px; border-radius: 8px; font-size: 0.82rem; font-weight: 700; border: 1px solid #E2E8F0;">
+                        Hackathon ONE G10 - LATAM · Equipo 47
+                    </span>
+                </div>
             </div>
             """,
             unsafe_allow_html=True
@@ -59,11 +62,24 @@ def render_login_form():
                 if submit:
                     if user_input.strip() == "admin" and pass_input.strip() == "admin":
                         st.session_state.authenticated = True
-                        st.session_state.username = "Administrador ONE"
+                        st.session_state.username = "Equipo 47 (Admin)"
                         st.toast("Sesión iniciada correctamente")
                         st.rerun()
                     else:
                         st.error("Credenciales incorrectas. Ingresa admin / admin para acceder.")
+
+        # Enlace al repositorio de GitHub
+        st.markdown(
+            f"""
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <a href="{GITHUB_REPO_URL}" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: #475569; font-size: 0.85rem; font-weight: 500;">
+                    {gh_svg}
+                    <span>Repositorio oficial en GitHub</span>
+                </a>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
 
 def render_user_sidebar():
     """Renderiza información del usuario en el sidebar y botón para cerrar sesión."""

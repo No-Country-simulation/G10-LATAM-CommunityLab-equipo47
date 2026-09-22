@@ -1,0 +1,37 @@
+{
+  "status": "exito",
+  "resumen_comunidad": {
+    "total_interacciones_procesadas": 3,
+    "sentimiento_predominante": "Altamente Positivo",
+    "temas_principales": [
+      "Contratación / Empleabilidad Tech",
+      "LangGraph / Orquestación de Agentes",
+      "Oracle Cloud Infrastructure (OCI Always Free)"
+    ]
+  },
+  "activos_distribucion_generados": {
+    "post_linkedin": {
+      "titulo": "De la Comunidad al Mercado: El impacto de los proyectos prácticos de IA",
+      "copy": "¡Nada nos llena más de orgullo que ver a nuestros talentos conquistando el mercado tecnológico! 🚀\n\nNuestra participante Mariana Souza acaba de dar un gran salto en su carrera tras destacar con sus proyectos prácticos desarrollados con Inteligencia Artificial y Oracle Cloud Infrastructure.\n\nHistorias como esta demuestran que construir soluciones del mundo real y apoyarse en la comunidad es el camino más sólido para transformar el futuro profesional. ¡Felicitaciones gigantes, Mariana Souza! 👏\n\n#TalentosTech #InteligenciaArtificial #OracleCloud #CarreraDev #ComunidadONE",
+      "canal_recomendado": "LinkedIn Oficial",
+      "potencial_engagement": "Alto",
+      "estado_curaduria": "Rechazado"
+    },
+    "destaque_newsletter_semanal": {
+      "seccion": "Logro de la Semana",
+      "titular": "Mariana Souza avanza en su carrera con portfolio de IA en Oracle Cloud",
+      "resumen": "A partir de su proyecto práctico en el curso, Mariana Souza logró destacarse en entrevistas técnicas gracias a su dominio de herramientas cloud e IA.",
+      "estado_curaduria": "Incluir en la Edición Semanal"
+    },
+    "sugerencia_contenido_faq": {
+      "tema": "Tip Rápido: Resolución de dudas sobre Oracle Cloud Infrastructure (OCI Always Free)",
+      "origen": "Duda frecuente planteada por Lucas Albuquerque en el canal #dudas-langgraph",
+      "status": "derivado_a_mentoria"
+    }
+  },
+  "almacenamiento_oci": {
+    "bucket": "communitylab-activos-marketing",
+    "ruta_objeto": "activos/2026-09-22/paquete-distribucion-semana_04.json",
+    "status": "guardado_con_exito"
+  }
+}

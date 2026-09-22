@@ -1,0 +1,35 @@
+{
+  "status": "exito",
+  "resumen_comunidad": {
+    "total_interacciones_procesadas": 3,
+    "sentimiento_predominante": "Curioso / Con Necesidad de Soporte",
+    "temas_principales": [
+      "Oracle Cloud Infrastructure (OCI Always Free)",
+      "RAG & Bases de Datos Vectoriales",
+      "Google Gemini / IA Generativa"
+    ]
+  },
+  "activos_distribucion_generados": {
+    "post_linkedin": {
+      "titulo": "Semana de Innovación y Aprendizaje en Foro_Alura_ONE",
+      "copy": "Esta semana la comunidad de Foro_Alura_ONE estuvo a pura innovación y trabajo colaborativo! 💡\n\nNuestros estudiantes estuvieron debatiendo sobre arquitecturas de agentes autónomos y buenas prácticas en la nube. Aprender en comunidad multiplica el conocimiento y acelera los resultados.\n\n¿Tú también estás construyendo con IA este año? ¡Súmate a la conversación!\n\n#ComunidadTech #AprendizajeContinuo #OracleNextEducation #AluraLatam",
+      "canal_recomendado": "LinkedIn Oficial",
+      "potencial_engagement": "Alto"
+    },
+    "destaque_newsletter_semanal": {
+      "seccion": "Pulso Comunitario",
+      "titular": "Tendencias y debates destacados en Semana_05",
+      "resumen": "Analizamos las dudas más recurrentes sobre despliegue cloud y orquestación con IA compartidas por los miembros durante la semana."
+    },
+    "sugerencia_contenido_faq": {
+      "tema": "Tip Rápido: Resolución de dudas sobre Google Gemini / IA Generativa",
+      "origen": "Duda frecuente planteada por Martín Giménez en el canal #dudas-oci",
+      "status": "convertir_en_tutorial_corto"
+    }
+  },
+  "almacenamiento_oci": {
+    "bucket": "communitylab-activos-marketing",
+    "ruta_objeto": "activos/2026-09-22/paquete-distribucion-semana_05.json",
+    "status": "guardado_con_exito"
+  }
+}

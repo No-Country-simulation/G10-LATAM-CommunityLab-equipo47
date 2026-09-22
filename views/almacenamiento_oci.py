@@ -1,7 +1,7 @@
 """
 Vista 5: Almacenamiento en Oracle Cloud Infrastructure (OCI Object Storage).
 Requisito obligatorio del MVP: Persistencia de paquetes de activos en un bucket de OCI Always Free.
-Diseño humano y profesional con iconos de Lucide (lucide.dev).
+Diseño modular y fácil de entender.
 """
 import streamlit as st
 import json
