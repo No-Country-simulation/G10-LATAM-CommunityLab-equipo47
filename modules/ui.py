@@ -1,7 +1,7 @@
 """
 Módulo de interfaz visual y diseño humanizado para CommunityLab.
 Integración completa con iconos vectoriales oficiales de Lucide (lucide.dev).
-Diseño modular para división de trabajo por Sprints y roles de equipo.
+Diseño modular adaptado para Educación Superior y Comunidades Digitales de Aprendizaje.
 """
 import streamlit as st
 
@@ -32,89 +32,88 @@ LUCIDE_ICONS = {
     "github": '<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-github"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>',
     "users": '<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
     "layers": '<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layers"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 12.5-8.58 3.91a2 2 0 0 1-1.66 0L2.6 12.5"/><path d="m22 17.5-8.58 3.91a2 2 0 0 1-1.66 0L2.6 17.5"/></svg>',
-    "external-link": '<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-external-link"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>'
+    "external-link": '<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-external-link"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>',
+    # Nuevos iconos clave de lucide.dev para Educación Superior y MarTech
+    "graduation-cap": '<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-graduation-cap"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>',
+    "book-open": '<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 1 4-4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>',
+    "award": '<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-award"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>',
+    "share-2": '<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-share-2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>',
+    "alert-triangle": '<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-alert-triangle"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>',
+    "alert-circle": '<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-alert-circle"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>',
+    "trending-up": '<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trending-up"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>',
+    "database": '<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-database"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg>',
+    "shield-check": '<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-check"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg>',
+    "mail": '<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>',
+    "copy": '<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>',
+    "check": '<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check"><polyline points="20 6 9 17 4 12"/></svg>',
+    "lightbulb": '<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lightbulb"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>',
+    "heart": '<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>',
+    "linkedin": '<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-linkedin"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>',
+    "server": '<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-server"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg>',
+    "arrow-right": '<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>'
 }
 
+def clean_html(raw_html: str) -> str:
+    """Elimina sangrías multilínea para que Streamlit nunca lo confunda con un bloque de código Markdown."""
+    lines = [line.strip() for line in raw_html.strip().splitlines() if line.strip()]
+    return "".join(lines)
+
 def get_lucide(name: str, size: int = 18, color: str = "currentColor") -> str:
-    """Devuelve el fragmento SVG oficial de Lucide."""
+    """Devuelve el fragmento SVG oficial de Lucide con respaldo seguro."""
     template = LUCIDE_ICONS.get(name, LUCIDE_ICONS["sparkles"])
     return template.format(size=size, color=color)
 
-def badge_header(icon_name: str, title: str, subtitle: str = None, color: str = "#2563EB"):
+def badge_header(icon_name: str, title: str, subtitle: str = None, color: str = "#2563EB", target_pill: str = "Target: Educación Superior & Comunidades Académicas"):
     """
-    Renderiza un encabezado limpio y elegante con el icono oficial de Lucide.
+    Renderiza un encabezado limpio, moderno y elegante con icono oficial de Lucide
+    y pastilla indicadora de sector, sin riesgo de renderizado en texto crudo.
     """
     icon_svg = get_lucide(icon_name, size=24, color=color)
-    html = f"""
-    <div style="display: flex; align-items: flex-start; gap: 14px; margin-bottom: 0.8rem; padding: 4px 0;">
-        <div style="background-color: {color}14; border: 1px solid {color}30; padding: 10px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px;">
-            {icon_svg}
-        </div>
-        <div>
-            <h2 style="margin: 0; font-size: 1.55rem; font-weight: 700; color: #0F172A; letter-spacing: -0.02em;">{title}</h2>
-            {f'<p style="margin: 3px 0 0 0; color: #475569; font-size: 0.95rem; line-height: 1.4;">{subtitle}</p>' if subtitle else ''}
-        </div>
-    </div>
-    """
-    st.markdown(html, unsafe_allow_html=True)
+    pill_html = ""
+    if target_pill:
+        grad_svg = get_lucide("graduation-cap", size=13, color=color)
+        pill_html = f'<div style="display: inline-flex; align-items: center; gap: 5px; background: {color}14; border: 1px solid {color}35; padding: 3px 10px; border-radius: 999px; font-size: 0.78rem; font-weight: 600; color: {color}; margin-bottom: 6px;">{grad_svg}<span>{target_pill}</span></div>'
 
-def render_sprint_card(sprint_label: str, goal: str, role_responsible: str, who_processes: str):
-    """
-    Tarjeta de contexto ágil para el equipo: explica el Sprint, el objetivo,
-    quién es el rol responsable y quién procesa los casos en esta pantalla.
-    """
-    layers_svg = get_lucide("layers", size=16, color="#4338CA")
-    user_svg = get_lucide("user", size=16, color="#059669")
-    cpu_svg = get_lucide("cpu", size=16, color="#7C3AED")
+    sub_p = f'<p style="margin: 3px 0 0 0; color: #475569; font-size: 0.95rem; line-height: 1.4;">{subtitle}</p>' if subtitle else ''
+    
+    html = f'''<div style="display: flex; align-items: flex-start; gap: 14px; margin-bottom: 1.1rem; padding: 4px 0;"><div style="background-color: {color}14; border: 1px solid {color}30; padding: 10px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">{icon_svg}</div><div>{pill_html}<h2 style="margin: 0; font-size: 1.55rem; font-weight: 700; color: #0F172A; letter-spacing: -0.02em;">{title}</h2>{sub_p}</div></div>'''
+    st.markdown(clean_html(html), unsafe_allow_html=True)
 
-    html = f"""
-    <div style="background-color: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 12px 16px; margin-bottom: 1.2rem;">
-        <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-                {layers_svg}
-                <span style="font-weight: 700; color: #1E293B; font-size: 0.9rem;">{sprint_label}</span>
-                <span style="color: #64748B; font-size: 0.85rem;">| {goal}</span>
-            </div>
-            <div style="display: flex; flex-wrap: wrap; gap: 14px; font-size: 0.82rem;">
-                <div style="display: flex; align-items: center; gap: 5px; color: #047857;">
-                    {user_svg}
-                    <span><strong>Responsable:</strong> {role_responsible}</span>
-                </div>
-                <div style="display: flex; align-items: center; gap: 5px; color: #6D28D9;">
-                    {cpu_svg}
-                    <span><strong>Ejecuta:</strong> {who_processes}</span>
-                </div>
-            </div>
-        </div>
-    </div>
-    """
-    st.markdown(html, unsafe_allow_html=True)
+def render_kpi_card(title: str, value: str, subtitle: str = None, icon_name: str = "sparkles", color: str = "#2563EB"):
+    """Renderiza una tarjeta KPI moderna con icono Lucide circular."""
+    icon_svg = get_lucide(icon_name, size=20, color=color)
+    sub_html = f'<div style="font-size: 0.78rem; color: #64748B; margin-top: 4px;">{subtitle}</div>' if subtitle else ''
+    html = f'''<div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); display: flex; align-items: center; justify-content: space-between; gap: 12px;"><div><span style="font-size: 0.8rem; font-weight: 600; color: #64748B; text-transform: uppercase; letter-spacing: 0.04em;">{title}</span><div style="font-size: 1.45rem; font-weight: 700; color: #0F172A; margin-top: 2px;">{value}</div>{sub_html}</div><div style="background: {color}14; border: 1px solid {color}25; width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">{icon_svg}</div></div>'''
+    return clean_html(html)
+
+def render_callout(text: str, title: str = None, icon_name: str = "lightbulb", color: str = "#2563EB"):
+    """Crea un bloque de mensaje destacado o callout con icono Lucide."""
+    icon_svg = get_lucide(icon_name, size=20, color=color)
+    title_html = f'<strong style="display: block; font-size: 0.95rem; color: #0F172A; margin-bottom: 2px;">{title}</strong>' if title else ''
+    html = f'''<div style="background-color: {color}0A; border-left: 4px solid {color}; border-top: 1px solid {color}20; border-right: 1px solid {color}20; border-bottom: 1px solid {color}20; padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 0.8rem 0; display: flex; gap: 12px; align-items: flex-start;"><div style="flex-shrink: 0; margin-top: 2px;">{icon_svg}</div><div style="font-size: 0.9rem; color: #334155; line-height: 1.5;">{title_html}{text}</div></div>'''
+    st.markdown(clean_html(html), unsafe_allow_html=True)
 
 def render_tag(text: str, bg_color: str = "#EEF2FF", text_color: str = "#4338CA"):
     """Renderiza una etiqueta o tag limpio estilo SaaS moderno."""
-    return f'<span style="background-color: {bg_color}; color: {text_color}; padding: 3px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; margin-right: 6px; display: inline-block;">{text}</span>'
+    return f'<span style="background-color: {bg_color}; color: {text_color}; padding: 3px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; margin-right: 6px; margin-bottom: 4px; display: inline-block; border: 1px solid {text_color}25;">{text}</span>'
+
+def render_linkedin_mockup(titulo: str, copy: str, canal: str = "LinkedIn Institucional", engagement: str = "Alto"):
+    """Renderiza una previsualización fotorrealista de un post de LinkedIn con la marca de la facultad."""
+    lk_svg = get_lucide("linkedin", size=18, color="#0A66C2")
+    grad_svg = get_lucide("graduation-cap", size=20, color="#FFFFFF")
+    heart_svg = get_lucide("heart", size=14, color="#E11D48")
+    sparkle_svg = get_lucide("sparkles", size=14, color="#2563EB")
+    
+    copy_html = copy.replace("\n", "<br>")
+    
+    html = f'''<div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-top: 10px;"><div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;"><div style="display: flex; align-items: center; gap: 12px;"><div style="width: 46px; height: 46px; border-radius: 50%; background: linear-gradient(135deg, #0A66C2, #2563EB); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(10,102,194,0.3);">{grad_svg}</div><div><div style="display: flex; align-items: center; gap: 6px;"><strong style="color: #0F172A; font-size: 0.98rem;">Facultad de Ingeniería · Campus Digital ONE</strong><span style="background: #E0E7FF; color: #3730A3; font-size: 0.7rem; font-weight: 700; padding: 2px 6px; border-radius: 4px;">VERIFICADO</span></div><div style="color: #64748B; font-size: 0.78rem;">14.850 seguidores · Publicado recientemente · 🌐</div></div></div><div style="display: flex; align-items: center; gap: 6px; background: #F1F5F9; padding: 4px 10px; border-radius: 6px; font-size: 0.78rem; font-weight: 600; color: #0A66C2;">{lk_svg}<span>{canal}</span></div></div><div style="border-top: 1px solid #F1F5F9; padding-top: 12px; margin-bottom: 12px;"><h4 style="margin: 0 0 10px 0; font-size: 1.08rem; font-weight: 700; color: #1E293B; line-height: 1.35;">{titulo}</h4><div style="color: #334155; font-size: 0.92rem; line-height: 1.6;">{copy_html}</div></div><div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; margin-top: 12px;"><div style="display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: #475569;"><span style="display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: #FEE2E2;">{heart_svg}</span><span style="display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: #EFF6FF;">{sparkle_svg}</span><span style="font-weight: 600; color: #1E293B;">Potencial de Alcance e Interacción:</span><span style="background: #DCFCE7; color: #15803D; font-weight: 700; padding: 2px 8px; border-radius: 4px; font-size: 0.78rem;">{engagement} (UGC Orgánico)</span></div><div style="font-size: 0.8rem; color: #64748B;">Listo para difusión oficial</div></div></div>'''
+    st.markdown(clean_html(html), unsafe_allow_html=True)
 
 def render_footer():
     """Renderiza el pie de página institucional con autoría de equipo y enlace al repositorio de GitHub."""
     gh_svg = get_lucide("github", size=16, color="#0F172A")
     link_svg = get_lucide("external-link", size=13, color="#64748B")
+    grad_svg = get_lucide("graduation-cap", size=15, color="#E04F16")
 
-    html = f"""
-    <div style="margin-top: 3.5rem; padding-top: 1.2rem; border-top: 1px solid #E2E8F0; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; font-size: 0.82rem; color: #64748B;">
-        <div>
-            <strong style="color: #1E293B;">Hackathon ONE G10 - LATAM · Equipo 47</strong>
-            <span style="margin: 0 6px;">•</span>
-            <span>Motor Inteligente CommunityLab</span>
-            <span style="margin: 0 6px;">•</span>
-            <span>Oracle Cloud Infrastructure (Always Free)</span>
-        </div>
-        <div>
-            <a href="{GITHUB_REPO_URL}" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: #0F172A; font-weight: 600; background: #F1F5F9; padding: 6px 12px; border-radius: 6px; border: 1px solid #E2E8F0;">
-                {gh_svg}
-                <span>Repositorio GitHub</span>
-                {link_svg}
-            </a>
-        </div>
-    </div>
-    """
-    st.markdown(html, unsafe_allow_html=True)
+    html = f'''<div style="margin-top: 3.5rem; padding-top: 1.2rem; border-top: 1px solid #E2E8F0; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; font-size: 0.82rem; color: #64748B;"><div style="display: flex; align-items: center; gap: 8px;"><div style="display: flex; align-items: center; gap: 5px;">{grad_svg}<strong style="color: #1E293B;">Hackathon ONE G10 - LATAM · Equipo 47</strong></div><span style="color: #CBD5E1;">•</span><span>Target: Educación Superior & Ecosistema ONE</span><span style="color: #CBD5E1;">•</span><span>OCI Always Free</span></div><div><a href="{GITHUB_REPO_URL}" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: #0F172A; font-weight: 600; background: #F1F5F9; padding: 6px 12px; border-radius: 6px; border: 1px solid #E2E8F0; transition: background 0.15s ease;">{gh_svg}<span>Repositorio en GitHub</span>{link_svg}</a></div></div>'''
+    st.markdown(clean_html(html), unsafe_allow_html=True)

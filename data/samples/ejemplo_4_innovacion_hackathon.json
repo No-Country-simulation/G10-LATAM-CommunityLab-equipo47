@@ -1,0 +1,144 @@
+{
+  "origen_comunidad": "Hackathon_Academico_Campus_ONE_G10",
+  "periodo_referencia": "Semestre_2026_1_Feria_Proyectos",
+  "target_sector": "Educacion_Superior_Tecnologica",
+  "institucion": "Campus Universitario & Programa Oracle Next Education (ONE - Alura)",
+  "metricas_generales_lote": {
+    "miembros_activos": 1920,
+    "canales_monitoreados": ["#feria-de-proyectos-ia", "#pitch-y-demos-live", "#jurado-docente-evaluacion", "#oportunidades-incubacion"]
+  },
+  "interacciones": [
+    {
+      "id_mensaje": "MSG-HACK-401",
+      "autor": "Andrés Morales",
+      "pais": "Colombia",
+      "carrera": "Ingeniería de Software",
+      "rol": "estudiante_avanzado",
+      "canal": "#pitch-y-demos-live",
+      "tipo": "testimonio",
+      "fecha": "2026-04-05 10:00",
+      "texto": "¡Día de demo en el Hackathon Universitario! Presentamos nuestro MVP de asistente inteligente para diagnóstico de código en laboratorios de computación, 100% alojado en OCI Always Free con Streamlit y Gemini Flash. Procesamos más de 300 peticiones en vivo sin un solo error de latencia. ¡Una experiencia inolvidable poner a prueba nuestro trabajo ante jurados docentes y empresas de tecnología!"
+    },
+    {
+      "id_mensaje": "MSG-HACK-402",
+      "autor": "Lucía Ferrari",
+      "pais": "Argentina",
+      "carrera": "Ciencia de Datos",
+      "rol": "estudiante_avanzada",
+      "canal": "#pitch-y-demos-live",
+      "tipo": "testimonio",
+      "fecha": "2026-04-05 10:45",
+      "texto": "Increíble ver el nivel de los 25 proyectos presentados hoy. Nuestro equipo 'AgroTech IA' integró visión computacional con buckets de Oracle Object Storage para clasificar plagas en cultivos familiares. Tres empresas invitadas a la feria nos pidieron contacto para evaluar una prueba piloto comercial."
+    },
+    {
+      "id_mensaje": "MSG-HACK-403",
+      "autor": "Prof. Roberto Santillán",
+      "pais": "México",
+      "carrera": "Jurado Académico & Cátedra de Innovación",
+      "rol": "docente_titular",
+      "canal": "#jurado-docente-evaluacion",
+      "tipo": "anuncio",
+      "fecha": "2026-04-05 11:30",
+      "texto": "En nombre del comité evaluador interfacultades: estamos profundamente impactados por la solidez arquitectónica de los proyectos. El 90% implementó gobierno de costos con OCI Always Free y orquestación con IA Generativa. La distancia entre el aula y la industria nunca fue tan corta en América Latina."
+    },
+    {
+      "id_mensaje": "MSG-HACK-404",
+      "autor": "Gabriel Vaca",
+      "pais": "Ecuador",
+      "carrera": "Ingeniería en Redes",
+      "rol": "estudiante_ingresante",
+      "canal": "#feria-de-proyectos-ia",
+      "tipo": "pregunta_tecnica",
+      "fecha": "2026-04-05 12:10",
+      "texto": "Para los equipos finalistas: ¿qué estrategia usaron para cachear los embeddings de los documentos sin sobrepasar la RAM de la instancia de OCI Compute Always Free? ¿Usaron SQLite con vector extension o FAISS local?"
+    },
+    {
+      "id_mensaje": "MSG-HACK-405",
+      "autor": "Mariana Souza",
+      "pais": "Colombia",
+      "carrera": "Ingeniería en Sistemas de Información",
+      "rol": "graduada_mentora",
+      "canal": "#feria-de-proyectos-ia",
+      "tipo": "recurso",
+      "fecha": "2026-04-05 12:40",
+      "texto": "Hola Gabriel. Para instancias Always Free (1GB o 4GB de RAM), FAISS index plano serializado a un bucket de OCI Object Storage funciona genial. Al iniciar la app se descarga el índice ligero a `/tmp` y las consultas toman menos de 40ms."
+    },
+    {
+      "id_mensaje": "MSG-HACK-406",
+      "autor": "Clara Domínguez",
+      "pais": "Chile",
+      "carrera": "Ingeniería Informática",
+      "rol": "estudiante_avanzada",
+      "canal": "#oportunidades-incubacion",
+      "tipo": "testimonio",
+      "fecha": "2026-04-05 14:00",
+      "texto": "¡Nos acaban de avisar que nuestro proyecto 'EduCare Bot' fue seleccionado para la pre-incubadora universitaria de base tecnológica! Nos ofrecen mentorías de negocios y créditos de nube para expandir la solución a más universidades públicas."
+    },
+    {
+      "id_mensaje": "MSG-HACK-407",
+      "autor": "Esteban Morales",
+      "pais": "Perú",
+      "carrera": "Ingeniería de Sistemas",
+      "rol": "estudiante_avanzado",
+      "canal": "#feria-de-proyectos-ia",
+      "tipo": "agradecimiento",
+      "fecha": "2026-04-05 14:50",
+      "texto": "Gracias infinitas a los mentores de Alura y Oracle que nos acompañaron durante las 48 horas de la maratón. Nos ayudaron a corregir errores de concurrencia y a refinar los prompts cuando el sistema colapsaba."
+    },
+    {
+      "id_mensaje": "MSG-HACK-408",
+      "autor": "Ing. Patricia Del Valle",
+      "pais": "Uruguay",
+      "carrera": "Decanato de Ingeniería",
+      "rol": "directora_academica",
+      "canal": "#jurado-docente-evaluacion",
+      "tipo": "anuncio",
+      "fecha": "2026-04-05 15:30",
+      "texto": "Todos los proyectos finalistas recibirán certificación oficial de mérito académico y formarán parte del repositorio de código abierto de la universidad para que las próximas cohortes puedan tomarlos como base."
+    },
+    {
+      "id_mensaje": "MSG-HACK-409",
+      "autor": "Javier Solís",
+      "pais": "Costa Rica",
+      "carrera": "Ingeniería en Computación",
+      "rol": "estudiante_ingresante",
+      "canal": "#pitch-y-demos-live",
+      "tipo": "pregunta_tecnica",
+      "fecha": "2026-04-05 16:15",
+      "texto": "¿Dónde van a publicar los enlaces de las grabaciones de los pitches técnicos y los repositorios de GitHub? Varios ingresantes queremos estudiar la arquitectura de micro-servicios que armaron."
+    },
+    {
+      "id_mensaje": "MSG-HACK-410",
+      "autor": "Valentina Aguirre",
+      "pais": "Argentina",
+      "carrera": "Licenciatura en Sistemas",
+      "rol": "ayudante_catedra",
+      "canal": "#pitch-y-demos-live",
+      "tipo": "recurso",
+      "fecha": "2026-04-05 16:45",
+      "texto": "Javier: todo se consolidará en el Newsletter semanal del campus y en la página oficial de LinkedIn de la facultad, con enlaces directos a los repositorios verificados de GitHub."
+    },
+    {
+      "id_mensaje": "MSG-HACK-411",
+      "autor": "Federico Lima",
+      "pais": "Brasil",
+      "carrera": "Ciencia de la Computación",
+      "rol": "estudiante_avanzado",
+      "canal": "#oportunidades-incubacion",
+      "tipo": "testimonio",
+      "fecha": "2026-04-05 17:20",
+      "texto": "Haber participado en este hackathon fue el mejor hito de mi carrera universitaria. Conectamos tecnología de punta con problemas sociales reales de nuestras comunidades."
+    },
+    {
+      "id_mensaje": "MSG-HACK-412",
+      "autor": "Sofía Benítez",
+      "pais": "Uruguay",
+      "carrera": "Ingeniería en Telecomunicaciones",
+      "rol": "estudiante_avanzada",
+      "canal": "#oportunidades-incubacion",
+      "tipo": "agradecimiento",
+      "fecha": "2026-04-05 18:00",
+      "texto": "¡Felicitaciones a todos los equipos! Demostramos que con esfuerzo colaborativo y tecnologías libres como OCI y modelos de lenguaje de código abierto no hay límites para la educación pública de calidad."
+    }
+  ]
+}

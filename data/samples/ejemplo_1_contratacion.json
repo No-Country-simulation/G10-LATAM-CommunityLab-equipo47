@@ -1,27 +1,144 @@
 {
-  "origen_comunidad": "Discord_ONE_LATAM",
-  "periodo_referencia": "Semana_04_Sprints",
+  "origen_comunidad": "Campus_Digital_Facultad_Ingenieria_ONE",
+  "periodo_referencia": "Semestre_2026_1_Semana_04",
+  "target_sector": "Educacion_Superior_Tecnologica",
+  "institucion": "Campus Universitario & Programa Oracle Next Education (ONE - Alura)",
+  "metricas_generales_lote": {
+    "miembros_activos": 1420,
+    "canales_monitoreados": ["#logros-laborales-y-grado", "#laboratorio-ia-agentes", "#dudas-cloud-oci", "#anuncios-academicos"]
+  },
   "interacciones": [
     {
+      "id_mensaje": "MSG-EDU-101",
       "autor": "Mariana Souza",
       "pais": "Colombia",
-      "canal": "#logros-y-empleos",
+      "carrera": "Ingeniería en Sistemas de Información",
+      "rol": "estudiante_avanzada",
+      "canal": "#logros-laborales-y-grado",
       "tipo": "testimonio",
-      "texto": "¡Hola a todos! Les quiero compartir una noticia que todavía me tiene temblando de emoción. Hoy firmé mi contrato como Desarrolladora Junior de IA en una software factory internacional. En el live coding me pidieron explicar arquitectura de agentes y les mostré exactamente el proyecto que construimos aquí con LangChain y los buckets de Oracle Cloud. Los entrevistadores quedaron impresionados con el despliegue real en la nube. ¡No bajen los brazos, las noches sin dormir valen la pena!"
+      "fecha": "2026-03-20 09:15",
+      "texto": "¡Comunidad universitaria! Les comparto una noticia hermosa: hoy firmé mi contrato como Ingeniera de Datos / IA Junior en una consultora multinacional, aun antes de defender mi tesis de grado. En el live coding me pidieron explicar arquitectura de agentes y les mostré exactamente el proyecto práctico que construimos en la cátedra con LangChain y los buckets de Oracle Cloud Infrastructure. Los evaluadores quedaron impresionados de que en la facultad desarrollemos soluciones en la nube listas para producción. ¡Agradezco profundamente a los docentes y a este grupo de estudio por todo el apoyo!"
     },
     {
+      "id_mensaje": "MSG-EDU-102",
       "autor": "Lucas Albuquerque",
-      "pais": "Argentina",
-      "canal": "#dudas-langgraph",
+      "pais": "Brasil",
+      "carrera": "Ciencias de la Computación",
+      "rol": "estudiante_avanzado",
+      "canal": "#laboratorio-ia-agentes",
       "tipo": "pregunta_tecnica",
-      "texto": "Buenas tardes profes y compas. Estoy trabado con los nodos condicionales de LangGraph. Cuando el LLM me devuelve una salida con formato JSON incompleto, quiero que el router lo detecte y vuelva a intentar con un prompt de corrección en vez de romper la aplicación. ¿Alguien tiene un ejemplo simple de validación con Pydantic dentro del grafo?"
+      "fecha": "2026-03-20 10:22",
+      "texto": "Buenas tardes profes y compañeros de laboratorio. Para la entrega del trabajo práctico integrador sobre grafos de agentes con LangGraph: cuando el LLM me devuelve una salida con formato JSON incompleto, quiero que el router condicional lo capture y reintente con un prompt de corrección en vez de cortar la ejecución. ¿Alguien tiene un ejemplo simple de validación con Pydantic dentro del grafo para compartir?"
     },
     {
+      "id_mensaje": "MSG-EDU-103",
       "autor": "Mateo Gómez",
       "pais": "México",
-      "canal": "#general",
+      "carrera": "Ingeniería Informática",
+      "rol": "estudiante_ingresante",
+      "canal": "#anuncios-academicos",
       "tipo": "agradecimiento",
-      "texto": "Mil gracias al profe por la clase de ayer sobre OCI Always Free. Venía con mucho miedo de que me cobraran por error en la tarjeta, pero con los límites de presupuesto y las alertas que nos enseñaron a configurar me quedé súper tranquilo. Ya tengo mi primera máquina virtual corriendo en São Paulo."
+      "fecha": "2026-03-20 11:05",
+      "texto": "Excelente el workshop extracurricular de ayer sobre OCI Always Free y gobierno de costos en la nube. Muchos teníamos miedo de incurrir en consumos imprevistos, pero con las políticas de cuota cero y alertas de presupuesto que nos enseñaron en la cátedra quedé súper tranquilo. Ya tengo mi primera instancia de cómputo en la nube para el proyecto de cátedra."
+    },
+    {
+      "id_mensaje": "MSG-EDU-104",
+      "autor": "Sofía Paredes",
+      "pais": "Perú",
+      "carrera": "Ingeniería de Software",
+      "rol": "graduada_reciente",
+      "canal": "#logros-laborales-y-grado",
+      "tipo": "testimonio",
+      "fecha": "2026-03-20 13:40",
+      "texto": "Sumando a lo de Mariana: ¡hoy me confirmaron la promoción a Tech Lead de automatización en mi empresa! Entré hace un año gracias a los cursos del programa ONE y los talleres de la facultad. Poder demostrar que domino pipelines serverless y almacenamiento seguro en OCI me abrió puertas que jamás imaginé."
+    },
+    {
+      "id_mensaje": "MSG-EDU-105",
+      "autor": "Gabriel Morales",
+      "pais": "Chile",
+      "carrera": "Licenciatura en Ciencias de Datos",
+      "rol": "estudiante_avanzado",
+      "canal": "#laboratorio-ia-agentes",
+      "tipo": "recurso",
+      "fecha": "2026-03-20 14:15",
+      "texto": "Para Lucas y los que están con LangGraph: les dejé en el canal de recursos un script con un nodo de fallback usando Pydantic OutputParser y Gemini 2.5 Flash. Si falla la serialización, reintenta hasta 2 veces con temperatura 0.1 antes de derivar al curador humano."
+    },
+    {
+      "id_mensaje": "MSG-EDU-106",
+      "autor": "Prof. Fernando Cabrera",
+      "pais": "Argentina",
+      "carrera": "Cátedra de Cloud Computing & IA",
+      "rol": "docente_titular",
+      "canal": "#anuncios-academicos",
+      "tipo": "anuncio",
+      "fecha": "2026-03-20 15:30",
+      "texto": "Felicitaciones gigantes a Mariana y a Sofía por los logros profesionales. Para todo el equipo docente es un orgullo ver que los proyectos de cátedra tienen impacto directo en la empleabilidad real. Recuerden que este viernes tenemos sesión abierta de consultoría técnica para las defensas de mitad de ciclo."
+    },
+    {
+      "id_mensaje": "MSG-EDU-107",
+      "autor": "Valeria Rivas",
+      "pais": "Colombia",
+      "carrera": "Ingeniería en Telecomunicaciones",
+      "rol": "estudiante_avanzada",
+      "canal": "#logros-laborales-y-grado",
+      "tipo": "testimonio",
+      "fecha": "2026-03-20 16:10",
+      "texto": "Paso a compartir que fuimos seleccionados en el top 5 del concurso de innovación interuniversitario con nuestro proyecto de triaje médico automatizado en OCI. La arquitectura de microservicios con buckets de almacenamiento que aprendimos aquí fue lo que más destacó el jurado."
+    },
+    {
+      "id_mensaje": "MSG-EDU-108",
+      "autor": "Andrés Villegas",
+      "pais": "Ecuador",
+      "carrera": "Ingeniería de Sistemas",
+      "rol": "estudiante_ingresante",
+      "canal": "#dudas-cloud-oci",
+      "tipo": "pregunta_tecnica",
+      "fecha": "2026-03-20 16:45",
+      "texto": "Hola a todos, ¿en el SDK de Python para OCI Object Storage es mejor subir el archivo como stream binario o usar `upload_part` si el payload supera los 10MB? Lo pregunto para el módulo de persistencia de logs de la cátedra."
+    },
+    {
+      "id_mensaje": "MSG-EDU-109",
+      "autor": "Camila Herrera",
+      "pais": "Uruguay",
+      "carrera": "Ingeniería en Computación",
+      "rol": "ayudante_catedra",
+      "canal": "#dudas-cloud-oci",
+      "tipo": "recurso",
+      "fecha": "2026-03-20 17:10",
+      "texto": "Hola Andrés. Para archivos menores a 50MB el método simple `put_object` en buffer de memoria es el recomendado dentro de Always Free. En el repositorio de cátedra hay un ejemplo encapsulado en la clase `OCIClient` listo para reutilizar."
+    },
+    {
+      "id_mensaje": "MSG-EDU-110",
+      "autor": "Tomás Silva",
+      "pais": "Argentina",
+      "carrera": "Tecnicatura en Programación",
+      "rol": "estudiante_avanzado",
+      "canal": "#logros-laborales-y-grado",
+      "tipo": "testimonio",
+      "fecha": "2026-03-20 18:00",
+      "texto": "¡Otra alegría de la semana! Me sumé como pasante de infraestructura Cloud en una fintech regional. Me preguntaron específicamente si sabía trabajar en equipo con control de versiones y metodologías ágiles en Discord y GitHub, y el portfolio del campus fue mi mejor carta de presentación."
+    },
+    {
+      "id_mensaje": "MSG-EDU-111",
+      "autor": "Elena Rostova",
+      "pais": "Costa Rica",
+      "carrera": "Ingeniería de Software",
+      "rol": "estudiante_avanzada",
+      "canal": "#logros-laborales-y-grado",
+      "tipo": "agradecimiento",
+      "fecha": "2026-03-20 18:50",
+      "texto": "Inspirador leer tantos compañeros consiguiendo oportunidades. Gracias a la comunidad por motivarnos cada día a no conformarnos con la teoría y poner las manos en el código."
+    },
+    {
+      "id_mensaje": "MSG-EDU-112",
+      "autor": "Ignacio Durán",
+      "pais": "México",
+      "carrera": "Ingeniería Telemática",
+      "rol": "tutor_par",
+      "canal": "#anuncios-academicos",
+      "tipo": "sugerencia",
+      "fecha": "2026-03-20 19:30",
+      "texto": "Para los estudiantes que están armando su CV y portfolio: recuerden incluir los enlaces a los repositorios de GitHub con README explicativo y capturas de OCI. A los reclutadores técnicos les encanta ver la arquitectura en producción."
     }
   ]
 }

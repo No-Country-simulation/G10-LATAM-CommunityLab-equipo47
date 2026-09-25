@@ -1,27 +1,144 @@
 {
-  "origen_comunidad": "Foro_Alura_ONE_LATAM",
-  "periodo_referencia": "Semana_05_Sprints",
+  "origen_comunidad": "Foro_Academico_Ingenieria_Sistemas_ONE",
+  "periodo_referencia": "Semestre_2026_1_Semana_05",
+  "target_sector": "Educacion_Superior_Tecnologica",
+  "institucion": "Campus Universitario & Programa Oracle Next Education (ONE - Alura)",
+  "metricas_generales_lote": {
+    "miembros_activos": 1180,
+    "canales_monitoreados": ["#catedra-cloud-computing", "#catedra-ia-generativa", "#dudas-laboratorios", "#recursos-estudiantiles"]
+  },
   "interacciones": [
     {
+      "id_mensaje": "MSG-DUDAS-201",
       "autor": "Valeria Morales",
       "pais": "Chile",
-      "canal": "#soporte-oci",
+      "carrera": "Ingeniería en Software",
+      "rol": "estudiante_avanzada",
+      "canal": "#catedra-cloud-computing",
       "tipo": "pregunta_tecnica",
-      "texto": "Hola equipo, estoy implementando la subida automática de archivos con el SDK de OCI en Python y me salta el error 'ServiceError: 401 NotAuthenticated'. Ya verifiqué el OCID de mi usuario y el fingerprint de la clave pública, pero sospecho que la ruta del archivo .pem tiene problemas en Windows con las barras invertidas. ¿A alguien más le pasó?"
+      "fecha": "2026-03-24 09:30",
+      "texto": "Profesores y ayudantes de cátedra: estoy haciendo el laboratorio práctico de persistencia en OCI Object Storage con el SDK oficial de Python para mi entrega de mitad de semestre y me arroja 'ServiceError: 401 NotAuthenticated'. Ya verifiqué el OCID y la llave RSA .pem, pero en Windows las rutas con barras invertidas parecen generar problemas de resolución de archivo. ¿Podríamos generar una guía rápida de configuración o FAQ para destrabar a quienes usamos Windows?"
     },
     {
+      "id_mensaje": "MSG-DUDAS-202",
       "autor": "Carlos Méndez",
       "pais": "Perú",
-      "canal": "#dudas-ia-generativa",
+      "carrera": "Licenciatura en Informática",
+      "rol": "estudiante_avanzado",
+      "canal": "#catedra-ia-generativa",
       "tipo": "pregunta_tecnica",
-      "texto": "Una consulta para los que ya implementaron Google Gemini o GPT en el pipeline: cuando el modelo redacta textos largos para LinkedIn, a veces corta los hashtags al final o se pasa de la ventana de contexto. ¿Cómo le están pasando el system prompt para que respete estrictamente una longitud máxima sin perder tono persuasivo?"
+      "fecha": "2026-03-24 10:15",
+      "texto": "Una consulta para el equipo docente del módulo de LLMs: cuando integramos la API de Gemini o GPT para generar resúmenes de bibliografía académica en el campus virtual, a veces el modelo excede la ventana de tokens o trunca los hashtags de referencia. ¿Qué estructura de system prompt y few-shot nos recomiendan para garantizar un formato académico estricto sin perder fluidez?"
     },
     {
+      "id_mensaje": "MSG-DUDAS-203",
       "autor": "Laura Restrepo",
       "pais": "Colombia",
-      "canal": "#proyectos-finales",
+      "carrera": "Ingeniería de Sistemas",
+      "rol": "ayudante_catedra",
+      "canal": "#recursos-estudiantiles",
       "tipo": "sugerencia",
-      "texto": "Chicos, armé una plantilla base en GitHub para conectar Streamlit con OCI Object Storage usando variables de entorno limpias con python-dotenv. Si a los mentores les parece bien, la comparto por acá para que los que recién empiezan no pierdan tiempo peleando con la autenticación."
+      "fecha": "2026-03-24 11:00",
+      "texto": "Compañeros de la facultad, para quienes cursan Sistemas Distribuidos preparé un repositorio plantilla en GitHub con Docker, Streamlit y python-dotenv listo para conectarse a los buckets Always Free de OCI sin exponer credenciales. Lo comparto para que los ingresantes no pierdan horas peleando con la autenticación inicial."
+    },
+    {
+      "id_mensaje": "MSG-DUDAS-204",
+      "autor": "Joaquín Benítez",
+      "pais": "Argentina",
+      "carrera": "Ingeniería en Computación",
+      "rol": "estudiante_ingresante",
+      "canal": "#catedra-cloud-computing",
+      "tipo": "pregunta_tecnica",
+      "fecha": "2026-03-24 11:45",
+      "texto": "A mí me pasa lo mismo que a Valeria con OCI en Windows 11. En PowerShell el comando openssl a veces genera la clave con permisos abiertos y OCI rechaza la conexión por seguridad (UNPROTECTED PRIVATE KEY FILE). ¿Hay forma de simular el bucket localmente mientras resolvemos la llave RSA?"
+    },
+    {
+      "id_mensaje": "MSG-DUDAS-205",
+      "autor": "Ing. Martín Casares",
+      "pais": "Uruguay",
+      "carrera": "Cátedra de Arquitecturas Cloud",
+      "rol": "docente_adjunto",
+      "canal": "#catedra-cloud-computing",
+      "tipo": "recurso",
+      "fecha": "2026-03-24 12:30",
+      "texto": "Atención Valeria y Joaquín: para Windows 11 deben ejecutar `icacls key.pem /inheritance:r /grant:r %username%:R` para fijar los permisos de la clave RSA. De todas formas, en el proyecto dejamos activo el cliente simulado en `modules/oci_client.py` que crea un mock local en `./oci_bucket_simulation/` con exactamente la misma firma de métodos del SDK oficial para que nadie quede bloqueado."
+    },
+    {
+      "id_mensaje": "MSG-DUDAS-206",
+      "autor": "Daniela Cruz",
+      "pais": "México",
+      "carrera": "Ingeniería en Inteligencia Artificial",
+      "rol": "estudiante_avanzada",
+      "canal": "#catedra-ia-generativa",
+      "tipo": "pregunta_tecnica",
+      "fecha": "2026-03-24 14:10",
+      "texto": "¿Cómo manejan el rate limit en la API gratuita de Gemini durante los ensayos del trabajo práctico? Cuando lanzamos las pruebas en lote de 20 mensajes seguidos nos tira error 429 Too Many Requests. ¿Recomiendan implementar un backoff exponencial o una cola con time.sleep?"
+    },
+    {
+      "id_mensaje": "MSG-DUDAS-207",
+      "autor": "Sebastián Pinto",
+      "pais": "Chile",
+      "carrera": "Ingeniería Informática",
+      "rol": "ayudante_catedra",
+      "canal": "#catedra-ia-generativa",
+      "tipo": "recurso",
+      "fecha": "2026-03-24 14:50",
+      "texto": "Daniela, excelente consulta. Para la capa gratuita sugerimos aplicar un delay de 0.8s entre llamadas o usar la biblioteca `tenacity` con `@retry(wait=wait_random_exponential(min=1, max=10))`. También pueden usar el motor simulado que procesa el JSON al instante sin consumir cuotas de API."
+    },
+    {
+      "id_mensaje": "MSG-DUDAS-208",
+      "autor": "Patricia Morales",
+      "pais": "Bolivia",
+      "carrera": "Ingeniería de Sistemas",
+      "rol": "estudiante_ingresante",
+      "canal": "#dudas-laboratorios",
+      "tipo": "pregunta_tecnica",
+      "fecha": "2026-03-24 15:30",
+      "texto": "Hola profe, ¿en qué formato debemos entregar el JSON de salida? ¿El router condicional debe generar obligatoriamente las tres ramas (LinkedIn, Newsletter, FAQ) en el mismo payload o puede omitir alguna si el sentimiento es neutro?"
+    },
+    {
+      "id_mensaje": "MSG-DUDAS-209",
+      "autor": "Rodrigo Silva",
+      "pais": "Brasil",
+      "carrera": "Ciencia de Datos",
+      "rol": "tutor_par",
+      "canal": "#dudas-laboratorios",
+      "tipo": "recurso",
+      "fecha": "2026-03-24 16:15",
+      "texto": "Hola Patricia. Según el PDF del Hackathon ONE (páginas 4 y 5), la respuesta oficial debe contener el nodo `activos_distribucion_generados` con los 3 formatos listos, adaptando el tono y contenido según el análisis del lote."
+    },
+    {
+      "id_mensaje": "MSG-DUDAS-210",
+      "autor": "Felipe Vargas",
+      "pais": "Colombia",
+      "carrera": "Ingeniería de Software",
+      "rol": "estudiante_avanzado",
+      "canal": "#catedra-cloud-computing",
+      "tipo": "pregunta_tecnica",
+      "fecha": "2026-03-24 17:00",
+      "texto": "Para la persistencia en OCI Always Free: ¿el nombre del Bucket debe coincidir exactamente con el del archivo de configuración o el usuario puede definirlo desde la interfaz gráfica de Streamlit en tiempo de ejecución?"
+    },
+    {
+      "id_mensaje": "MSG-DUDAS-211",
+      "autor": "Lucía Fontana",
+      "pais": "Argentina",
+      "carrera": "Ingeniería en Telecomunicaciones",
+      "rol": "ayudante_catedra",
+      "canal": "#catedra-cloud-computing",
+      "tipo": "recurso",
+      "fecha": "2026-03-24 17:40",
+      "texto": "Felipe: es ideal que el usuario pueda escribir o seleccionar el Bucket en la UI con un valor por defecto seguro (ej: `communitylab-activos-marketing`). Así se cumple tanto la flexibilidad como la evaluación automática."
+    },
+    {
+      "id_mensaje": "MSG-DUDAS-212",
+      "autor": "Esteban Ramos",
+      "pais": "México",
+      "carrera": "Ingeniería en Computación",
+      "rol": "estudiante_avanzado",
+      "canal": "#recursos-estudiantiles",
+      "tipo": "agradecimiento",
+      "fecha": "2026-03-24 18:20",
+      "texto": "¡Muchísimas gracias a los profes y ayudantes de cátedra por responder tan rápido en el foro! Con los tips de OCI y Gemini pudimos dejar andando el pipeline de extremo a extremo sin trabas."
     }
   ]
 }

@@ -1,11 +1,11 @@
 """
 Vista 5: Almacenamiento en Oracle Cloud Infrastructure (OCI Object Storage).
 Requisito obligatorio del MVP: Persistencia de paquetes de activos en un bucket de OCI Always Free.
-Diseño modular y fácil de entender.
+Diseño modular adaptado a la infraestructura del Hackathon ONE G10.
 """
 import streamlit as st
 import json
-from modules.ui import badge_header, get_lucide
+from modules.ui import badge_header, get_lucide, render_callout, clean_html
 from modules.oci_client import guardar_en_oci, listar_activos_oci
 
 def render_oci_storage_view():
@@ -13,6 +13,15 @@ def render_oci_storage_view():
         icon_name="cloud",
         title="Almacenamiento OCI Object Storage",
         subtitle="Persistencia obligatoria de activos en un Bucket de Oracle Cloud (Capa Always Free)",
+        color="#DC2626",
+        target_pill="Infraestructura: Oracle Cloud Always Free"
+    )
+
+    render_callout(
+        text="Requisito mandatorio del Hackathon ONE: Todos los paquetes generados (JSON estructurado con copys, resumen semántico y decisiones de curaduría) "
+             "deben quedar persistidos en un Bucket de OCI Object Storage dentro de la capa gratuita Always Free.",
+        title="Conformidad con Oracle Cloud",
+        icon_name="shield-check",
         color="#DC2626"
     )
 
@@ -22,10 +31,15 @@ def render_oci_storage_view():
     with col2:
         region = st.selectbox("Región OCI", ["sa-saopaulo-1", "sa-santiago-1", "us-ashburn-1", "us-phoenix-1"])
 
-    st.caption("Cumplimiento estricto con las directrices de costo cero (Always Free) del programa ONE.")
+    st.caption("Cumplimiento estricto con las directrices de costo cero (Always Free) del programa social ONE.")
 
     if "curated_package" not in st.session_state and "generated_package" not in st.session_state:
-        st.info("Para persistir un paquete en OCI, primero procesa un lote en '2. Pipeline de IA & Router'.")
+        render_callout(
+            text="Para persistir un paquete en OCI, primero procesa un lote en '2. Pipeline de IA & Router'.",
+            title="Sin paquete para persistir",
+            icon_name="info",
+            color="#2563EB"
+        )
         return
 
     paquete_a_guardar = st.session_state.get("curated_package", st.session_state.get("generated_package"))
@@ -36,18 +50,18 @@ def render_oci_storage_view():
     if st.button("Persistir Paquete en OCI Object Storage", type="primary", use_container_width=True):
         resultado = guardar_en_oci(paquete_a_guardar, bucket_name=bucket_name, ruta_objeto=ruta_objeto)
         st.session_state["ultimo_guardado_oci"] = resultado
-        st.success(f"Paquete persistido exitosamente en el Bucket {bucket_name}")
+        st.success(f"Paquete persistido exitosamente en el Bucket '{bucket_name}'")
 
     if "ultimo_guardado_oci" in st.session_state:
         res = st.session_state["ultimo_guardado_oci"]
         with st.container(border=True):
             st.markdown(
-                f"""
+                clean_html(f"""
                 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 0.8rem;">
-                    {get_lucide('check-circle-2', size=18, color='#059669')}
+                    {get_lucide('check-circle-2', size=20, color='#059669')}
                     <h4 style="margin: 0; font-size: 1.1rem; font-weight: 600; color: #1E293B;">Confirmación de Almacenamiento (Esquema Oficial)</h4>
                 </div>
-                """,
+                """),
                 unsafe_allow_html=True
             )
             confirmacion = {
@@ -71,12 +85,12 @@ def render_oci_storage_view():
 
     st.divider()
     st.markdown(
-        f"""
+        clean_html(f"""
         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 0.8rem;">
-            {get_lucide('file-text', size=18, color='#475569')}
+            {get_lucide('database', size=19, color='#475569')}
             <h4 style="margin: 0; font-size: 1.1rem; font-weight: 600; color: #1E293B;">Explorador de Objetos Persistidos en el Bucket</h4>
         </div>
-        """,
+        """),
         unsafe_allow_html=True
     )
     objetos = listar_activos_oci(bucket_name=bucket_name)

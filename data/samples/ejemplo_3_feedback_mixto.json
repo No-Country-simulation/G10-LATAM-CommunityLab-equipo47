@@ -1,27 +1,166 @@
 {
-  "origen_comunidad": "Slack_Talentos_ONE_LATAM",
-  "periodo_referencia": "Semana_06_Sprints",
+  "origen_comunidad": "Comunidad_Estudiantil_Interfacultades_ONE",
+  "periodo_referencia": "Semestre_2026_1_Semana_06",
+  "target_sector": "Educacion_Superior_Tecnologica",
+  "institucion": "Campus Universitario & Programa Oracle Next Education (ONE - Alura)",
+  "metricas_generales_lote": {
+    "miembros_activos": 1650,
+    "canales_monitoreados": ["#proyectos-de-grado", "#tutorias-y-apoyo-estudiantil", "#red-de-tutores-pares", "#bienestar-universitario"]
+  },
   "interacciones": [
     {
+      "id_mensaje": "MSG-MIX-301",
       "autor": "Sofía Benítez",
       "pais": "Uruguay",
-      "canal": "#historias-de-exito",
+      "carrera": "Ingeniería en Telecomunicaciones",
+      "rol": "estudiante_avanzada",
+      "canal": "#proyectos-de-grado",
       "tipo": "testimonio",
-      "texto": "¡Compañeros! Quería contarles que ayer le presenté a mi jefe el prototipo de agente de triaje que construimos en el sprint. Le encantó tanto que nos dio luz verde para integrarlo con la API de atención al cliente el próximo mes. Llegué al programa ONE sin saber casi nada de cloud y hoy siento que tengo herramientas reales para competir en el mercado."
+      "fecha": "2026-03-28 09:10",
+      "texto": "¡Compañeros y profes! Ayer defendimos el avance de nuestro proyecto final de carrera ante el tribunal docente y nos felicitaron por la arquitectura de micro-agentes con IA y despliegue en la nube. Llegué a la facultad pensando que la inteligencia artificial aplicada era solo para centros de investigación lejanos y hoy estamos preparando la publicación de un paper con los resultados. ¡Orgullo de nuestra universidad y de este equipo de trabajo!"
     },
     {
+      "id_mensaje": "MSG-MIX-302",
       "autor": "Diego Navarro",
       "pais": "México",
-      "canal": "#dificultades-y-apoyo",
+      "carrera": "Ingeniería en Computación",
+      "rol": "estudiante_ingresante",
+      "canal": "#tutorias-y-apoyo-estudiantil",
       "tipo": "alerta_apoyo",
-      "texto": "Les soy muy honesto: vengo bastante atrasado con las actividades de esta semana. Entre el trabajo de 9 a 18 y la familia me cuesta un montón hacerme el tiempo para entender los grafos de LangGraph desde cero. ¿Alguien tiene disponibilidad para armar una sala de Discord el sábado y estudiar juntos los conceptos básicos?"
+      "fecha": "2026-03-28 09:45",
+      "texto": "Les soy muy sincero: estoy teniendo bastantes dificultades para conciliar los horarios de mi trabajo de 9 horas con las entregas de laboratorio de este semestre. Vengo atrasado con la implementación de LangGraph y me da pánico recursar la materia y perder la correlatividad. ¿Hay tutores pares o algún grupo de estudio disponible este fin de semana en la biblioteca o por Discord para repasar los conceptos clave desde cero?"
     },
     {
+      "id_mensaje": "MSG-MIX-303",
       "autor": "Florencia Costa",
       "pais": "Argentina",
-      "canal": "#recursos-comunidad",
+      "carrera": "Ingeniería en Sistemas de Información",
+      "rol": "tutora_par",
+      "canal": "#red-de-tutores-pares",
       "tipo": "recurso",
-      "texto": "¡Ánimo Diego y a todos los que sientan que van a las corridas! Les dejo un resumen con los 5 comandos esenciales del CLI de Oracle Cloud y un diagrama que hice a mano de cómo se conectan los nodos condicionales. Espero que les sirva para destrabar el sprint."
+      "fecha": "2026-03-28 10:15",
+      "texto": "¡Diego y todos los que se sientan al límite con los tiempos, no bajen los brazos! Como tutora par de la cátedra preparé una guía paso a paso con los 5 errores comunes al configurar Oracle Cloud y un diagrama conceptual de cómo orquestar los nodos condicionales. Armamos una sala de estudio colaborativo este sábado a las 10:00 AM para destrabar todas las dudas."
+    },
+    {
+      "id_mensaje": "MSG-MIX-304",
+      "autor": "Matías Carrizo",
+      "pais": "Chile",
+      "carrera": "Licenciatura en Informática",
+      "rol": "estudiante_avanzado",
+      "canal": "#tutorias-y-apoyo-estudiantil",
+      "tipo": "alerta_apoyo",
+      "fecha": "2026-03-28 11:00",
+      "texto": "Me sumo al pedido de Diego. El ritmo de los últimos tres prácticos simultáneos (Bases de Datos, Cloud y Frontend) me dejó casi sin horas de sueño. Necesitamos que las cátedras sincronicen las fechas de entrega para no colapsar en la semana de parciales."
+    },
+    {
+      "id_mensaje": "MSG-MIX-305",
+      "autor": "Dra. Carmen Valenzuela",
+      "pais": "Colombia",
+      "carrera": "Dirección de Asuntos Estudiantiles",
+      "rol": "directora_academica",
+      "canal": "#bienestar-universitario",
+      "tipo": "anuncio",
+      "fecha": "2026-03-28 11:40",
+      "texto": "Estimados estudiantes: hemos tomado nota de los comentarios sobre la acumulación de entregas en la semana 7. Desde la Secretaría Académica acordamos con los profesores extender el plazo de entrega del integrador de OCI e IA por 7 días corridos y habilitar mentorías de refuerzo los sábados. Priorizamos su salud mental y aprendizaje."
+    },
+    {
+      "id_mensaje": "MSG-MIX-306",
+      "autor": "Nicolás Herrera",
+      "pais": "Perú",
+      "carrera": "Ingeniería de Sistemas",
+      "rol": "estudiante_ingresante",
+      "canal": "#bienestar-universitario",
+      "tipo": "agradecimiento",
+      "fecha": "2026-03-28 12:15",
+      "texto": "¡Qué alivio enorme esta prórroga! Gracias por escuchar el pulso de los estudiantes. Ahora sí vamos a poder entregar un proyecto con buena calidad de código y sin enfermarnos por el estrés."
+    },
+    {
+      "id_mensaje": "MSG-MIX-307",
+      "autor": "Valeria Quintero",
+      "pais": "Ecuador",
+      "carrera": "Ingeniería de Software",
+      "rol": "tutora_par",
+      "canal": "#red-de-tutores-pares",
+      "tipo": "sugerencia",
+      "fecha": "2026-03-28 13:30",
+      "texto": "Para la sesión de estudio del sábado preparamos un checklist rápido de entrega: validación de sintaxis JSON, pruebas de integración con OCI Object Storage simulado y real, y captura de métricas del dashboard. Así van a la defensa con total seguridad."
+    },
+    {
+      "id_mensaje": "MSG-MIX-308",
+      "autor": "Lucas Farias",
+      "pais": "Brasil",
+      "carrera": "Ciencia de Datos",
+      "rol": "estudiante_avanzado",
+      "canal": "#proyectos-de-grado",
+      "tipo": "testimonio",
+      "fecha": "2026-03-28 14:20",
+      "texto": "Quiero rescatar algo que dijo Sofía: lo valioso de esta comunidad no es solo la tecnología de punta, sino el compañerismo. Cuando entré no sabía qué era un bucket ni un webhook, y hoy estamos ayudando a los chicos de primer año a superar sus primeros laboratorios."
+    },
+    {
+      "id_mensaje": "MSG-MIX-309",
+      "autor": "Santiago Peña",
+      "pais": "Argentina",
+      "carrera": "Ingeniería Informática",
+      "rol": "estudiante_ingresante",
+      "canal": "#tutorias-y-apoyo-estudiantil",
+      "tipo": "alerta_apoyo",
+      "fecha": "2026-03-28 15:00",
+      "texto": "¿Dónde me anoto para la sala de estudio de Discord del sábado? Trabajo de lunes a viernes en un call center y solo tengo el fin de semana para ponerme al día con la parte de orquestación."
+    },
+    {
+      "id_mensaje": "MSG-MIX-310",
+      "autor": "Florencia Costa",
+      "pais": "Argentina",
+      "carrera": "Ingeniería en Sistemas de Información",
+      "rol": "tutora_par",
+      "canal": "#tutorias-y-apoyo-estudiantil",
+      "tipo": "recurso",
+      "fecha": "2026-03-28 15:15",
+      "texto": "Santiago: el enlace es directo en el canal de voz `#sala-estudio-tutorias-1`. No hace falta inscripción previa, se conectan libremente a partir de las 10:00 AM hora de Argentina/Chile/Uruguay."
+    },
+    {
+      "id_mensaje": "MSG-MIX-311",
+      "autor": "Brenda Ortiz",
+      "pais": "México",
+      "carrera": "Licenciatura en Tecnología Educativa",
+      "rol": "estudiante_avanzada",
+      "canal": "#proyectos-de-grado",
+      "tipo": "testimonio",
+      "fecha": "2026-03-28 16:00",
+      "texto": "Nuestro equipo armó un bot de Discord que analiza las dudas de los foros y genera resúmenes para los docentes usando los conceptos de CommunityLab. Los profesores quedaron encantados con cómo reduce los tiempos de respuesta de 48 horas a menos de 10 minutos."
+    },
+    {
+      "id_mensaje": "MSG-MIX-312",
+      "autor": "Tomás Iriarte",
+      "pais": "Paraguay",
+      "carrera": "Ingeniería en Sistemas",
+      "rol": "estudiante_ingresante",
+      "canal": "#tutorias-y-apoyo-estudiantil",
+      "tipo": "agradecimiento",
+      "fecha": "2026-03-28 16:45",
+      "texto": "Agradezco a los tutores pares. El año pasado casi abandono la carrera por sentirme aislado, y este acompañamiento constante marca la diferencia entre dejar o seguir adelante."
+    },
+    {
+      "id_mensaje": "MSG-MIX-313",
+      "autor": "Prof. Fernando Cabrera",
+      "pais": "Argentina",
+      "carrera": "Cátedra de Cloud Computing & IA",
+      "rol": "docente_titular",
+      "canal": "#bienestar-universitario",
+      "tipo": "anuncio",
+      "fecha": "2026-03-28 17:30",
+      "texto": "Felicitamos la iniciativa de Florencia y Valeria en la Red de Tutorías. El aprendizaje entre pares es el pilar metodológico más potente del programa. Este sábado estaré disponible en la primera hora de la sala para responder consultas complejas de arquitectura."
+    },
+    {
+      "id_mensaje": "MSG-MIX-314",
+      "autor": "Mariana Souza",
+      "pais": "Colombia",
+      "carrera": "Ingeniería en Sistemas de Información",
+      "rol": "graduada_reciente",
+      "canal": "#bienestar-universitario",
+      "tipo": "testimonio",
+      "fecha": "2026-03-28 18:15",
+      "texto": "Para los que están en la mitad del camino con dudas o cansancio: ¡vale 100% la pena el esfuerzo! Hoy en mi trabajo uso exactamente las mismas herramientas que estamos aprendiendo aquí. ¡Fuerza a todos para este cierre de ciclo!"
     }
   ]
 }
