@@ -52,9 +52,9 @@ def render_curatorship_view():
     activos = paquete.get("activos_distribucion_generados", {})
 
     tab_linkedin, tab_newsletter, tab_faq = st.tabs([
-        "🎓 Post para LinkedIn (UGC Marketing)", 
-        "📰 Destaque en Newsletter Institucional", 
-        "💡 Sugerencia de FAQ / Tip de Cátedra"
+        "Post para LinkedIn", 
+        "Destaque en Newsletter Institucional", 
+        "Sugerencia de FAQ y Cátedra"
     ])
 
     # 1. TAB LINKEDIN
@@ -78,9 +78,9 @@ def render_curatorship_view():
 
         col_traz1, col_traz2 = st.columns(2)
         with col_traz1:
-            st.caption("🤖 **Redacción inicial:** Generado por LLM a partir de los testimonios del campus virtual.")
+            st.caption("**Redacción inicial:** Generada por el pipeline a partir de testimonios del campus virtual.")
         with col_traz2:
-            st.caption("👤 **Curador asignado:** Equipo de Admisiones y Comunicación Institucional.")
+            st.caption("**Responsable editorial:** Equipo de Admisiones y Comunicación Institucional.")
 
         nuevo_titulo_lk = st.text_input("Titular de la publicación:", value=post_lk.get("titulo", ""))
         nuevo_copy_lk = st.text_area("Cuerpo del post (puedes editarlo libremente antes de publicar):", value=post_lk.get("copy", ""), height=200)
@@ -137,9 +137,9 @@ def render_curatorship_view():
 
         col_nl1, col_nl2 = st.columns(2)
         with col_nl1:
-            st.caption("🤖 **Origen:** Extraído del logro o actividad más destacada de la semana.")
+            st.caption("**Origen:** Extraído del logro o actividad más destacada de la semana.")
         with col_nl2:
-            st.caption("👤 **Curador asignado:** Editor del boletín para graduados y estudiantes.")
+            st.caption("**Responsable editorial:** Editor del boletín para graduados y estudiantes.")
 
         nueva_seccion = st.text_input("Nombre de la sección en el boletín:", value=nl.get("seccion", "Logro Estudiantil de la Semana"))
         nuevo_titular_nl = st.text_input("Titular destacado para el correo:", value=nl.get("titular", ""))
@@ -190,7 +190,7 @@ def render_curatorship_view():
             unsafe_allow_html=True
         )
 
-        st.caption(f"📌 **Origen detectado por la IA:** {faq.get('origen', 'Comunidad Académica')}")
+        st.caption(f"**Origen detectado en campus:** {faq.get('origen', 'Comunidad Académica')}")
 
         nuevo_tema_faq = st.text_input("Tema propuesto para el tip o FAQ:", value=faq.get("tema", ""))
         

@@ -16,7 +16,7 @@ from views.almacenamiento_oci import render_oci_storage_view
 # Configuración de página
 st.set_page_config(
     page_title="CommunityLab | Equipo 47 ONE LATAM",
-    page_icon="🎓",
+    page_icon="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/layers.svg",
     layout="wide",
     initial_sidebar_state="expanded"
 )

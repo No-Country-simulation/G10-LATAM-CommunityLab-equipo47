@@ -208,10 +208,10 @@ def render_ingestion_view():
         st.markdown("---")
         col_btn1, col_btn2 = st.columns([2, 1])
         with col_btn1:
-            if st.button("🚀 Ejecutar Pipeline de IA & Router con este lote", type="primary", use_container_width=True):
+            if st.button("Ejecutar Pipeline de IA y Router Condicional", type="primary", use_container_width=True):
                 paquete = process_community_payload(payload)
                 st.session_state["generated_package"] = paquete
                 st.session_state["curated_package"] = paquete.copy()
-                st.success("¡Lote analizado con éxito! Pasa al menú '2. Pipeline de IA & Router' para ver las bifurcaciones y los activos generados.")
+                st.success("Lote analizado con éxito. Continúa en '2. Pipeline de IA & Router' para revisar las bifurcaciones y los activos generados.")
         with col_btn2:
             st.caption("Cumplimiento estricto con el esquema JSON oficial del Hackathon ONE G10.")

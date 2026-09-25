@@ -59,53 +59,51 @@ def process_community_payload(data: dict) -> dict:
 
     # 2. Generación de Activos de Distribución (Bifurcación Condicional en Router)
     
-    # FORMATO 1: Post para LinkedIn (Enfoque Educación Superior & UGC Marketing)
+    # FORMATO 1: Post para LinkedIn (Enfoque Institucional & UGC Marketing)
     if "Feria de Innovación & Hackathon Universitario" in temas:
         protagonista = testimonios[0].get("autor", "Nuestros estudiantes") if testimonios else "Equipos destacados"
-        titulo_linkedin = "Innovación en Vivo: Estudiantes despliegan soluciones de IA en Oracle Cloud durante el Hackathon Universitario"
+        titulo_linkedin = "Innovación en Tiempo Real: Estudiantes despliegan soluciones de IA en Oracle Cloud durante el Hackathon Universitario"
         copy_linkedin = (
-            f"¡El talento de nuestras universidades no tiene techo! 🚀🏛️\n\n"
-            f"Durante la jornada del Hackathon Académico de Campus Digital ONE, más de 25 equipos de estudiantes defendieron "
-            f"soluciones de IA Generativa y Cloud en tiempo real. Proyectos como el presentado por {protagonista} y sus compañeros "
+            f"El potencial del talento universitario se consolida con proyectos prácticos de alto impacto.\n\n"
+            f"Durante la jornada del Hackathon Académico de Campus Digital ONE, más de 25 equipos de estudiantes presentaron y "
+            f"defendieron soluciones de IA Generativa y Cloud en tiempo real. Iniciativas como la desarrollada por {protagonista} y su equipo "
             f"procesaron cientos de consultas en vivo utilizando Streamlit, Gemini Flash y almacenamiento de objetos en OCI Always Free.\n\n"
             f"La distancia entre la teoría del aula y las demandas de la industria tecnológica se acorta cuando los estudiantes "
-            f"tienen acceso a infraestructura de primer nivel. ¡Felicitaciones a todos los equipos por demostrar el poder del aprendizaje colaborativo! 👏\n\n"
+            f"tienen acceso a infraestructura de primer nivel. Hacemos llegar nuestro reconocimiento a todos los participantes por su dedicación y trabajo colaborativo.\n\n"
             f"#EducacionSuperior #HackathonONE #InnovacionUniversitaria #OracleCloud #InteligenciaArtificial #AluraLatam"
         )
     elif testimonios and not alertas_apoyo:
         protagonista = testimonios[0].get("autor", "Nuestra estudiante")
         carrera = testimonios[0].get("carrera", "Ingeniería en Sistemas")
         total_testimonios = len(testimonios)
-        mención_adicional = f" junto a {total_testimonios - 1} compañeros más que reportaron ascensos y contrataciones esta semana" if total_testimonios > 1 else ""
+        mención_adicional = f" junto a {total_testimonios - 1} compañeros más que consolidaron ascensos y contrataciones esta semana" if total_testimonios > 1 else ""
         titulo_linkedin = "De las Aulas al Mercado: El impacto de los proyectos prácticos de IA en la Educación Superior"
         copy_linkedin = (
-            f"¡Nada nos llena más de orgullo que ver a nuestros estudiantes transformando el mercado tecnológico! 🎓🚀\n\n"
-            f"Nuestra estudiante {protagonista} ({carrera}){mención_adicional} acaba de dar un salto clave en su carrera tras firmar su contrato "
-            f"en IA antes de defender su tesis de grado, destacando con su proyecto práctico desarrollado con "
+            f"Compartimos un nuevo avance en la inserción laboral y el desarrollo profesional de nuestra comunidad estudiantil.\n\n"
+            f"Nuestra estudiante {protagonista} ({carrera}){mención_adicional} concretó un paso clave en su carrera al firmar su contrato "
+            f"en el área de Inteligencia Artificial antes de defender su tesis de grado, respaldada por el proyecto práctico desarrollado en cátedra con "
             f"LangChain y Oracle Cloud Infrastructure.\n\n"
-            f"Historias como esta confirman que conectar las cátedras universitarias con tecnologías cloud y desafíos del mundo real "
-            f"es el camino más sólido para formar a los líderes tecnológicos de América Latina. ¡Felicitaciones gigantes, {protagonista}! 👏\n\n"
+            f"Resultados como este reafirman que vincular los programas académicos con tecnologías de vanguardia y desafíos reales "
+            f"es el camino más sólido para formar a los futuros líderes tecnológicos de América Latina. Felicitamos a {protagonista} y al equipo docente por este importante logro.\n\n"
             f"#EducacionSuperior #TalentoUniversitario #InteligenciaArtificial #OracleCloud #FacultadDeIngenieria #ComunidadTech"
         )
     elif alertas_apoyo:
         titulo_linkedin = "Aprender en Comunidad: Cómo la tutoría par y el apoyo estudiantil impulsan la retención tecnológica"
         copy_linkedin = (
-            f"Aprender tecnologías complejas como arquitecturas de agentes autónomos y computación en la nube es un gran desafío, "
-            f"pero nadie debería recorrer ese camino en soledad. 🤝💡\n\n"
-            f"Esta semana en nuestra comunidad académica, frente a las dificultades en las entregas de mitad de semestre, "
-            f"la red de tutores pares y estudiantes avanzados se organizó para abrir salas de estudio colaborativo y guías de soporte.\n\n"
-            f"El verdadero valor de una institución educativa no está solo en su programa académico, sino en el tejido humano que cuida "
-            f"y acompaña a cada estudiante hasta la meta.\n\n"
+            f"El aprendizaje de tecnologías complejas como arquitecturas de agentes autónomos y computación en la nube requiere espacios sólidos de acompañamiento y colaboración.\n\n"
+            f"Esta semana en nuestra comunidad académica, frente a las exigencias de las entregas de mitad de ciclo, "
+            f"la red de tutores pares y estudiantes avanzados coordinó salas de estudio colaborativo y guías técnicas de apoyo.\n\n"
+            f"El verdadero valor de una institución educativa radica no solo en el rigor de sus programas, sino en la red humana que acompaña a cada estudiante a lo largo de su trayectoria formativa.\n\n"
             f"#BienestarEstudiantil #TutoriasPares #EducacionSuperior #ComunidadUniversitaria #Ingenieria"
         )
     else:
         titulo_linkedin = f"Innovación y Aprendizaje Práctico en {origen.replace('_', ' ')}"
         copy_linkedin = (
-            f"Esta semana en los laboratorios prácticos de {origen.replace('_', ' ')} vivimos intensos debates sobre "
-            f"arquitecturas de agentes y despliegue seguro en la nube. 💡🏛️\n\n"
-            f"Nuestros estudiantes estuvieron experimentando con persistencia en OCI Always Free y orquestación con IA Generativa. "
-            f"La curiosidad técnica de los estudiantes es el motor que mantiene viva a nuestra facultad.\n\n"
-            f"¿Tu institución ya está integrando proyectos cloud en su currícula? ¡Sumémonos a la conversación!\n\n"
+            f"Durante la presente semana en los laboratorios prácticos de {origen.replace('_', ' ')} se desarrollaron debates técnicos sobre "
+            f"arquitecturas de agentes y despliegue seguro en la nube.\n\n"
+            f"Los estudiantes exploraron la persistencia de datos en OCI Always Free y la integración de modelos de lenguaje, "
+            f"demostrando un compromiso constante con la experimentación y el aprendizaje aplicado.\n\n"
+            f"Invitamos a la comunidad académica y profesional a compartir experiencias sobre la adopción de proyectos cloud en la currícula universitaria.\n\n"
             f"#EducacionSuperior #CloudComputing #OracleNextEducation #AluraLatam #InnovacionEducativa"
         )
 

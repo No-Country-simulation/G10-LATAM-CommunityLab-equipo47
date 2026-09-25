@@ -76,8 +76,8 @@ def render_pipeline_view():
         )
 
     # Botón principal de ejecución
-    if st.button("⚡ Ejecutar Análisis y Bifurcación en Router", type="primary", use_container_width=True):
-        with st.status("Orquestando pipeline de inteligencia artificial...", expanded=True) as status:
+    if st.button("Ejecutar Análisis y Router Condicional", type="primary", use_container_width=True):
+        with st.status("Orquestando pipeline de análisis y enrutamiento...", expanded=True) as status:
             st.write("1. Normalizando textos y perfiles de estudiantes...")
             time.sleep(0.3)
             st.write("2. Extrayendo polaridad de sentimiento y entidades clave...")
@@ -136,16 +136,16 @@ def render_pipeline_view():
                     {get_lucide('git-fork', size=20, color='#7C3AED')}
                     <h3 style="margin: 0; font-size: 1.25rem; font-weight: 600; color: #1E293B;">Activos Generados por el Router Condicional</h3>
                 </div>
-                <span style="font-size: 0.82rem; color: #64748B;">Selecciona una pestaña para ver, copiar o publicar cada activo</span>
+                <span style="font-size: 0.82rem; color: #64748B;">Selecciona una pestaña para revisar, copiar o publicar cada formato</span>
             </div>
             """),
             unsafe_allow_html=True
         )
 
         tab_linkedin, tab_newsletter, tab_faq = st.tabs([
-            "🎓 1. Publicación de LinkedIn (UGC Marketing)",
-            "📰 2. Destaque para Newsletter Semanal",
-            "💡 3. Sugerencia de FAQ / Tip de Cátedra"
+            "1. Publicación para LinkedIn",
+            "2. Destaque de Newsletter Semanal",
+            "3. Sugerencia de FAQ y Cátedra"
         ])
 
         # TAB 1: LINKEDIN
@@ -186,10 +186,10 @@ def render_pipeline_view():
 
             col_acc1, col_acc2 = st.columns([1, 1])
             with col_acc1:
-                if st.button("📋 Copiar Copy al Portapapeles", key="btn_copy_lk"):
+                if st.button("Copiar texto de LinkedIn", key="btn_copy_lk"):
                     st.success("Texto seleccionado arriba. Utiliza el icono de copiar en la esquina del recuadro.")
             with col_acc2:
-                st.caption("¿Necesitas hacer ajustes o correcciones editoriales? Puedes hacerlo en el menú lateral **'3. Panel de Curaduría'**.")
+                st.caption("Para realizar ajustes editoriales, puedes dirigirte al menú lateral '3. Panel de Curaduría'.")
 
         # TAB 2: NEWSLETTER
         with tab_newsletter:
@@ -265,7 +265,7 @@ def render_pipeline_view():
             st.code(texto_faq, language=None)
 
         # EXPANDER JSON OFICIAL
-        with st.expander("📄 Ver JSON estructurado de salida (formato oficial de las págs. 4 y 5 del PDF)"):
+        with st.expander("Ver JSON estructurado de salida (Esquema Oficial)"):
             st.json(paquete)
 
         st.markdown(
