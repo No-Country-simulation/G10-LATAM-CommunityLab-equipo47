@@ -84,7 +84,7 @@ flowchart TD
 
 ## 📋 Contrato de Salida Requerido (JSON Schema Oficial)
 
-El motor de CommunityLab entrega y persiste los datos cumpliendo estrictamente la especificación requerida en las páginas 4 y 5 del documento oficial del Hackathon:
+El motor de CommunityLab entrega y persiste los datos cumpliendo estrictamente la especificación requerida:
 
 ```json
 {
