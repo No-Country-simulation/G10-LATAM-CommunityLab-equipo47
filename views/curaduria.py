@@ -56,9 +56,9 @@ def render_curatorship_view():
     activos = paquete.get("activos_distribucion_generados", {})
 
     tab_linkedin, tab_newsletter, tab_faq = st.tabs([
-        "💼 Post para LinkedIn (Edición & Preview en Vivo)", 
-        "📰 Destaque en Newsletter Institucional", 
-        "💡 Sugerencia de FAQ y Cátedra"
+        "Post para LinkedIn", 
+        "Destaque de Newsletter", 
+        "Sugerencia de FAQ y Cátedra"
     ])
 
     # 1. TAB LINKEDIN
@@ -83,7 +83,15 @@ def render_curatorship_view():
         col_edit_lk, col_prev_lk = st.columns([1, 1])
 
         with col_edit_lk:
-            st.markdown("##### ✏️ Editor de Contenido:")
+            st.markdown(
+                clean_html(f"""
+                <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                    {get_lucide('pen-tool', size=16, color='#2563EB')}
+                    <strong style="font-size: 0.95rem; color: #0F172A;">Editor de Contenido</strong>
+                </div>
+                """),
+                unsafe_allow_html=True
+            )
             st.caption("Ajusta el titular y el texto. La previsualización de la derecha se adaptará a tus modificaciones:")
             nuevo_titulo_lk = st.text_input("Titular de la publicación:", value=post_lk.get("titulo", ""), key="input_titulo_lk")
             nuevo_copy_lk = st.text_area("Cuerpo del post (puedes editarlo libremente):", value=post_lk.get("copy", ""), height=220, key="textarea_copy_lk")
@@ -104,7 +112,15 @@ def render_curatorship_view():
                 st.success("Cambios editoriales guardados. Se reflejarán en el paquete final de OCI.")
 
         with col_prev_lk:
-            st.markdown("##### 👁️ Previsualización Fotorrealista en Vivo:")
+            st.markdown(
+                clean_html(f"""
+                <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                    {get_lucide('linkedin', size=16, color='#0A66C2')}
+                    <strong style="font-size: 0.95rem; color: #0F172A;">Previsualización Fotorrealista en Vivo</strong>
+                </div>
+                """),
+                unsafe_allow_html=True
+            )
             canal_mostrar = post_lk.get("canal_recomendado", "LinkedIn Institucional")
             potencial_mostrar = post_lk.get("potencial_engagement", "Alto")
             render_linkedin_mockup(titulo=nuevo_titulo_lk, copy=nuevo_copy_lk, canal=canal_mostrar, engagement=potencial_mostrar)
@@ -144,7 +160,15 @@ def render_curatorship_view():
         col_nl_edit, col_nl_prev = st.columns([1, 1])
 
         with col_nl_edit:
-            st.markdown("##### ✏️ Redacción del Boletín:")
+            st.markdown(
+                clean_html(f"""
+                <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                    {get_lucide('pen-tool', size=16, color='#059669')}
+                    <strong style="font-size: 0.95rem; color: #0F172A;">Redacción del Boletín</strong>
+                </div>
+                """),
+                unsafe_allow_html=True
+            )
             nueva_seccion = st.text_input("Nombre de la sección en el boletín:", value=nl.get("seccion", "Logro Estudiantil de la Semana"), key="nl_sec_input")
             nuevo_titular_nl = st.text_input("Titular destacado:", value=nl.get("titular", ""), key="nl_tit_input")
             nuevo_resumen_nl = st.text_area("Cuerpo sintetizado para el lector:", value=nl.get("resumen", ""), height=150, key="nl_res_input")
@@ -166,7 +190,15 @@ def render_curatorship_view():
                 st.success("Sección de Newsletter actualizada.")
 
         with col_nl_prev:
-            st.markdown("##### 📰 Previsualización de Correo Electrónico:")
+            st.markdown(
+                clean_html(f"""
+                <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                    {get_lucide('mail', size=16, color='#059669')}
+                    <strong style="font-size: 0.95rem; color: #0F172A;">Previsualización de Correo Electrónico</strong>
+                </div>
+                """),
+                unsafe_allow_html=True
+            )
             with st.container(border=True):
                 st.markdown(
                     clean_html(f"""
@@ -205,7 +237,15 @@ def render_curatorship_view():
         col_faq_edit, col_faq_prev = st.columns([1, 1])
 
         with col_faq_edit:
-            st.markdown("##### ✏️ Configuración de Soporte:")
+            st.markdown(
+                clean_html(f"""
+                <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                    {get_lucide('help-circle', size=16, color='#D97706')}
+                    <strong style="font-size: 0.95rem; color: #0F172A;">Configuración de Soporte</strong>
+                </div>
+                """),
+                unsafe_allow_html=True
+            )
             st.caption(f"**Origen detectado en comunidad:** {faq.get('origen', 'Comunidad')}")
             nuevo_tema_faq = st.text_input("Tema propuesto para el tip o FAQ:", value=faq.get("tema", ""), key="faq_tema_input")
             
@@ -229,7 +269,15 @@ def render_curatorship_view():
                 st.success("Acción de documentación y soporte guardada.")
 
         with col_faq_prev:
-            st.markdown("##### 💡 Tarjeta de Asistencia Comunitaria:")
+            st.markdown(
+                clean_html(f"""
+                <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                    {get_lucide('book-open', size=16, color='#D97706')}
+                    <strong style="font-size: 0.95rem; color: #0F172A;">Tarjeta de Asistencia Comunitaria</strong>
+                </div>
+                """),
+                unsafe_allow_html=True
+            )
             with st.container(border=True):
                 st.markdown(
                     clean_html(f"""

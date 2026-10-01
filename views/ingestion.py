@@ -266,13 +266,22 @@ def render_ingestion_view():
         st.markdown("<div style='height: 12px;'></div>", unsafe_allow_html=True)
 
         tab_chat, tab_tabla, tab_json = st.tabs([
-            "💬 Vista Mensajes Orgánicos (Estilo Comunidad)",
-            "📊 Vista Tabular Filtrable (Pandas)",
-            "🧩 Estructura JSON Oficial (Pág. 4 PDF)"
+            "Mensajes Orgánicos de la Comunidad",
+            "Vista Tabular de Datos",
+            "Estructura Técnica JSON"
         ])
 
         # TAB 1: VISTA CHAT ORGANICO
         with tab_chat:
+            st.markdown(
+                clean_html(f"""
+                <div style="display: flex; align-items: center; gap: 8px; margin: 0.6rem 0 1rem 0;">
+                    {get_lucide('message-square', size=18, color='#2563EB')}
+                    <h4 style="margin: 0; font-size: 1.05rem; font-weight: 600; color: #1E293B;">Mensajes de la Comunidad en Canales Monitoreados</h4>
+                </div>
+                """),
+                unsafe_allow_html=True
+            )
             if interacciones:
                 for idx, item in enumerate(interacciones):
                     autor = item.get("autor", "Miembro")
@@ -329,6 +338,15 @@ def render_ingestion_view():
 
         # TAB 2: VISTA TABULAR
         with tab_tabla:
+            st.markdown(
+                clean_html(f"""
+                <div style="display: flex; align-items: center; gap: 8px; margin: 0.6rem 0 0.8rem 0;">
+                    {get_lucide('bar-chart-3', size=18, color='#2563EB')}
+                    <h4 style="margin: 0; font-size: 1.05rem; font-weight: 600; color: #1E293B;">Tabla Normalizada de Mensajes</h4>
+                </div>
+                """),
+                unsafe_allow_html=True
+            )
             if interacciones:
                 df_interacciones = pd.DataFrame(interacciones)
                 cols_disponibles = [c for c in ["autor", "pais", "carrera", "rol", "canal", "tipo", "texto"] if c in df_interacciones.columns]
@@ -349,6 +367,15 @@ def render_ingestion_view():
 
         # TAB 3: VISTA JSON
         with tab_json:
+            st.markdown(
+                clean_html(f"""
+                <div style="display: flex; align-items: center; gap: 8px; margin: 0.6rem 0 0.8rem 0;">
+                    {get_lucide('file-text', size=18, color='#2563EB')}
+                    <h4 style="margin: 0; font-size: 1.05rem; font-weight: 600; color: #1E293B;">Payload JSON Oficial Ingerido</h4>
+                </div>
+                """),
+                unsafe_allow_html=True
+            )
             st.json(payload)
 
         # Botón de acción directa para procesar de inmediato

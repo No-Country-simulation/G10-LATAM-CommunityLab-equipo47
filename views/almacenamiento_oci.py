@@ -112,7 +112,7 @@ def render_oci_storage_view():
             # Botón de descarga directa
             json_str = json.dumps(paquete_a_guardar, indent=2, ensure_ascii=False)
             st.download_button(
-                label="📥 Descargar Paquete JSON Oficial para Evaluación",
+                label="Descargar Paquete JSON Oficial para Evaluación",
                 data=json_str,
                 file_name=res.get("ruta_objeto").split("/")[-1],
                 mime="application/json",
@@ -138,7 +138,7 @@ def render_oci_storage_view():
         st.caption(f"Se encontraron **{len(objetos)} paquetes** almacenados en el bucket:")
         for obj in objetos:
             peso_kb = round(obj.get("tamano_bytes", 0) / 1024, 2)
-            with st.expander(f"📦 {obj['ruta_objeto']} — {peso_kb} KB"):
+            with st.expander(f"{obj['ruta_objeto']} ({peso_kb} KB)"):
                 st.caption(f"**Archivo:** {obj['nombre']}")
                 ruta_local = Path("oci_bucket_simulation") / bucket_name / obj['ruta_objeto']
                 if ruta_local.exists():
