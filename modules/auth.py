@@ -4,7 +4,11 @@ Permite inicio de sesión en memoria (admin / admin) sin base de datos externa.
 Diseño humano y profesional con iconos de Lucide (lucide.dev).
 """
 import streamlit as st
-from modules.ui import get_lucide, GITHUB_REPO_URL, DEMO_URL, clean_html
+try:
+    from modules.ui import get_lucide, GITHUB_REPO_URL, DEMO_URL, clean_html
+except ImportError:
+    from modules.ui import get_lucide, GITHUB_REPO_URL, clean_html
+    DEMO_URL = "https://proyectohackathon-vmuqmx28sqeyagkyoebamt.streamlit.app/"
 
 def check_login():
     """Verifica si el usuario está autenticado en la sesión actual."""

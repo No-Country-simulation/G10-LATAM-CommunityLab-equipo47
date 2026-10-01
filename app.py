@@ -4,9 +4,23 @@ Hackathon ONE G10 - LATAM · Equipo 47
 Sector: Educación Superior & Comunidades Digitales de Aprendizaje
 Punto de Entrada Principal (Streamlit)
 """
+import sys
+import os
+
+# Garantizar que el directorio raíz del proyecto esté en sys.path (indispensable para Streamlit Cloud en Linux)
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
+
 import streamlit as st
 from modules.auth import check_login, render_login_form, render_user_sidebar
-from modules.ui import get_lucide, GITHUB_REPO_URL, DEMO_URL, render_footer, clean_html
+
+try:
+    from modules.ui import get_lucide, GITHUB_REPO_URL, DEMO_URL, render_footer, clean_html
+except ImportError:
+    from modules.ui import get_lucide, GITHUB_REPO_URL, render_footer, clean_html
+    DEMO_URL = "https://proyectohackathon-vmuqmx28sqeyagkyoebamt.streamlit.app/"
+
 from views.ingestion import render_ingestion_view
 from views.pipeline_ia import render_pipeline_view
 from views.curaduria import render_curatorship_view
