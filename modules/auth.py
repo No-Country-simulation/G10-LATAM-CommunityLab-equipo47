@@ -4,7 +4,7 @@ Permite inicio de sesión en memoria (admin / admin) sin base de datos externa.
 Diseño humano y profesional con iconos de Lucide (lucide.dev).
 """
 import streamlit as st
-from modules.ui import get_lucide, GITHUB_REPO_URL, clean_html
+from modules.ui import get_lucide, GITHUB_REPO_URL, DEMO_URL, clean_html
 
 def check_login():
     """Verifica si el usuario está autenticado en la sesión actual."""
@@ -71,13 +71,20 @@ def render_login_form():
                     else:
                         st.error("Credenciales incorrectas. Ingresa admin / admin para acceder.")
 
-        # Enlace al repositorio de GitHub
+        # Enlaces al demo en vivo y repositorio de GitHub
+        sparkle_svg = get_lucide("sparkles", size=14, color="#E04F16")
+        link_svg = get_lucide("external-link", size=12, color="#64748B")
         st.markdown(
             clean_html(f"""
-            <div style="text-align: center; margin-top: 1.5rem;">
-                <a href="{GITHUB_REPO_URL}" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: #475569; font-size: 0.85rem; font-weight: 500;">
+            <div style="display: flex; justify-content: center; gap: 12px; margin-top: 1.5rem;">
+                <a href="{DEMO_URL}" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: #E04F16; font-size: 0.82rem; font-weight: 600; background: #FFF1EE; padding: 6px 12px; border-radius: 6px; border: 1px solid #FFD8CE;">
+                    {sparkle_svg}
+                    <span>Demo en Vivo (Streamlit Cloud)</span>
+                    {link_svg}
+                </a>
+                <a href="{GITHUB_REPO_URL}" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: #475569; font-size: 0.82rem; font-weight: 500; background: #F8FAFC; padding: 6px 12px; border-radius: 6px; border: 1px solid #E2E8F0;">
                     {gh_svg}
-                    <span>Repositorio oficial en GitHub</span>
+                    <span>Código en GitHub</span>
                 </a>
             </div>
             """),

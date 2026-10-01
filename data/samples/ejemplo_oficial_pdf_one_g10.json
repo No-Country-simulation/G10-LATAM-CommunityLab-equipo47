@@ -1,0 +1,56 @@
+{
+  "origen_comunidad": "Discord_Grupo_ONE_G10",
+  "periodo_referencia": "Semana_04",
+  "target_sector": "Educacion_Superior_y_Comunidades_Tech",
+  "institucion": "Programa Oracle Next Education (ONE) & Alura LATAM",
+  "metricas_generales_lote": {
+    "miembros_activos": 2400,
+    "canales_monitoreados": ["#logros-y-empleos", "#dudas-langgraph", "#anuncios-comunidad"]
+  },
+  "interacciones": [
+    {
+      "id_mensaje": "MSG-PDF-001",
+      "autor": "Mariana Souza",
+      "pais": "Brasil",
+      "carrera": "Desarrollo de Software & IA",
+      "rol": "estudiante_avanzada",
+      "canal": "#logros-y-empleos",
+      "tipo": "testimonio",
+      "fecha": "2026-03-24 10:30",
+      "texto": "Comunidad, quede seleccionada para el puesto de Desarrolladora Junior de IA! El proyecto del curso de LangChain y OCI que construi en mi portfolio marco toda la diferencia en la entrevista tecnica. Muy agradecida con la comunidad por todo el apoyo!"
+    },
+    {
+      "id_mensaje": "MSG-PDF-002",
+      "autor": "Lucas Albuquerque",
+      "pais": "Brasil",
+      "carrera": "Ciencias de la Computación",
+      "rol": "estudiante",
+      "canal": "#dudas-langgraph",
+      "tipo": "pregunta_tecnica",
+      "fecha": "2026-03-24 11:15",
+      "texto": "Tengo dudas sobre como estructurar los nodos condicionales en LangGraph cuando la respuesta del LLM necesita reintento. Alguien tiene un ejemplo practico de router?"
+    },
+    {
+      "id_mensaje": "MSG-PDF-003",
+      "autor": "Carolina Méndez",
+      "pais": "Colombia",
+      "carrera": "Ingeniería de Software",
+      "rol": "estudiante_avanzada",
+      "canal": "#logros-y-empleos",
+      "tipo": "testimonio",
+      "fecha": "2026-03-24 14:20",
+      "texto": "Quería sumar mi testimonio al de Mariana: hoy recibí mi oferta formal para sumarme al equipo de Cloud Engineering de una multinacional de telecomunicaciones. Presentar el esquema de persistencia segura en Oracle Cloud Object Storage Always Free me ayudó a demostrar criterio de arquitectura y gobierno de costos en la nube."
+    },
+    {
+      "id_mensaje": "MSG-PDF-004",
+      "autor": "Martín Silva",
+      "pais": "Argentina",
+      "carrera": "Analista Programador",
+      "rol": "ayudante_catedra",
+      "canal": "#dudas-langgraph",
+      "tipo": "recurso",
+      "fecha": "2026-03-24 15:45",
+      "texto": "Para Lucas y los que tienen dudas sobre LangGraph: les compartí un notebook con el patrón router condicional validado con Pydantic. Si la serialización del LLM devuelve un error, el nodo deriva a un paso de corrección antes de continuar con la persistencia en OCI."
+    }
+  ]
+}

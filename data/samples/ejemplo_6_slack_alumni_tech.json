@@ -1,0 +1,78 @@
+{
+  "origen_comunidad": "Slack_ONE_Alumni_Network_LATAM",
+  "periodo_referencia": "Mes_Marzo_2026",
+  "target_sector": "Ecosistema_Egresados_y_Empresas_Tech",
+  "institucion": "Red de Egresados Oracle Next Education & Alura",
+  "metricas_generales_lote": {
+    "miembros_activos": 1850,
+    "canales_monitoreados": ["#alumni-wins", "#soporte-arquitectura-cloud", "#mentoria-carrera", "#general-debates"]
+  },
+  "interacciones": [
+    {
+      "id_mensaje": "SLK-ALU-601",
+      "autor": "Gabriel Arismendi",
+      "pais": "Uruguay",
+      "carrera": "Ingeniería en Computación",
+      "rol": "egresado_one_senior",
+      "canal": "#alumni-wins",
+      "tipo": "testimonio",
+      "fecha": "2026-03-25 09:30",
+      "texto": "Hola red de egresados! A 2 años de graduarme del programa ONE, acabo de ser promovido a Tech Lead de Data Platform en PedidosYa. Gran parte de lo que aplico a diario en producción sobre particionamiento de datos y almacenamiento en Object Storage lo aprendí acá. Abran camino a los chicos del Grupo 10 que vienen empujando fuerte con IA Generativa!"
+    },
+    {
+      "id_mensaje": "SLK-ALU-602",
+      "autor": "Paola Zambrano",
+      "pais": "Ecuador",
+      "carrera": "Ciencia de Datos",
+      "rol": "egresada_one_junior",
+      "canal": "#alumni-wins",
+      "tipo": "testimonio",
+      "fecha": "2026-03-25 10:45",
+      "texto": "¡Hoy cumplo mis primeros 6 meses como Analista de IA en Itaú! En el onboarding me felicitaron por las buenas prácticas de versionado de prompts y manejo de variables de entorno. Saber comunicar el impacto de la tecnología al negocio fue la clave que me dio el bootcamp."
+    },
+    {
+      "id_mensaje": "SLK-ALU-603",
+      "autor": "Facundo Navarro",
+      "pais": "Argentina",
+      "carrera": "Sistemas de Información",
+      "rol": "desarrollador_cloud",
+      "canal": "#soporte-arquitectura-cloud",
+      "tipo": "pregunta_tecnica",
+      "fecha": "2026-03-25 11:20",
+      "texto": "¿Cómo están manejando la expiración de URLs pre-autenticadas (PAR - Pre-Authenticated Requests) en OCI Object Storage cuando necesitan compartir informes generados por IA con stakeholders que no tienen cuenta en la consola de Oracle Cloud?"
+    },
+    {
+      "id_mensaje": "SLK-ALU-604",
+      "autor": "Beatriz Lima",
+      "pais": "Brasil",
+      "carrera": "Arquitetura Cloud",
+      "rol": "mentora_alumni",
+      "canal": "#soporte-arquitectura-cloud",
+      "tipo": "recurso",
+      "fecha": "2026-03-25 12:00",
+      "texto": "Oi Facundo! O SDK do OCI tem o método `create_preauthenticated_request` onde você define o tempo de expiração (por exemplo, 7 dias para leitura). Assim a equipe de marketing consegue baixar o JSON ou PDF direto sem precisar de permissões IAM no tenancy."
+    },
+    {
+      "id_mensaje": "SLK-ALU-605",
+      "autor": "Sebastián Cordero",
+      "pais": "México",
+      "carrera": "Ingeniería en Software",
+      "rol": "egresado_one_junior",
+      "canal": "#mentoria-carrera",
+      "tipo": "agradecimiento",
+      "fecha": "2026-03-25 14:10",
+      "texto": "Agradezco enormemente las sesiones de simulacros de entrevistas técnicas en el canal de mentoría. Logré pasar las 3 rondas en una startup de Silicon Valley y la prueba técnica de LangChain fue idéntica a los laboratorios que resolvimos en equipo."
+    },
+    {
+      "id_mensaje": "SLK-ALU-606",
+      "autor": "Marcela Ríos",
+      "pais": "Chile",
+      "carrera": "Diseño Estratégico",
+      "rol": "product_designer",
+      "canal": "#general-debates",
+      "tipo": "sugerencia",
+      "fecha": "2026-03-25 16:30",
+      "texto": "Un tip para los equipos de marketing: los posts de LinkedIn que incluyen métricas concretas de retención de comunidad y quotes directos de los estudiantes tienen hasta un 65% más de compartidos orgánicos que las publicaciones puramente institucionales."
+    }
+  ]
+}

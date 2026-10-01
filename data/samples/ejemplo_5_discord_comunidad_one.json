@@ -1,0 +1,171 @@
+{
+  "origen_comunidad": "Discord_Comunidad_ONE_LATAM_G10",
+  "periodo_referencia": "Ciclo_2026_Sprint_Final",
+  "target_sector": "Educacion_Superior_y_Comunidades_Tech",
+  "institucion": "Programa Oracle Next Education (ONE) & Alura LATAM",
+  "metricas_generales_lote": {
+    "miembros_activos": 3250,
+    "canales_monitoreados": [
+      "#contrataciones-y-wins",
+      "#dudas-desarrollo-cloud",
+      "#agentes-ia-laboratorio",
+      "#general-networking"
+    ]
+  },
+  "interacciones": [
+    {
+      "id_mensaje": "DISC-ONE-501",
+      "autor": "Valeria Quintero (@vale_code)",
+      "pais": "Colombia",
+      "carrera": "Ingeniería de Sistemas",
+      "rol": "estudiante_avanzada",
+      "canal": "#contrataciones-y-wins",
+      "tipo": "testimonio",
+      "fecha": "2026-03-27 10:14",
+      "texto": "¡Gente hermosa de la comunidad! 🎉 Quería contarles con mucha emoción que acabo de firmar mi oferta laboral como Desarrolladora Python / Cloud Junior en Globant. Durante la entrevista técnica me hicieron defender la arquitectura de nuestro proyecto final de ONE y les mostré cómo desplegamos el frontend en Streamlit y guardamos los reportes analíticos en los buckets de Oracle Cloud Infrastructure (OCI Always Free). El lead me dijo que valoraron muchísimo que no fuera un proyecto de juguete de localhost sino un pipeline serverless completo con manejo de credenciales y APIs de LLM. ¡Muchísimas gracias a los instructores de Alura y a mis compañeros del grupo 47 por tantas noches de pair programming!"
+    },
+    {
+      "id_mensaje": "DISC-ONE-502",
+      "autor": "Matías Carrizo (@mati_dev)",
+      "pais": "Argentina",
+      "carrera": "Tecnicatura Universitaria en Programación",
+      "rol": "graduado_reciente",
+      "canal": "#contrataciones-y-wins",
+      "tipo": "testimonio",
+      "fecha": "2026-03-27 11:05",
+      "texto": "Me sumo a los festejos de Vale. Hoy fue mi primer día formal como Backend Dev en Mercado Libre. Hace 8 meses cuando arranqué en el programa ONE no sabía ni lo que era una clave RSA para conectarme por SSH ni cómo funcionaba un modelo de embeddings. La constancia paga, amigos. Si están trabados con los sprints, no bajen los brazos y apóyense en la comunidad que acá nadie se queda atrás 💪🚀"
+    },
+    {
+      "id_mensaje": "DISC-ONE-503",
+      "autor": "Thiago Barbosa (@thiago_cloud)",
+      "pais": "Brasil",
+      "carrera": "Engenharia de Software",
+      "rol": "estudiante",
+      "canal": "#dudas-desarrollo-cloud",
+      "tipo": "pregunta_tecnica",
+      "fecha": "2026-03-27 11:42",
+      "texto": "Boa tarde pessoal! Estou integrando o SDK oficial de Python do OCI (`oci.object_storage.ObjectStorageClient`) dentro do nosso Streamlit no Streamlit Cloud. Localmente funciona com o arquivo `.oci/config`, mas na nuvem preciso ler a chave PEM e o fingerprint direto de `st.secrets`. Alguém tem um snippet limpo de inicialização usando `from_dict` sem precisar salvar arquivo temporário no disco?"
+    },
+    {
+      "id_mensaje": "DISC-ONE-504",
+      "autor": "Esteban Morales (@esteban_mentor)",
+      "pais": "Chile",
+      "carrera": "Cloud Architect",
+      "rol": "mentor_comunidad",
+      "canal": "#dudas-desarrollo-cloud",
+      "tipo": "recurso",
+      "fecha": "2026-03-27 12:15",
+      "texto": "Hola @thiago_cloud! En el canal de recursos fijé un helper `get_oci_client_from_secrets()` que toma la variable `st.secrets['oci']['key_content']` y arma la configuración en memoria usando `oci.config.validate_config(config)`. Es 100% compatible con Streamlit Cloud y no deja rastros de claves privadas en el disco de la VM."
+    },
+    {
+      "id_mensaje": "DISC-ONE-505",
+      "autor": "Camila Domínguez (@cami_tech)",
+      "pais": "México",
+      "carrera": "Ingeniería en Inteligencia Artificial",
+      "rol": "estudiante_avanzada",
+      "canal": "#agentes-ia-laboratorio",
+      "tipo": "pregunta_tecnica",
+      "fecha": "2026-03-27 13:20",
+      "texto": "Para el equipo de IA: estamos probando el router condicional para clasificar si un mensaje de la comunidad es una queja de plataforma, un logro laboral o una duda técnica de programación. Con Gemini 2.5 Flash los structured outputs en JSON son súper consistentes, pero a veces cuando el estudiante escribe con modismos muy locales de México o Argentina confunde el sentimiento predominante. ¿Recomiendan agregar few-shot examples en el system prompt con jerga latinoamericana?"
+    },
+    {
+      "id_mensaje": "DISC-ONE-506",
+      "autor": "Andrés Felipe Silva (@andres_ia)",
+      "pais": "Colombia",
+      "carrera": "Ciencia de Datos",
+      "rol": "tutor_par",
+      "canal": "#agentes-ia-laboratorio",
+      "tipo": "recurso",
+      "fecha": "2026-03-27 14:02",
+      "texto": "Totalmente @cami_tech. En nuestro pipeline incluimos un diccionario canónico de expresiones de LATAM ('chamba', 'pega', 'laburo', 'posta', 're manija', 'tirar la toalla') mapeadas a polaridades positivas/negativas. Eso redujo el error de clasificación del router semántico en un 35%."
+    },
+    {
+      "id_mensaje": "DISC-ONE-507",
+      "autor": "Luciana Ferreyra (@lu_frontend)",
+      "pais": "Uruguay",
+      "carrera": "Diseño y Programación Web",
+      "rol": "estudiante",
+      "canal": "#contrataciones-y-wins",
+      "tipo": "testimonio",
+      "fecha": "2026-03-27 15:30",
+      "texto": "¡Paso a sumar otro win para el equipo 47! Me aceptaron en una pasantía internacional de UX/UI Engineering para aplicaciones SaaS de IA. Les encantó la maqueta interactiva que armamos para el panel de curaduría humana en Streamlit con los iconos vectoriales de Lucide y la previsualización en tiempo real del post de LinkedIn. ¡Se puede estudiar y cambiar de rubro a los 32 años!"
+    },
+    {
+      "id_mensaje": "DISC-ONE-508",
+      "autor": "Rodrigo Peña (@rodrigo_sec)",
+      "pais": "Perú",
+      "carrera": "Ingeniería de Ciberseguridad",
+      "rol": "estudiante_avanzado",
+      "canal": "#dudas-desarrollo-cloud",
+      "tipo": "pregunta_tecnica",
+      "fecha": "2026-03-27 16:15",
+      "texto": "Pregunta de buenas prácticas para la defensa técnica del Demo Day: ¿es necesario que el bucket de OCI sea público o la aplicación de Streamlit debe accederlo exclusivamente mediante autenticación con API Signing Key para preservar la privacidad de los datos de la comunidad?"
+    },
+    {
+      "id_mensaje": "DISC-ONE-509",
+      "autor": "Prof. Martín Soria (@profe_soria)",
+      "pais": "Argentina",
+      "carrera": "Docente Titular Cloud Computing",
+      "rol": "docente_titular",
+      "canal": "#dudas-desarrollo-cloud",
+      "tipo": "anuncio",
+      "fecha": "2026-03-27 16:45",
+      "texto": "Atención Rodrigo y todos los equipos del Hackathon: bajo ningún concepto hagan públicos los buckets. La persistencia en OCI Always Free debe hacerse autenticada mediante el SDK con tenancy, user OCID y llave privada. Esa es precisamente una de las competencias clave que el jurado de Oracle evaluará en la rúbrica de arquitectura segura."
+    },
+    {
+      "id_mensaje": "DISC-ONE-510",
+      "autor": "Gabriela Mendoza (@gaby_bi)",
+      "pais": "Bolivia",
+      "carrera": "Ingeniería Comercial y Analítica",
+      "rol": "estudiante",
+      "canal": "#general-networking",
+      "tipo": "agradecimiento",
+      "fecha": "2026-03-27 17:30",
+      "texto": "Quiero agradecer de corazón el espacio de tutoría de ayer. Venía sintiendo síndrome del impostor porque no tengo background de ingeniería dura, pero ver cómo pudimos construir un dashboard de sentimiento con métricas de salud de comunidad y KPIs de retención me demostró que el trabajo interdisciplinario es lo más valioso del programa ONE."
+    },
+    {
+      "id_mensaje": "DISC-ONE-511",
+      "autor": "Javier Ochoa (@javi_backend)",
+      "pais": "Ecuador",
+      "carrera": "Ingeniería en Computación",
+      "rol": "estudiante_avanzado",
+      "canal": "#dudas-desarrollo-cloud",
+      "tipo": "pregunta_tecnica",
+      "fecha": "2026-03-27 18:20",
+      "texto": "¿Alguien sabe si el límite de 10GB de OCI Object Storage Always Free aplica a la suma de todos los buckets o es por bucket individual? Queremos asegurarnos de no exceder cuotas durante las pruebas de carga del pipeline."
+    },
+    {
+      "id_mensaje": "DISC-ONE-512",
+      "autor": "Florencia Rossi (@flor_datascience)",
+      "pais": "Argentina",
+      "carrera": "Licenciatura en Ciencias de Datos",
+      "rol": "tutor_par",
+      "canal": "#dudas-desarrollo-cloud",
+      "tipo": "recurso",
+      "fecha": "2026-03-27 18:50",
+      "texto": "Hola Javier! La capa Always Free de OCI otorga 20 GB combinados de Object Storage estándar por tenancy sin costo alguno de por vida. Para los paquetes JSON de CommunityLab (que pesan entre 4KB y 15KB por lote consolidado) tendrías capacidad para guardar más de 1.5 millones de ejecuciones sin pagar un solo centavo."
+    },
+    {
+      "id_mensaje": "DISC-ONE-513",
+      "autor": "Daniela Cordero (@dani_ai)",
+      "pais": "Costa Rica",
+      "carrera": "Ingeniería de Software",
+      "rol": "estudiante_avanzada",
+      "canal": "#contrataciones-y-wins",
+      "tipo": "testimonio",
+      "fecha": "2026-03-27 19:10",
+      "texto": "¡Hoy me llegó mi carta de aceptación para el programa de trainees de ingeniería de datos en Oracle! En la prueba técnica me preguntaron sobre gobernanza de datos y el flujo de curaduría Human-in-the-Loop que diseñamos en el equipo fue el punto que inclinó la balanza. ¡Gracias totales a la comunidad ONE!"
+    },
+    {
+      "id_mensaje": "DISC-ONE-514",
+      "autor": "Carlos Santoro (@charly_cloud)",
+      "pais": "Paraguay",
+      "carrera": "Ingeniería Electrónica",
+      "rol": "estudiante",
+      "canal": "#general-networking",
+      "tipo": "sugerencia",
+      "fecha": "2026-03-27 19:45",
+      "texto": "Propongo que automaticemos un bot de webhook que cada vez que alguien publique en `#contrataciones-y-wins` envíe el mensaje al pipeline de CommunityLab para que los encargados de marketing de Alura y Oracle tengan los copys listos para LinkedIn en menos de 5 minutos."
+    }
+  ]
+}

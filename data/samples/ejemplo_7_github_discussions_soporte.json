@@ -1,0 +1,83 @@
+{
+  "origen_comunidad": "GitHub_Discussions_Ecosistema_ONE",
+  "periodo_referencia": "Ciclo_2026_Entregas_Finales",
+  "target_sector": "Desarrolladores_y_Estudiantes_OpenSource",
+  "institucion": "Comunidad Técnica ONE (Oracle Next Education) & Alura",
+  "metricas_generales_lote": {
+    "miembros_activos": 980,
+    "canales_monitoreados": [
+      "#q-and-a-arquitectura",
+      "#show-and-tell-proyectos",
+      "#troubleshooting-cloud",
+      "#ideas-colaborativas"
+    ]
+  },
+  "interacciones": [
+    {
+      "id_mensaje": "GH-DISC-701",
+      "autor": "Leandro Morales (@leandro_dev)",
+      "pais": "Argentina",
+      "carrera": "Ingeniería en Sistemas de Información",
+      "rol": "estudiante_avanzado",
+      "canal": "#troubleshooting-cloud",
+      "tipo": "pregunta_tecnica",
+      "fecha": "2026-03-28 09:20",
+      "texto": "Hola comunidad! Al desplegar nuestra app de Streamlit en Streamlit Cloud conectada con OCI Object Storage, nos encontramos con un problema: ¿dónde es más seguro persistir los archivos temporales generados antes del upload final? ¿Conviene usar buffers en memoria con `io.BytesIO` o el directorio local simulado `oci_bucket_simulation/` mientras se validan los JSONs de salida?"
+    },
+    {
+      "id_mensaje": "GH-DISC-702",
+      "autor": "Ing. Brenda Carrizo (@brenda_cloud)",
+      "pais": "Perú",
+      "carrera": "Arquitectura Cloud & DevOps",
+      "rol": "mentora_tecnica",
+      "canal": "#troubleshooting-cloud",
+      "tipo": "recurso",
+      "fecha": "2026-03-28 10:05",
+      "texto": "Respondiendo a @leandro_dev: la mejor práctica en arquitecturas serverless o instancias efímeras de Streamlit Cloud es operar en memoria usando buffers de `io.BytesIO` y mantener una carpeta local espejo como fallback (`oci_bucket_simulation/`). Así, si por alguna razón la conexión con el tenancy de Oracle se demora o las llaves no están cargadas, la app nunca arroja error 500 y el usuario puede descargar su paquete inmediatamente."
+    },
+    {
+      "id_mensaje": "GH-DISC-703",
+      "autor": "Esteban Restrepo (@esteban_nlp)",
+      "pais": "Colombia",
+      "carrera": "Ciencia de Datos & IA",
+      "rol": "estudiante_avanzado",
+      "canal": "#show-and-tell-proyectos",
+      "tipo": "testimonio",
+      "fecha": "2026-03-28 11:30",
+      "texto": "¡Les comparto el resultado de nuestro equipo! Integramos el router condicional con Gemini 2.5 Flash y logramos que en menos de 1.8 segundos clasifique un lote de 20 mensajes de la comunidad y genere simultáneamente el post de LinkedIn, el resumen para el boletín y las preguntas frecuentes para los ayudantes de cátedra. Gracias al equipo de mentores por las sesiones de code review!"
+    },
+    {
+      "id_mensaje": "GH-DISC-704",
+      "autor": "Agustina Bianchi (@agus_bi)",
+      "pais": "Uruguay",
+      "carrera": "Licenciatura en Informática",
+      "rol": "estudiante",
+      "canal": "#q-and-a-arquitectura",
+      "tipo": "pregunta_tecnica",
+      "fecha": "2026-03-28 14:15",
+      "texto": "¿Cómo estructurar el prompt del LLM para que respete estrictamente los campos requeridos en el schema JSON (`status`, `resumen_comunidad`, `activos_distribucion_generados`, `almacenamiento_oci`) sin agregar texto introductorio ni explicaciones adicionales?"
+    },
+    {
+      "id_mensaje": "GH-DISC-705",
+      "autor": "Felipe Nogueira (@felipe_eng)",
+      "pais": "Brasil",
+      "carrera": "Engenharia da Computação",
+      "rol": "tutor_par",
+      "canal": "#q-and-a-arquitectura",
+      "tipo": "recurso",
+      "fecha": "2026-03-28 15:00",
+      "texto": "Para Agustina: recomendo definir `response_mime_type='application/json'` na API do Gemini ou usar Pydantic `BaseModel` com Structured Outputs. No repo do CommunityLab vocês encontram o motor heurístico de fallback que valida cada chave antes de retornar o dicionário final para a interface."
+    },
+    {
+      "id_mensaje": "GH-DISC-706",
+      "autor": "Nicolás Varela (@nico_fullstack)",
+      "pais": "Chile",
+      "carrera": "Ingeniería de Software",
+      "rol": "graduado_reciente",
+      "canal": "#show-and-tell-proyectos",
+      "tipo": "testimonio",
+      "fecha": "2026-03-28 16:40",
+      "texto": "Un saludo enorme a todos! Hoy di mi primera charla técnica en un meetup sobre cómo conectar aplicaciones Streamlit con servicios de nube de Oracle. Gran parte de la audiencia eran estudiantes que querían saber cómo pasar de cursos introductorios a proyectos de portafolio con arquitectura real. ¡El ecosistema ONE está marcando una diferencia gigante!"
+    }
+  ]
+}

@@ -43,16 +43,40 @@ def render_ingestion_view():
             clean_html(f"""
             <div style="display: flex; align-items: center; gap: 8px; margin: 1.2rem 0 0.6rem 0;">
                 {get_lucide('book-open', size=19, color='#1E293B')}
-                <h4 style="margin: 0; font-size: 1.05rem; font-weight: 600; color: #1E293B;">Selecciona un Caso de Estudio Universitario</h4>
+                <h4 style="margin: 0; font-size: 1.05rem; font-weight: 600; color: #1E293B;">Selecciona un Caso de Demostración (Datasets Listos para Evaluar)</h4>
             </div>
             """),
             unsafe_allow_html=True
         )
-        st.caption("Casos representativos con datasets ampliados (12 a 14 mensajes por lote):")
 
+        # 1. BOTÓN DESTACADO: CASO OFICIAL DEL PDF DE HACKATHON ONE G10
+        with st.container(border=True):
+            col_pdf_txt, col_pdf_btn = st.columns([3, 1])
+            with col_pdf_txt:
+                st.markdown(
+                    clean_html(f"""
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="background: #FEF3C7; color: #92400E; font-size: 0.75rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; border: 1px solid #FDE68A;">
+                            ESPECIFICACIÓN OFICIAL
+                        </span>
+                        <strong style="color: #0F172A; font-size: 0.98rem;">Caso Canónico del PDF del Hackathon (Págs. 4-5)</strong>
+                    </div>
+                    <p style="margin: 4px 0 0 0; font-size: 0.84rem; color: #64748B;">
+                        Testimonio de <strong>Mariana Souza</strong> (contratada como Dev Jr IA tras proyecto LangChain + OCI) y duda técnica de <strong>Lucas Albuquerque</strong> (LangGraph / Router).
+                    </p>
+                    """),
+                    unsafe_allow_html=True
+                )
+            with col_pdf_btn:
+                if st.button("Cargar Caso Oficial PDF", type="primary", use_container_width=True, help="Carga exactamente el JSON de ejemplo especificado en las páginas 4 y 5 del PDF"):
+                    ejemplo_seleccionado = "ejemplo_oficial_pdf_one_g10.json"
+
+        st.caption("Otros casos representativos y canales de comunidad en vivo:")
         c1, c2, c3, c4 = st.columns(4)
 
-        ejemplo_seleccionado = None
+        if "ejemplo_seleccionado" not in locals():
+            ejemplo_seleccionado = None
+
         with c1:
             st.markdown(
                 clean_html(f"""
@@ -105,8 +129,64 @@ def render_ingestion_view():
             if st.button("Caso 4: Feria de Innovación", use_container_width=True, help="12 mensajes: Proyectos finales en OCI, pitches y pre-incubación"):
                 ejemplo_seleccionado = "ejemplo_4_innovacion_hackathon.json"
 
+        # Segunda fila de canales realistas (Discord y Slack)
+        c5, c6 = st.columns(2)
+        with c5:
+            st.markdown(
+                clean_html(f"""
+                <div style="font-size: 0.78rem; font-weight: 700; color: #5865F2; margin-bottom: 4px; display: flex; align-items: center; gap: 4px;">
+                    {get_lucide('message-square', size=14, color='#5865F2')}
+                    DISCORD COMUNIDAD TECH (14 MSGS)
+                </div>
+                """),
+                unsafe_allow_html=True
+            )
+            if st.button("Caso 5: Discord Comunidad ONE LATAM", use_container_width=True, help="14 mensajes reales de Discord: contrataciones en Globant y MeLi, dudas de SDK de OCI y Streamlit"):
+                ejemplo_seleccionado = "ejemplo_5_discord_comunidad_one.json"
+
+        # Segunda fila de canales realistas (Discord, Slack y GitHub)
+        c5, c6, c7 = st.columns(3)
+        with c5:
+            st.markdown(
+                clean_html(f"""
+                <div style="font-size: 0.78rem; font-weight: 700; color: #5865F2; margin-bottom: 4px; display: flex; align-items: center; gap: 4px;">
+                    {get_lucide('message-square', size=14, color='#5865F2')}
+                    DISCORD COMUNIDAD (14 MSGS)
+                </div>
+                """),
+                unsafe_allow_html=True
+            )
+            if st.button("Caso 5: Discord ONE LATAM", use_container_width=True, help="14 mensajes reales de Discord: contrataciones en Globant y MeLi, dudas de SDK de OCI y Streamlit"):
+                ejemplo_seleccionado = "ejemplo_5_discord_comunidad_one.json"
+
+        with c6:
+            st.markdown(
+                clean_html(f"""
+                <div style="font-size: 0.78rem; font-weight: 700; color: #E11D48; margin-bottom: 4px; display: align-items: center; gap: 4px;">
+                    {get_lucide('users', size=14, color='#E11D48')}
+                    SLACK ALUMNI (6 MSGS)
+                </div>
+                """),
+                unsafe_allow_html=True
+            )
+            if st.button("Caso 6: Slack Alumni Network", use_container_width=True, help="6 mensajes de egresados de ONE en la industria: Tech Leads, buenas prácticas OCI y mentorías"):
+                ejemplo_seleccionado = "ejemplo_6_slack_alumni_tech.json"
+
+        with c7:
+            st.markdown(
+                clean_html(f"""
+                <div style="font-size: 0.78rem; font-weight: 700; color: #0284C7; margin-bottom: 4px; display: align-items: center; gap: 4px;">
+                    {get_lucide('github', size=14, color='#0284C7')}
+                    GITHUB DISCUSSIONS (6 MSGS)
+                </div>
+                """),
+                unsafe_allow_html=True
+            )
+            if st.button("Caso 7: GitHub Discussions", use_container_width=True, help="6 mensajes técnicos: buffer en memoria vs simulación local, schemas de Gemini y buenas prácticas"):
+                ejemplo_seleccionado = "ejemplo_7_github_discussions_soporte.json"
+
         if not ejemplo_seleccionado and "raw_payload" not in st.session_state:
-            ejemplo_seleccionado = "ejemplo_1_contratacion.json"
+            ejemplo_seleccionado = "ejemplo_oficial_pdf_one_g10.json"
 
         if ejemplo_seleccionado:
             filepath = SAMPLES_DIR / ejemplo_seleccionado
@@ -119,7 +199,7 @@ def render_ingestion_view():
     else:
         st.markdown(
             clean_html(f"""
-            <div style="display: flex; align-items: center; gap: 8px; margin: 1.2rem 0 0.6rem 0;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-1.2rem 0 0.6rem 0;">
                 {get_lucide('upload-cloud', size=18, color='#475569')}
                 <h4 style="margin: 0; font-size: 1.05rem; font-weight: 600; color: #1E293B;">Subir Archivo de Interacciones</h4>
             </div>
@@ -163,13 +243,13 @@ def render_ingestion_view():
 
         st.markdown(
             clean_html(f"""
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.8rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.8rem; flex-wrap: wrap; gap: 8px;">
                 <div style="display: flex; align-items: center; gap: 8px;">
                     {get_lucide('message-square', size=20, color='#2563EB')}
-                    <h3 style="margin: 0; font-size: 1.25rem; font-weight: 600; color: #1E293B;">Resumen del Lote Académico Ingerido</h3>
+                    <h3 style="margin: 0; font-size: 1.25rem; font-weight: 600; color: #1E293B;">Resumen del Lote Comunitario Activo</h3>
                 </div>
-                <span style="background: #EFF6FF; color: #1D4ED8; font-size: 0.8rem; font-weight: 700; padding: 4px 10px; border-radius: 6px; border: 1px solid #BFDBFE;">
-                    Archivo: {st.session_state.get('archivo_origen', 'Lote Activo')}
+                <span style="background: #EFF6FF; color: #1D4ED8; font-size: 0.82rem; font-weight: 700; padding: 4px 12px; border-radius: 8px; border: 1px solid #BFDBFE;">
+                    Archivo Activo: {st.session_state.get('archivo_origen', 'Lote')}
                 </span>
             </div>
             """),
@@ -177,31 +257,98 @@ def render_ingestion_view():
         )
 
         c1, c2, c3, c4 = st.columns(4)
-        c1.metric("Canal de Origen", payload.get("origen_comunidad", "N/A").replace("_", " "))
-        c2.metric("Período Académico", payload.get("periodo_referencia", "N/A").replace("_", " "))
-        c3.metric("Mensajes en el Lote", len(interacciones))
+        c1.metric("Comunidad de Origen", payload.get("origen_comunidad", "N/A").replace("_", " "))
+        c2.metric("Período / Sprint", payload.get("periodo_referencia", "N/A").replace("_", " "))
+        c3.metric("Mensajes Ingeridos", len(interacciones))
         testimonios_count = sum(1 for i in interacciones if i.get("tipo") in ["testimonio", "logro"])
-        c4.metric("Testimonios Detectados", testimonios_count)
+        c4.metric("Testimonios para LinkedIn", testimonios_count)
 
-        # Tabla limpia para lectura humana con filtro
-        if interacciones:
-            df_interacciones = pd.DataFrame(interacciones)
-            cols_disponibles = [c for c in ["autor", "pais", "carrera", "rol", "canal", "tipo", "texto"] if c in df_interacciones.columns]
-            
-            filtro_canal = st.selectbox(
-                "Filtrar interacciones por canal:",
-                ["Todos los canales"] + sorted(list(df_interacciones["canal"].unique())),
-                index=0
-            )
-            
-            if filtro_canal != "Todos los canales":
-                df_mostrar = df_interacciones[df_interacciones["canal"] == filtro_canal]
+        st.markdown("<div style='height: 12px;'></div>", unsafe_allow_html=True)
+
+        tab_chat, tab_tabla, tab_json = st.tabs([
+            "💬 Vista Mensajes Orgánicos (Estilo Comunidad)",
+            "📊 Vista Tabular Filtrable (Pandas)",
+            "🧩 Estructura JSON Oficial (Pág. 4 PDF)"
+        ])
+
+        # TAB 1: VISTA CHAT ORGANICO
+        with tab_chat:
+            if interacciones:
+                for idx, item in enumerate(interacciones):
+                    autor = item.get("autor", "Miembro")
+                    canal = item.get("canal", "#general")
+                    tipo = item.get("tipo", "mensaje")
+                    texto = item.get("texto", "")
+                    pais = item.get("pais", "LATAM")
+                    carrera = item.get("carrera", "")
+                    fecha = item.get("fecha", "Reciente")
+
+                    # Color según tipo
+                    if tipo in ["testimonio", "logro"]:
+                        tipo_color = "#059669"
+                        tipo_bg = "#ECFDF5"
+                        tipo_label = "LOGRO / EMPLEABILIDAD"
+                    elif tipo in ["pregunta_tecnica", "duda"]:
+                        tipo_color = "#2563EB"
+                        tipo_bg = "#EFF6FF"
+                        tipo_label = "PREGUNTA TÉCNICA"
+                    elif tipo in ["alerta_apoyo", "dificultades"]:
+                        tipo_color = "#DC2626"
+                        tipo_bg = "#FEF2F2"
+                        tipo_label = "ALERTA DE RETENCIÓN"
+                    else:
+                        tipo_color = "#7C3AED"
+                        tipo_bg = "#F5F3FF"
+                        tipo_label = tipo.replace("_", " ").upper()
+
+                    sub_info = f" · {carrera}" if carrera else ""
+
+                    with st.container(border=True):
+                        st.markdown(
+                            clean_html(f"""
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+                                <div>
+                                    <strong style="color: #0F172A; font-size: 0.95rem;">{autor}</strong>
+                                    <span style="color: #64748B; font-size: 0.8rem; margin-left: 6px;">({pais}{sub_info})</span>
+                                    <div style="font-size: 0.78rem; color: #94A3B8; margin-top: 2px;">
+                                        Canal: <code style="color: #475569; background: #F1F5F9; padding: 2px 6px; border-radius: 4px;">{canal}</code> · {fecha}
+                                    </div>
+                                </div>
+                                <span style="background: {tipo_bg}; color: {tipo_color}; font-size: 0.72rem; font-weight: 700; padding: 3px 8px; border-radius: 6px; border: 1px solid {tipo_color}30;">
+                                    {tipo_label}
+                                </span>
+                            </div>
+                            <div style="color: #334155; font-size: 0.91rem; line-height: 1.5; margin-top: 6px;">
+                                {texto}
+                            </div>
+                            """),
+                            unsafe_allow_html=True
+                        )
             else:
-                df_mostrar = df_interacciones
+                st.info("No hay interacciones para mostrar.")
 
-            st.dataframe(df_mostrar[cols_disponibles], use_container_width=True, hide_index=True)
+        # TAB 2: VISTA TABULAR
+        with tab_tabla:
+            if interacciones:
+                df_interacciones = pd.DataFrame(interacciones)
+                cols_disponibles = [c for c in ["autor", "pais", "carrera", "rol", "canal", "tipo", "texto"] if c in df_interacciones.columns]
+                
+                filtro_canal = st.selectbox(
+                    "Filtrar interacciones por canal:",
+                    ["Todos los canales"] + sorted(list(df_interacciones["canal"].unique())),
+                    index=0,
+                    key="filtro_canales_ingestion"
+                )
+                
+                if filtro_canal != "Todos los canales":
+                    df_mostrar = df_interacciones[df_interacciones["canal"] == filtro_canal]
+                else:
+                    df_mostrar = df_interacciones
 
-        with st.expander("Ver estructura técnica en JSON (según la pág. 4 del PDF)"):
+                st.dataframe(df_mostrar[cols_disponibles], use_container_width=True, hide_index=True)
+
+        # TAB 3: VISTA JSON
+        with tab_json:
             st.json(payload)
 
         # Botón de acción directa para procesar de inmediato

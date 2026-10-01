@@ -5,8 +5,9 @@ Diseño modular adaptado para Educación Superior y Comunidades Digitales de Apr
 """
 import streamlit as st
 
-# Repositorio oficial del equipo
+# Repositorio oficial del equipo y Demo desplegado en Streamlit Cloud
 GITHUB_REPO_URL = "https://github.com/No-Country-simulation/G10-LATAM-CommunityLab-equipo47/"
+DEMO_URL = "https://proyectohackathon-vmuqmx28sqeyagkyoebamt.streamlit.app/"
 
 # Catálogo completo de iconos SVG de lucide.dev
 LUCIDE_ICONS = {
@@ -115,5 +116,8 @@ def render_footer():
     link_svg = get_lucide("external-link", size=13, color="#64748B")
     grad_svg = get_lucide("graduation-cap", size=15, color="#E04F16")
 
-    html = f'''<div style="margin-top: 3.5rem; padding-top: 1.2rem; border-top: 1px solid #E2E8F0; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; font-size: 0.82rem; color: #64748B;"><div style="display: flex; align-items: center; gap: 8px;"><div style="display: flex; align-items: center; gap: 5px;">{grad_svg}<strong style="color: #1E293B;">Hackathon ONE G10 - LATAM · Equipo 47</strong></div><span style="color: #CBD5E1;">•</span><span>Target: Educación Superior & Ecosistema ONE</span><span style="color: #CBD5E1;">•</span><span>OCI Always Free</span></div><div><a href="{GITHUB_REPO_URL}" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: #0F172A; font-weight: 600; background: #F1F5F9; padding: 6px 12px; border-radius: 6px; border: 1px solid #E2E8F0; transition: background 0.15s ease;">{gh_svg}<span>Repositorio en GitHub</span>{link_svg}</a></div></div>'''
+    sparkle_svg = get_lucide("sparkles", size=14, color="#E04F16")
+
+    html = f'''<div style="margin-top: 3.5rem; padding-top: 1.2rem; border-top: 1px solid #E2E8F0; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; font-size: 0.82rem; color: #64748B;"><div style="display: flex; align-items: center; gap: 8px;"><div style="display: flex; align-items: center; gap: 5px;">{grad_svg}<strong style="color: #1E293B;">Hackathon ONE G10 - LATAM · Equipo 47</strong></div><span style="color: #CBD5E1;">•</span><span>Target: Educación Superior & Ecosistema ONE</span><span style="color: #CBD5E1;">•</span><span>OCI Always Free</span></div><div style="display: flex; align-items: center; gap: 8px;"><a href="{DEMO_URL}" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: #E04F16; font-weight: 600; background: #FFF1EE; padding: 6px 12px; border-radius: 6px; border: 1px solid #FFD8CE; transition: background 0.15s ease;">{sparkle_svg}<span>Demo en Streamlit</span>{link_svg}</a><a href="{GITHUB_REPO_URL}" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: #0F172A; font-weight: 600; background: #F1F5F9; padding: 6px 12px; border-radius: 6px; border: 1px solid #E2E8F0; transition: background 0.15s ease;">{gh_svg}<span>GitHub</span>{link_svg}</a></div></div>'''
     st.markdown(clean_html(html), unsafe_allow_html=True)
+
