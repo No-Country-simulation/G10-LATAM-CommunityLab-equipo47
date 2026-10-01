@@ -59,7 +59,7 @@ def render_ingestion_view():
                         <span style="background: #FEF3C7; color: #92400E; font-size: 0.75rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; border: 1px solid #FDE68A;">
                             ESPECIFICACIÓN OFICIAL
                         </span>
-                        <strong style="color: #0F172A; font-size: 0.98rem;">Caso Canónico del PDF del Hackathon (Págs. 4-5)</strong>
+                        <strong style="color: #0F172A; font-size: 0.98rem;">Caso Canónico</strong>
                     </div>
                     <p style="margin: 4px 0 0 0; font-size: 0.84rem; color: #64748B;">
                         Testimonio de <strong>Mariana Souza</strong> (contratada como Dev Jr IA tras proyecto LangChain + OCI) y duda técnica de <strong>Lucas Albuquerque</strong> (LangGraph / Router).
