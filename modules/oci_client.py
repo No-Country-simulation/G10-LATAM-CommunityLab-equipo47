@@ -20,8 +20,11 @@ def _obtener_cliente_oci_real():
         
         # 1. Intentar desde st.secrets si existe
         oci_secrets = None
-        if hasattr(st, "secrets") and "oci" in st.secrets:
-            oci_secrets = st.secrets["oci"]
+        try:
+            if "oci" in st.secrets:
+                oci_secrets = st.secrets["oci"]
+        except FileNotFoundError:
+            pass  # Permitir configuración por variables de entorno sin secrets.toml.
         
         user = oci_secrets.get("user") if oci_secrets else os.getenv("OCI_USER")
         fingerprint = oci_secrets.get("fingerprint") if oci_secrets else os.getenv("OCI_FINGERPRINT")

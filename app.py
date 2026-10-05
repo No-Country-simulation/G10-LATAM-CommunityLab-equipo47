@@ -14,6 +14,7 @@ if PROJECT_ROOT not in sys.path:
 
 import streamlit as st
 from modules.auth import check_login, render_login_form, render_user_sidebar
+from modules.session import EDITOR_FIELDS
 
 try:
     from modules.ui import get_lucide, GITHUB_REPO_URL, DEMO_URL, render_footer, clean_html
@@ -163,6 +164,11 @@ st.markdown(
 if not check_login():
     render_login_form()
     st.stop()
+
+# Conservar widgets editoriales entre vistas; sus valores también viven en curated_package.
+for editor_key in EDITOR_FIELDS:
+    if editor_key in st.session_state:
+        st.session_state[editor_key] = st.session_state[editor_key]
 
 # 2. Barra Lateral y Navegación
 with st.sidebar:

@@ -5,7 +5,7 @@ Especializado para el sector de Educación Tecnológica Superior & Ecosistema ON
 """
 import streamlit as st
 import pandas as pd
-from modules.ui import badge_header, get_lucide, render_kpi_card, render_callout, clean_html
+from modules.ui import badge_header, get_lucide, render_kpi_card, render_callout, clean_html, render_tag
 
 def render_dashboard_view():
     badge_header(
@@ -33,6 +33,30 @@ def render_dashboard_view():
     dudas_cnt = sum(1 for i in interacciones if i.get("tipo") in ["pregunta_tecnica", "duda"])
     alertas_cnt = sum(1 for i in interacciones if i.get("tipo") in ["alerta_apoyo", "dificultades"])
     otros_cnt = total_msg - (testimonios_cnt + dudas_cnt + alertas_cnt)
+
+    package = st.session_state.get("generated_package")
+    if package:
+        summary = package.get("resumen_comunidad", {})
+        m1, m2, m3 = st.columns(3)
+        m1.metric("Mensajes procesados", summary.get("total_interacciones_procesadas", total_msg))
+        m2.metric("Sentimiento predominante", summary.get("sentimiento_predominante", "Sin clasificar"))
+        topics = summary.get("temas_principales", [])
+        m3.metric("Temas detectados", len(topics))
+        st.markdown("**Temas detectados**")
+        st.markdown(clean_html("".join(render_tag(t, "#EFF6FF", "#1D4ED8") for t in topics)), unsafe_allow_html=True)
+        st.markdown("**Distribución de sentimiento**")
+        distribution = summary.get("distribucion_sentimiento")
+        if not distribution:
+            labels = [i["sentimiento"] for i in interacciones if isinstance(i.get("sentimiento"), str)]
+            distribution = pd.Series(labels, dtype="str").value_counts().to_dict()
+            if labels and len(labels) != total_msg:
+                st.caption(f"Clasificación disponible para {len(labels)} de {total_msg} mensajes.")
+        if distribution:
+            st.bar_chart(pd.DataFrame.from_dict(distribution, orient="index", columns=["Mensajes"]), color="#059669")
+        else:
+            st.info("El motor actual entrega sentimiento predominante, pero no un conteo por sentimiento. La distribución aparecerá cuando Backend incluya ese dato.")
+    else:
+        st.info("Ejecuta el pipeline para ver los temas y el sentimiento analizados.")
 
     # Métricas con estilo visual enriquecido
     col1, col2, col3, col4 = st.columns(4)

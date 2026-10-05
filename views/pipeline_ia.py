@@ -7,6 +7,7 @@ import streamlit as st
 import time
 from modules.ui import badge_header, get_lucide, render_tag, render_callout, render_linkedin_mockup, clean_html
 from modules.mock_engine import process_community_payload
+from modules.session import store_generated
 
 def render_pipeline_view():
     badge_header(
@@ -88,16 +89,14 @@ def render_pipeline_view():
             time.sleep(0.3)
             
             paquete = process_community_payload(payload)
-            st.session_state["generated_package"] = paquete
-            st.session_state["curated_package"] = paquete.copy()
+            store_generated(paquete)
             status.update(label="Pipeline ejecutado exitosamente con router condicional", state="complete", expanded=False)
 
     # Si aún no se ha ejecutado en esta sesión pero ya existe o acaba de generarse
     if "generated_package" not in st.session_state:
         # Si ya había raw_payload, procesar automáticamente para conveniencia del usuario
         paquete = process_community_payload(payload)
-        st.session_state["generated_package"] = paquete
-        st.session_state["curated_package"] = paquete.copy()
+        store_generated(paquete)
 
     if "generated_package" in st.session_state:
         paquete = st.session_state["generated_package"]

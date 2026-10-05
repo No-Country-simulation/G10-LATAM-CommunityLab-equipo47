@@ -5,12 +5,14 @@ Diseño orientado al sector de Educación Superior & Ecosistema ONE (Campus Virt
 """
 import streamlit as st
 import json
+from io import BytesIO
 from pathlib import Path
 import pandas as pd
 from modules.ui import badge_header, get_lucide, render_callout, clean_html
 from modules.mock_engine import process_community_payload
+from modules.session import load_payload, store_generated
 
-SAMPLES_DIR = Path("data/samples")
+SAMPLES_DIR = Path(__file__).resolve().parents[1] / "data" / "samples"
 
 def render_ingestion_view():
     badge_header(
@@ -190,11 +192,11 @@ def render_ingestion_view():
 
         if ejemplo_seleccionado:
             filepath = SAMPLES_DIR / ejemplo_seleccionado
-            if filepath.exists():
-                with open(filepath, "r", encoding="utf-8") as f:
-                    data_cargada = json.load(f)
-                    st.session_state["raw_payload"] = data_cargada
-                    st.session_state["archivo_origen"] = ejemplo_seleccionado
+            try:
+                with filepath.open("r", encoding="utf-8-sig") as f:
+                    load_payload(json.load(f), ejemplo_seleccionado)
+            except (OSError, ValueError) as error:
+                st.error(f"No se pudo cargar el caso de demostración: {error}")
 
     else:
         st.markdown(
@@ -210,9 +212,11 @@ def render_ingestion_view():
         if uploaded_file is not None:
             try:
                 if uploaded_file.name.endswith(".json"):
-                    data_cargada = json.load(uploaded_file)
+                    data_cargada = json.loads(uploaded_file.getvalue().decode("utf-8-sig"))
                 else:
-                    df = pd.read_csv(uploaded_file)
+                    df = pd.read_csv(BytesIO(uploaded_file.getvalue())).fillna("")
+                    if "texto" not in df.columns:
+                        raise ValueError("El CSV debe incluir una columna texto.")
                     interacciones = []
                     for _, row in df.iterrows():
                         interacciones.append({
@@ -229,8 +233,7 @@ def render_ingestion_view():
                         "target_sector": "Educacion_Superior",
                         "interacciones": interacciones
                     }
-                st.session_state["raw_payload"] = data_cargada
-                st.session_state["archivo_origen"] = uploaded_file.name
+                load_payload(data_cargada, uploaded_file.name)
                 st.success(f"Archivo cargado correctamente: {uploaded_file.name}")
             except Exception as e:
                 st.error(f"Error al leer el archivo: {e}")
@@ -383,9 +386,8 @@ def render_ingestion_view():
         col_btn1, col_btn2 = st.columns([2, 1])
         with col_btn1:
             if st.button("Ejecutar Pipeline de IA y Router Condicional", type="primary", use_container_width=True):
-                paquete = process_community_payload(payload)
-                st.session_state["generated_package"] = paquete
-                st.session_state["curated_package"] = paquete.copy()
+                with st.spinner("Analizando el lote y generando contenido..."):
+                    store_generated(process_community_payload(payload))
                 st.success("Lote analizado con éxito. Continúa en '2. Pipeline de IA & Router' para revisar las bifurcaciones y los activos generados.")
         with col_btn2:
             st.caption("Cumplimiento estricto con el esquema JSON oficial del Hackathon ONE G10.")

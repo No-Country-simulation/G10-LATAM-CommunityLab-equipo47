@@ -5,6 +5,9 @@ los contenidos antes de su publicación oficial.
 Especializado para el sector de Educación Superior & Ecosistema ONE (Admisiones, Prensa de Facultad y Soporte de Cátedra).
 """
 import streamlit as st
+from copy import deepcopy
+from modules import oci_client
+from modules.session import capture_editor, restore_editor
 from modules.ui import badge_header, get_lucide, render_callout, render_linkedin_mockup, clean_html
 
 def render_curatorship_view():
@@ -50,9 +53,10 @@ def render_curatorship_view():
 
     # Sincronizar si aún no se había copiado a curated_package
     if "curated_package" not in st.session_state:
-        st.session_state["curated_package"] = st.session_state["generated_package"].copy()
+        st.session_state["curated_package"] = deepcopy(st.session_state["generated_package"])
 
-    paquete = st.session_state["curated_package"]
+    restore_editor()
+    paquete = deepcopy(st.session_state["curated_package"])
     activos = paquete.get("activos_distribucion_generados", {})
 
     tab_linkedin, tab_newsletter, tab_faq = st.tabs([
@@ -93,14 +97,14 @@ def render_curatorship_view():
                 unsafe_allow_html=True
             )
             st.caption("Ajusta el titular y el texto. La previsualización de la derecha se adaptará a tus modificaciones:")
-            nuevo_titulo_lk = st.text_input("Titular de la publicación:", value=post_lk.get("titulo", ""), key="input_titulo_lk")
-            nuevo_copy_lk = st.text_area("Cuerpo del post (puedes editarlo libremente):", value=post_lk.get("copy", ""), height=220, key="textarea_copy_lk")
+            nuevo_titulo_lk = st.text_input("Titular de la publicación:", value=post_lk.get("titulo", ""), key="input_titulo_lk", on_change=capture_editor)
+            nuevo_copy_lk = st.text_area("Cuerpo del post (puedes editarlo libremente):", value=post_lk.get("copy", ""), height=220, key="textarea_copy_lk", on_change=capture_editor)
 
             estado_lk = st.radio(
                 "Decisión del Curador:",
                 ["Aprobado para Publicar", "Pendiente de Modificaciones", "Rechazado"],
                 horizontal=True,
-                key="curaduria_lk_radio"
+                key="curaduria_lk_radio", on_change=capture_editor
             )
 
             if st.button("Guardar Cambios de LinkedIn", type="primary", use_container_width=True):
@@ -169,15 +173,15 @@ def render_curatorship_view():
                 """),
                 unsafe_allow_html=True
             )
-            nueva_seccion = st.text_input("Nombre de la sección en el boletín:", value=nl.get("seccion", "Logro Estudiantil de la Semana"), key="nl_sec_input")
-            nuevo_titular_nl = st.text_input("Titular destacado:", value=nl.get("titular", ""), key="nl_tit_input")
-            nuevo_resumen_nl = st.text_area("Cuerpo sintetizado para el lector:", value=nl.get("resumen", ""), height=150, key="nl_res_input")
+            nueva_seccion = st.text_input("Nombre de la sección en el boletín:", value=nl.get("seccion", "Logro Estudiantil de la Semana"), key="nl_sec_input", on_change=capture_editor)
+            nuevo_titular_nl = st.text_input("Titular destacado:", value=nl.get("titular", ""), key="nl_tit_input", on_change=capture_editor)
+            nuevo_resumen_nl = st.text_area("Cuerpo sintetizado para el lector:", value=nl.get("resumen", ""), height=150, key="nl_res_input", on_change=capture_editor)
 
             estado_nl = st.radio(
                 "Decisión del Curador:",
                 ["Incluir en la Edición Semanal", "Omitir en este envío"],
                 horizontal=True,
-                key="curaduria_nl_radio"
+                key="curaduria_nl_radio", on_change=capture_editor
             )
 
             if st.button("Guardar Cambios de Newsletter", type="primary", use_container_width=True):
@@ -247,7 +251,7 @@ def render_curatorship_view():
                 unsafe_allow_html=True
             )
             st.caption(f"**Origen detectado en comunidad:** {faq.get('origen', 'Comunidad')}")
-            nuevo_tema_faq = st.text_input("Tema propuesto para el tip o FAQ:", value=faq.get("tema", ""), key="faq_tema_input")
+            nuevo_tema_faq = st.text_input("Tema propuesto para el tip o FAQ:", value=faq.get("tema", ""), key="faq_tema_input", on_change=capture_editor)
             
             opciones_status = ["derivado_a_mentoria", "derivado_a_ayudantes_de_catedra", "convertir_en_tutorial_corto", "publicado_en_campus_virtual", "descartado"]
             idx_default = 0
@@ -258,7 +262,7 @@ def render_curatorship_view():
                 "Acción de soporte asignada:",
                 opciones_status,
                 index=idx_default,
-                key="faq_status_select"
+                key="faq_status_select", on_change=capture_editor
             )
 
             if st.button("Guardar Decisión de FAQ / Tip", type="primary", use_container_width=True):
@@ -298,17 +302,29 @@ def render_curatorship_view():
             st.code(texto_faq_copiar, language=None)
 
     st.divider()
-    st.markdown(
-        clean_html(f"""
-        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; background: #F8FAFC; border: 1px solid #E2E8F0; padding: 12px 18px; border-radius: 10px;">
-            <div style="display: flex; align-items: center; gap: 8px; color: #475569; font-size: 0.9rem;">
-                {get_lucide('cloud', size=18, color='#059669')}
-                <span>¿Decisiones validadas? Continúa a <strong>5. OCI Object Storage</strong> para persistir el paquete en la nube de Oracle.</span>
-            </div>
-            <span style="font-size: 0.78rem; font-weight: 700; color: #059669; background: #ECFDF5; padding: 3px 10px; border-radius: 6px; border: 1px solid #A7F3D0;">
-                Always Free Ready
-            </span>
-        </div>
-        """),
-        unsafe_allow_html=True
-    )
+    if st.button("Aprobar y Guardar", type="primary", use_container_width=True):
+        capture_editor()
+        candidate = deepcopy(st.session_state["curated_package"])
+        storage = candidate.get("almacenamiento_oci", {})
+        try:
+            with st.spinner("Guardando el paquete revisado..."):
+                result = oci_client.guardar_en_oci(
+                    candidate,
+                    bucket_name=storage.get("bucket", "communitylab-activos-marketing"),
+                    ruta_objeto=storage.get("ruta_objeto"),
+                )
+            if result.get("status") != "guardado_con_exito":
+                raise RuntimeError("El servicio no confirmó el guardado.")
+            st.session_state["oci_save_result"] = result
+        except Exception as error:
+            st.error(f"No se pudo guardar el paquete: {error}")
+
+    result = st.session_state.get("oci_save_result")
+    if result:
+        if result.get("nube_real"):
+            st.success("Paquete revisado guardado en OCI Object Storage.")
+        else:
+            st.success("Paquete revisado guardado en el almacenamiento local de demostración.")
+            if result.get("error_nube"):
+                st.warning("La subida a OCI falló. Se conservó una copia local.")
+        st.caption(f"Destino: {result['bucket']}/{result['ruta_objeto']}")
