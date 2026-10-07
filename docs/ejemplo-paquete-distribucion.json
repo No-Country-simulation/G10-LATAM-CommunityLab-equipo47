@@ -1,0 +1,74 @@
+{
+  "status": "exito",
+  "resumen_comunidad": {
+    "origen_comunidad": "Discord_ONE_LATAM",
+    "periodo_referencia": "Semana_04_Sprints",
+    "total_interacciones_procesadas": 3,
+    "sentimiento_predominante": "Altamente Positivo",
+    "temas_principales": [
+      "Contratación / Logros",
+      "LangGraph / Reintento con validación",
+      "OCI Always Free / Control de costos"
+    ]
+  },
+  "analisis_interacciones": [
+    {
+      "autor": "Mariana Souza",
+      "canal": "#logros-y-empleos",
+      "tipo": "testimonio",
+      "sentimiento": "muy_positivo",
+      "temas": ["Contratación", "LangChain", "OCI"],
+      "puntuacion_relevancia": 95,
+      "motivo_puntuacion": "Hito laboral concreto, conecta el proyecto del programa con la contratación y es muy publicable.",
+      "ruta": "post_linkedin"
+    },
+    {
+      "autor": "Lucas Albuquerque",
+      "canal": "#dudas-langgraph",
+      "tipo": "pregunta_tecnica",
+      "sentimiento": "neutro",
+      "temas": ["LangGraph", "Pydantic", "Reintentos"],
+      "puntuacion_relevancia": 78,
+      "motivo_puntuacion": "Duda técnica clara y reutilizable para otros estudiantes.",
+      "ruta": "faq"
+    },
+    {
+      "autor": "Mateo Gómez",
+      "canal": "#general",
+      "tipo": "agradecimiento",
+      "sentimiento": "positivo",
+      "temas": ["OCI Always Free", "Alertas de presupuesto"],
+      "puntuacion_relevancia": 55,
+      "motivo_puntuacion": "Agradecimiento útil como señal de confianza, pero con poca información nueva.",
+      "ruta": "sin_activo"
+    }
+  ],
+  "activos_distribucion_generados": {
+    "post_linkedin": {
+      "titulo": "De un proyecto en la nube a un contrato como Dev Jr de IA",
+      "copy": "Hay noticias que nos recuerdan por qué construimos comunidad. 🚀\n\nMariana Souza acaba de firmar su contrato como Desarrolladora Junior de IA. En su entrevista técnica mostró un proyecto real con LangChain desplegado en Oracle Cloud, y eso marcó la diferencia.\n\nSu mensaje para quien está en pleno sprint: no bajen los brazos, las noches sin dormir valen la pena. 👏\n\n#TalentosTech #InteligenciaArtificial #OracleCloud #CarreraDev",
+      "canal_recomendado": "LinkedIn Oficial",
+      "potencial_engagement": "Alto",
+      "estado_aprobacion": "pendiente"
+    },
+    "sugerencia_contenido_faq": {
+      "tema": "Tip rápido: reintentar con un prompt de corrección cuando el LLM devuelve JSON incompleto",
+      "origen": "Duda planteada por Lucas Albuquerque en #dudas-langgraph",
+      "status": "derivado_a_mentoria",
+      "pregunta": "¿Cómo hago que un nodo condicional de LangGraph detecte un JSON incompleto y reintente en lugar de romper la aplicación?",
+      "respuesta_sugerida": "Valida la salida del modelo con un esquema de Pydantic. Si la validación falla, el router envía el estado a un nodo de corrección con un prompt que incluya el error, y limita los reintentos a uno o dos para evitar bucles.",
+      "estado_aprobacion": "pendiente"
+    },
+    "destaque_newsletter_semanal": {
+      "seccion": "Logro de la Semana",
+      "titular": "Contratada como Dev Jr de IA gracias a un proyecto en Oracle Cloud",
+      "resumen": "Mariana Souza consiguió su primera oportunidad como Desarrolladora Junior de IA mostrando el proyecto que construyó durante la formación.",
+      "estado_aprobacion": "pendiente"
+    }
+  },
+  "almacenamiento_oci": {
+    "bucket": "communitylab-activos-marketing",
+    "ruta_objeto": "activos/2026-semana-04/paquete-distribucion.json",
+    "status": "guardado_con_exito"
+  }
+}

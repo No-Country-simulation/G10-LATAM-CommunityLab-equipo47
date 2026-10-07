@@ -1,0 +1,27 @@
+{
+  "origen_comunidad": "Slack_Talentos_ONE_LATAM",
+  "periodo_referencia": "Semana_06_Sprints",
+  "interacciones": [
+    {
+      "autor": "Sofía Benítez",
+      "pais": "Uruguay",
+      "canal": "#historias-de-exito",
+      "tipo": "testimonio",
+      "texto": "¡Compañeros! Quería contarles que ayer le presenté a mi jefe el prototipo de agente de triaje que construimos en el sprint. Le encantó tanto que nos dio luz verde para integrarlo con la API de atención al cliente el próximo mes. Llegué al programa ONE sin saber casi nada de cloud y hoy siento que tengo herramientas reales para competir en el mercado."
+    },
+    {
+      "autor": "Diego Navarro",
+      "pais": "México",
+      "canal": "#dificultades-y-apoyo",
+      "tipo": "alerta_apoyo",
+      "texto": "Les soy muy honesto: vengo bastante atrasado con las actividades de esta semana. Entre el trabajo de 9 a 18 y la familia me cuesta un montón hacerme el tiempo para entender los grafos de LangGraph desde cero. ¿Alguien tiene disponibilidad para armar una sala de Discord el sábado y estudiar juntos los conceptos básicos?"
+    },
+    {
+      "autor": "Florencia Costa",
+      "pais": "Argentina",
+      "canal": "#recursos-comunidad",
+      "tipo": "recurso",
+      "texto": "¡Ánimo Diego y a todos los que sientan que van a las corridas! Les dejo un resumen con los 5 comandos esenciales del CLI de Oracle Cloud y un diagrama que hice a mano de cómo se conectan los nodos condicionales. Espero que les sirva para destrabar el sprint."
+    }
+  ]
+}

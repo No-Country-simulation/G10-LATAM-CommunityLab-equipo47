@@ -1,0 +1,17 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "oci-object-storage": {
+      "type": "local",
+      "command": [
+        "RUTA_COMPLETA_A_uvx.exe",
+        "oracle.oci-object-storage-mcp-server"
+      ],
+      "enabled": true,
+      "timeout": 30000,
+      "environment": {
+        "OCI_CONFIG_PROFILE": "communitylab"
+      }
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "origen_comunidad": "Foro_Alura_ONE_LATAM",
+  "periodo_referencia": "Semana_05_Sprints",
+  "interacciones": [
+    {
+      "autor": "Valeria Morales",
+      "pais": "Chile",
+      "canal": "#soporte-oci",
+      "tipo": "pregunta_tecnica",
+      "texto": "Hola equipo, estoy implementando la subida automática de archivos con el SDK de OCI en Python y me salta el error 'ServiceError: 401 NotAuthenticated'. Ya verifiqué el OCID de mi usuario y el fingerprint de la clave pública, pero sospecho que la ruta del archivo .pem tiene problemas en Windows con las barras invertidas. ¿A alguien más le pasó?"
+    },
+    {
+      "autor": "Carlos Méndez",
+      "pais": "Perú",
+      "canal": "#dudas-ia-generativa",
+      "tipo": "pregunta_tecnica",
+      "texto": "Una consulta para los que ya implementaron Google Gemini o GPT en el pipeline: cuando el modelo redacta textos largos para LinkedIn, a veces corta los hashtags al final o se pasa de la ventana de contexto. ¿Cómo le están pasando el system prompt para que respete estrictamente una longitud máxima sin perder tono persuasivo?"
+    },
+    {
+      "autor": "Laura Restrepo",
+      "pais": "Colombia",
+      "canal": "#proyectos-finales",
+      "tipo": "sugerencia",
+      "texto": "Chicos, armé una plantilla base en GitHub para conectar Streamlit con OCI Object Storage usando variables de entorno limpias con python-dotenv. Si a los mentores les parece bien, la comparto por acá para que los que recién empiezan no pierdan tiempo peleando con la autenticación."
+    }
+  ]
+}
