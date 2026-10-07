@@ -1,9 +1,9 @@
-# Verifica nombres y versiones en PyPI al instalar; después fija versiones con `uv pip freeze`.
-langgraph
-langchain-core
-langchain-google-genai
-streamlit
-oci
-pydantic
-python-dotenv
-pytest
+﻿# Versiones probadas el 2026-10-06 (Python 3.12). Las dependencias indirectas las resuelve uv.
+langgraph==1.2.14
+langchain-core==1.6.7
+langchain-google-genai==4.4.0
+streamlit==1.65.0
+oci==2.187.2
+pydantic==2.13.5
+python-dotenv==1.2.4
+pytest==9.1.1
