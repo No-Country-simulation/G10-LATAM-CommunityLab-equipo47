@@ -69,14 +69,17 @@ para que otras personas lo revisen y lo evalúen.
   **MCP** (`oci-object-storage`, perfil `communitylab`, token de sesión) es solo ayuda
   para el agente de desarrollo: la consigna exige la integración dentro de la aplicación.
 - Convención de objetos: `entradas/AAAA-semana-NN/`, `informes/AAAA-semana-NN/`,
-  `activos/AAAA-semana-NN/` (incluye `paquete-distribucion.json`). Ejemplo de la consigna:
-  `activos/2026-semana-04/paquete-distribucion.json`. Equipo: se usa la semana ISO
-  (`isocalendar()`). Ojo: los lotes traen `periodo_referencia` (p. ej. `Semana_04_Sprints`)
-  y el ejemplo de la consigna usa ese número; hasta decidirlo, el número sale de
-  `periodo_referencia` si lo trae y, si no, de la semana ISO. Pregunta antes de cambiarlo.
+  `activos/AAAA-semana-NN/` (incluye `paquete-distribucion.json`). Ejemplo:
+  `activos/2026-semana-04/paquete-distribucion.json`. El número de semana sale de
+  `periodo_referencia` (p. ej. `Semana_04_Sprints`) con el año actual; si no trae número, se
+  usa la semana ISO de `isocalendar()` (con el año ISO, no el del calendario). La construye
+  `construir_nombre_objeto()` en `almacenamiento_oci.py`. No cambiar sin preguntar.
 - Namespace, bucket y región vienen de variables de entorno, no de constantes en el código.
 - El MCP no tiene herramienta para borrar. Si hay que borrar o sobrescribir, avisa al
   usuario.
+- `subir_objeto()` no sobrescribe por defecto (`sobrescribir=False`): si el objeto ya
+  existe, lanza error. Solo se usa `sobrescribir=True` cuando el equipo lo decida, y se
+  avisa siempre antes de subir.
 - Token de sesión caducado (~60 min): `oci session refresh --profile communitylab`.
   Si ya pasó el máximo: `oci session authenticate --region sa-santiago-1 --tenancy-name lonkonueo --profile-name communitylab`.
 - Usa las herramientas del MCP en lugar de leer el sistema de archivos para consultar OCI.
