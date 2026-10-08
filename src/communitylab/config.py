@@ -22,7 +22,7 @@ class Configuracion:
     """Configuración de la aplicación, leída del entorno."""
 
     gemini_api_key: str = field(default="", repr=False)
-    gemini_model: str = "gemini-2.5-flash"
+    gemini_model: str = "gemini-3.5-flash-lite"
     oci_config_file: str = "~/.oci/config"
     oci_config_profile: str = "DEFAULT"
     oci_region: str = "sa-santiago-1"
@@ -45,7 +45,7 @@ def cargar_configuracion(ruta_env: str | None = None) -> Configuracion:
 
     config = Configuracion(
         gemini_api_key=os.getenv("GEMINI_API_KEY", ""),
-        gemini_model=os.getenv("GEMINI_MODEL", "gemini-2.5-flash"),
+        gemini_model=os.getenv("GEMINI_MODEL", "gemini-3.5-flash-lite"),
         oci_config_file=os.getenv("OCI_CONFIG_FILE", "~/.oci/config"),
         oci_config_profile=os.getenv("OCI_CONFIG_PROFILE", "DEFAULT"),
         oci_region=os.getenv("OCI_REGION", "sa-santiago-1"),
@@ -64,3 +64,37 @@ def cargar_configuracion(ruta_env: str | None = None) -> Configuracion:
         )
 
     return config
+
+
+# --- Análisis con el LLM (Fase 3) ---------------------------------------------
+
+# Pesos de la puntuación de relevancia. Deben sumar 1.0. El LLM devuelve
+# sub-puntuaciones (0-100) y el código calcula la puntuación final con estos pesos.
+PESOS_PUNTUACION: dict[str, float] = {
+    "relevancia_comunidad": 0.4,
+    "impacto_publicable": 0.3,
+    "claridad": 0.2,
+    "novedad": 0.1,
+}
+
+# Modelos de Gemini que usan muestreo fijo: Google ignora (y LangChain descarta) los
+# parámetros de muestreo como `temperature`. Para ellos no se fija `temperature`; la
+# reproducibilidad la da la caché, no la temperatura.
+MODELOS_MUESTREO_FIJO: tuple[str, ...] = ("gemini-3.5-flash-lite", "gemini-3.6-flash")
+
+# Presupuesto y ritmo de llamadas, para respetar la cuota gratuita de Gemini
+# (15 solicitudes/min, 250K tokens/min, 500/día).
+MAX_LLAMADAS_POR_LOTE = 4  # tope absoluto por lote: 1 + reintentos 429 + 1 reparación
+MAX_REINTENTOS_429 = 2  # reintentos propios ante un error 429
+REINTENTOS_VALIDACION = 1  # una reparación si la salida no valida con Pydantic
+MAX_REINTENTOS_CLIENTE = 1  # `max_retries` del cliente: sin reintentos ocultos
+
+# Esperas (segundos).
+ESPERA_MINIMA_ENTRE_LLAMADAS_SEG = 4.0  # 15 RPM -> 60/15 = 4 s entre llamadas
+ESPERA_POR_DEFECTO_429_SEG = 20.0  # si el error 429 no trae `retry_delay`
+ESPERA_MAXIMA_REINTENTO_SEG = 60.0  # tope de espera ante un 429
+TIMEOUT_LLM_SEG = 60
+
+# Rutas de trabajo (relativas a la raíz del proyecto).
+RUTA_PROMPT_ANALISIS = "prompts/analisis.md"
+DIRECTORIO_CACHE_LLM = "data/salida/cache"

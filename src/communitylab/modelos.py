@@ -158,3 +158,81 @@ class PaqueteDistribucion(BaseModel):
         if self.status == "error" and not self.mensaje_error:
             raise ValueError("si 'status' es 'error', 'mensaje_error' es obligatorio")
         return self
+
+
+# --- Modelos del análisis con el LLM (Fase 3) ---------------------------------
+# `RespuestaLlmAnalisis` es lo que se le pide al LLM (salida estructurada). El resto
+# es el informe interno que arma el código a partir de esa respuesta.
+
+class SubPuntuaciones(BaseModel):
+    """Sub-puntuaciones (0-100) que devuelve el LLM para una interacción."""
+
+    relevancia_comunidad: int = Field(ge=0, le=100)
+    impacto_publicable: int = Field(ge=0, le=100)
+    claridad: int = Field(ge=0, le=100)
+    novedad: int = Field(ge=0, le=100)
+
+
+class AnalisisLlmInteraccion(BaseModel):
+    """Análisis de una interacción tal como lo devuelve el LLM."""
+
+    indice: int = Field(ge=0)
+    sentimiento: Sentimiento
+    temas: list[str]
+    subpuntuaciones: SubPuntuaciones
+    motivo: str
+
+
+class ResumenLlm(BaseModel):
+    """Resumen consolidado que devuelve el LLM."""
+
+    sentimiento_predominante: Sentimiento
+    temas_principales: list[str]
+
+
+class RespuestaLlmAnalisis(BaseModel):
+    """Respuesta estructurada completa del LLM para un lote."""
+
+    resumen: ResumenLlm
+    interacciones: list[AnalisisLlmInteraccion]
+
+
+class PuntuacionRelevancia(BaseModel):
+    """Puntuación final calculada por el código, con sus sub-puntuaciones y pesos."""
+
+    subpuntuaciones: dict[str, int]
+    pesos: dict[str, float]
+    puntuacion_final: int = Field(ge=0, le=100)
+
+
+class InteraccionAnalizada(BaseModel):
+    """Interacción ya analizada, lista para el router (Fase 4)."""
+
+    autor: str
+    canal: str
+    tipo: str
+    texto: str
+    sentimiento: Sentimiento
+    temas: list[str]
+    puntuacion: PuntuacionRelevancia
+    motivo_puntuacion: str
+
+
+class MetadatosInforme(BaseModel):
+    """Trazabilidad del análisis: modelo, versión del prompt y uso de caché."""
+
+    modelo: str
+    version_prompt: str
+    desde_cache: bool
+
+
+class InformeAnalisis(BaseModel):
+    """Informe consolidado de un lote (salida del futuro nodo de análisis)."""
+
+    origen_comunidad: str
+    periodo_referencia: str
+    total_interacciones_procesadas: int
+    sentimiento_predominante: Sentimiento
+    temas_principales: list[str]
+    interacciones: list[InteraccionAnalizada]
+    metadatos: MetadatosInforme
