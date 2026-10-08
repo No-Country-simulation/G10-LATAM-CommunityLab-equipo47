@@ -28,11 +28,17 @@ para que otras personas lo revisen y lo evalúen.
 
 ## LLM (Gemini)
 - Modelo y clave vienen de `.env` (`GEMINI_MODEL`, `GEMINI_API_KEY`); nunca en el código.
-- Análisis: `temperature=0`. Generación de copys: algo más alta si se necesita variedad.
-- Respeta las cuotas de la capa gratuita: pocas llamadas por lote (una por interacción para
-  el análisis y una por activo), reintentos con espera y mensaje claro ante un error 429.
-- Verifica en la documentación oficial el nombre del parámetro de la clave en
-  `langchain-google-genai` antes de usarlo.
+- `temperature`: los modelos de muestreo fijo (`gemini-3.5-flash-lite`, `gemini-3.6-flash`)
+  ignoran los parámetros de muestreo, así que **no se les pasa `temperature`**; en el resto
+  se usa `0`. La reproducibilidad del análisis la da la **caché**, no la temperatura.
+- Una sola llamada al LLM por lote (todas las interacciones juntas) y caché local en
+  `data/salida/cache/` (clave = modelo + versión del prompt + hash de la entrada). El prompt
+  vive en `prompts/analisis.md`.
+- Reintentos acotados: el cliente va con `max_retries=1` (sin reintentos ocultos); ante un
+  429 se reintenta respetando `retry_delay`; si la salida no valida con Pydantic, se hace
+  **una** reparación. Tope absoluto de llamadas por lote en `config.py`.
+- Cuota de la capa gratuita (15 solicitudes/min, 250K tokens/min, 500/día): respétala con
+  pocas llamadas, espera entre llamadas y mensaje claro ante un error 429.
 
 ## Convenciones
 - Todo en español: interfaz, prompts, documentación y comentarios. Nombres de código
