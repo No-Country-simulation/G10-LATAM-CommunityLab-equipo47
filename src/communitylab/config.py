@@ -83,11 +83,16 @@ PESOS_PUNTUACION: dict[str, float] = {
 MODELOS_MUESTREO_FIJO: tuple[str, ...] = ("gemini-3.5-flash-lite", "gemini-3.6-flash")
 
 # Presupuesto y ritmo de llamadas, para respetar la cuota gratuita de Gemini
-# (15 solicitudes/min, 250K tokens/min, 500/día).
-MAX_LLAMADAS_POR_LOTE = 4  # tope absoluto por lote: 1 + reintentos 429 + 1 reparación
+# (15 solicitudes/min, 250K tokens/min, 500/día). La clave es compartida por el equipo,
+# así que la espera es por proceso (no coordinación entre personas).
+LLAMADAS_NOMINALES_POR_LOTE = 3  # 1 análisis + 1 LinkedIn + 1 FAQ
+MAX_LLAMADAS_POR_OPERACION = 4  # por operación: 1 + 2×429 + 1 reparación
+MAX_LLAMADAS_POR_LOTE = 12  # techo absoluto del lote: 3 operaciones × 4
 MAX_REINTENTOS_429 = 2  # reintentos propios ante un error 429
 REINTENTOS_VALIDACION = 1  # una reparación si la salida no valida con Pydantic
 MAX_REINTENTOS_CLIENTE = 1  # `max_retries` del cliente: sin reintentos ocultos
+# Si un 429 pide esperar más que esto, se falla de inmediato (cuota agotada) sin reintentar.
+MAX_ESPERA_ACEPTABLE_SEG = 60
 
 # Esperas (segundos).
 ESPERA_MINIMA_ENTRE_LLAMADAS_SEG = 4.0  # 15 RPM -> 60/15 = 4 s entre llamadas
@@ -98,3 +103,30 @@ TIMEOUT_LLM_SEG = 60
 # Rutas de trabajo (relativas a la raíz del proyecto).
 RUTA_PROMPT_ANALISIS = "prompts/analisis.md"
 DIRECTORIO_CACHE_LLM = "data/salida/cache"
+
+# --- Generadores por canal (Fase 4) -------------------------------------------
+RUTA_PROMPT_LINKEDIN = "prompts/linkedin.md"
+RUTA_PROMPT_FAQ = "prompts/faq.md"
+
+# LinkedIn: topes editoriales (no el límite de la plataforma), contados sobre el copy.
+LONGITUD_MIN_COPY_LINKEDIN = 300
+LONGITUD_MAX_COPY_LINKEDIN = 1300
+# Hashtags al final del copy: completos y entre un mínimo y un máximo.
+HASHTAGS_MIN_LINKEDIN = 3
+HASHTAGS_MAX_LINKEDIN = 5
+
+# Selección temporal de la interacción hasta el router (Fase 5). No hay llamadas nuevas
+# al LLM: se reordenan las sub-puntuaciones ya calculadas.
+TIPOS_LINKEDIN: tuple[str, ...] = ("testimonio",)
+SENTIMIENTOS_LINKEDIN: tuple[str, ...] = ("muy_positivo",)
+TIPOS_FAQ: tuple[str, ...] = ("pregunta_tecnica",)
+PESOS_SELECCION_FAQ: dict[str, float] = {
+    "claridad": 0.5,
+    "relevancia_comunidad": 0.35,
+    "novedad": 0.1,
+    "impacto_publicable": 0.05,
+}
+
+# Campos de la FAQ que arma el código (no se le piden al LLM).
+PLANTILLA_ORIGEN_FAQ = "Duda planteada por {autor} en {canal}"
+STATUS_FAQ = "derivado_a_mentoria"  # valor de la consigna (a revisar el 9-oct)

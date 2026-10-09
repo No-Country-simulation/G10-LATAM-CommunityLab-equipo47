@@ -11,7 +11,7 @@ from communitylab.analisis import (
     usa_muestreo_fijo,
     version_prompt,
 )
-from communitylab.config import Configuracion, MAX_LLAMADAS_POR_LOTE
+from communitylab.config import Configuracion, MAX_LLAMADAS_POR_OPERACION
 from communitylab.modelos import LoteEntrada, RespuestaLlmAnalisis
 
 
@@ -164,7 +164,10 @@ def test_cobertura_incompleta_agota_reparacion(tmp_path):
 def test_429_reintenta_y_luego_exito(tmp_path):
     esperas = []
     llm = FakeLlm([
-        GoogleRateLimitError("429 RESOURCE_EXHAUSTED retry_delay { seconds: 3 }"),
+        GoogleRateLimitError(
+            "429 RESOURCE_EXHAUSTED. {'error': {'details': "
+            "[{'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '3s'}]}}"
+        ),
         _ok(2),
     ])
 
@@ -181,7 +184,7 @@ def test_429_agotado_respeta_el_tope(tmp_path):
     with pytest.raises(ErrorAnalisis):
         analizar_lote(_lote(2), _config(), llm=llm, directorio_cache=tmp_path, dormir=lambda s: None)
 
-    assert llm.llamadas <= MAX_LLAMADAS_POR_LOTE
+    assert llm.llamadas <= MAX_LLAMADAS_POR_OPERACION
 
 
 def test_no_pasa_temperature_a_los_modelos_de_muestreo_fijo():

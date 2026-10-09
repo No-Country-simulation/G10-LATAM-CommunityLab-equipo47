@@ -27,7 +27,8 @@ from .config import (
     ESPERA_MAXIMA_REINTENTO_SEG,
     ESPERA_MINIMA_ENTRE_LLAMADAS_SEG,
     ESPERA_POR_DEFECTO_429_SEG,
-    MAX_LLAMADAS_POR_LOTE,
+    MAX_ESPERA_ACEPTABLE_SEG,
+    MAX_LLAMADAS_POR_OPERACION,
     MAX_REINTENTOS_429,
     MAX_REINTENTOS_CLIENTE,
     MODELOS_MUESTREO_FIJO,
@@ -138,11 +139,31 @@ def escribir_cache(
 
 # --- Extracción y errores -----------------------------------------------------
 
-def espera_sugerida(exc: Exception) -> float:
-    """Espera ante un 429: usa el `retry_delay` sugerido, acotado a un tope."""
-    coincidencia = re.search(r"retry_delay\s*\{\s*seconds:\s*(\d+)", str(exc))
-    segundos = int(coincidencia.group(1)) if coincidencia else ESPERA_POR_DEFECTO_429_SEG
-    return min(max(float(segundos), ESPERA_MINIMA_ENTRE_LLAMADAS_SEG), ESPERA_MAXIMA_REINTENTO_SEG)
+# El SDK devuelve el detalle como dict/JSON: `'retryDelay': '120s'`. También se acepta el
+# formato proto de texto (`retry_delay { seconds: 120 }`) por si aparece en otra ruta.
+_PATRONES_RETRY_DELAY = (
+    re.compile(r"'retryDelay'\s*:\s*'(\d+(?:\.\d+)?)s'"),
+    re.compile(r'"retryDelay"\s*:\s*"(\d+(?:\.\d+)?)s"'),
+    re.compile(r"retry_delay\s*\{\s*seconds:\s*(\d+)", re.IGNORECASE),
+    re.compile(r"'retry_delay'\s*:\s*\{\s*'seconds'\s*:\s*(\d+)", re.IGNORECASE),
+)
+
+def retry_delay_segundos(exc: Exception) -> float:
+    """Segundos que sugiere esperar un error 429 (`retryDelay`/`retry_delay`), sin acotar."""
+    texto = str(exc)
+    for patron in _PATRONES_RETRY_DELAY:
+        coincidencia = patron.search(texto)
+        if coincidencia:
+            return float(coincidencia.group(1))
+    return ESPERA_POR_DEFECTO_429_SEG
+
+
+def finish_reason(salida: Any) -> str | None:
+    """Motivo de finalización del modelo (p. ej. `STOP` o `MAX_TOKENS`), si está disponible."""
+    if isinstance(salida, dict):
+        metadatos = getattr(salida.get("raw"), "response_metadata", None) or {}
+        return metadatos.get("finish_reason")
+    return None
 
 
 def texto_salida(salida: Any) -> str:
@@ -184,14 +205,14 @@ def obtener_respuesta_estructurada(
     mensajes: list[Any],
     *,
     tipo: type[T],
-    validar: Callable[[T | None], Exception | None],
+    validar: Callable[[T | None, Any], Exception | None],
     reparar: Callable[[Exception, Any], list[Any]],
     error_cls: type[Exception],
     dormir: Dormir,
 ) -> T:
     """Llama al LLM respetando el tope de llamadas, los reintentos 429 y una reparación.
 
-    - `validar(parsed)` devuelve un error (o `None` si es válido).
+    - `validar(parsed, salida)` devuelve un error (o `None` si es válido).
     - `reparar(error, salida)` construye los mensajes para el reintento de reparación.
     - Los errores de presupuesto, cuota agotada o validación se lanzan con `error_cls`.
     """
@@ -202,9 +223,9 @@ def obtener_respuesta_estructurada(
     ultimo_error: Exception | None = None
 
     while True:
-        if llamadas >= MAX_LLAMADAS_POR_LOTE:
+        if llamadas >= MAX_LLAMADAS_POR_OPERACION:
             raise error_cls(
-                f"Se agotó el presupuesto de {MAX_LLAMADAS_POR_LOTE} llamadas al LLM para este lote."
+                f"Se agotó el presupuesto de {MAX_LLAMADAS_POR_OPERACION} llamadas al LLM para esta operación."
             ) from ultimo_error
 
         if llamadas > 0:
@@ -216,12 +237,21 @@ def obtener_respuesta_estructurada(
         except GoogleRateLimitError as exc:
             llamadas += 1
             ultimo_error = exc
+            demora = retry_delay_segundos(exc)
+            if demora > MAX_ESPERA_ACEPTABLE_SEG:
+                raise error_cls(
+                    "Cuota del LLM agotada: el servicio pide esperar "
+                    f"{int(demora)} s, más del máximo aceptable ({int(MAX_ESPERA_ACEPTABLE_SEG)} s). "
+                    "No se reintenta; usa la caché o vuelve a intentarlo más tarde."
+                ) from exc
             if reintentos_429 >= MAX_REINTENTOS_429:
                 raise error_cls(
                     "El LLM alcanzó el límite de solicitudes (429) y se agotaron los reintentos."
                 ) from exc
             reintentos_429 += 1
-            espera_pendiente = espera_sugerida(exc)
+            espera_pendiente = min(
+                max(demora, ESPERA_MINIMA_ENTRE_LLAMADAS_SEG), ESPERA_MAXIMA_REINTENTO_SEG
+            )
             continue
         except ChatGoogleGenerativeAIError as exc:
             raise error_cls(
@@ -231,7 +261,7 @@ def obtener_respuesta_estructurada(
         llamadas += 1
         parsed, error = extraer_parseado(salida, tipo)
         if error is None:
-            error = validar(parsed)
+            error = validar(parsed, salida)
         if error is None:
             return parsed  # type: ignore[return-value]
 

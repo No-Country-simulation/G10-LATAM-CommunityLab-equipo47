@@ -176,7 +176,7 @@ def _obtener_respuesta(
         llm,
         _construir_mensajes(prompt, lote),
         tipo=RespuestaLlmAnalisis,
-        validar=lambda parsed: _validar_cobertura(parsed, lote),
+        validar=lambda parsed, salida: _validar_cobertura(parsed, lote),
         reparar=lambda error, salida: _mensajes_reparacion(prompt, lote, error, salida),
         error_cls=ErrorAnalisis,
         dormir=dormir,
