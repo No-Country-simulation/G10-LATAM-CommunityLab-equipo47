@@ -3,14 +3,13 @@ Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo qu
 aporte.
 
 ## Estado actual
-- Fase 2 completada: `modelos.py`, `config.py`, `ingesta.py`, `almacenamiento_oci.py` y
-  tests. Objeto subido con el SDK y verificado con el MCP:
-  `entradas/2026-semana-04/ejemplo_1_contratacion.json`.
-- Fase 3 completada: `analisis.py`, `prompts/analisis.md` y tests (44 en verde). Análisis
-  con Gemini `gemini-3.5-flash-lite`, salida validada y puntuación calculada por el código.
-  Prueba real con `ejemplo_1_contratacion.json`: 1 llamada y segunda pasada desde caché.
-- Repo del equipo: `No-Country-simulation/G10-LATAM-CommunityLab-equipo47`; mi rama:
-  `prot_rober`. Entregados: 3 lotes en `data/entrada/` y esquema en `docs/`.
+- Fases 2 y 3 hechas: `modelos.py`, `config.py`, `ingesta.py`, `almacenamiento_oci.py`,
+  `llm.py` y `analisis.py`. Objeto subido con el SDK y verificado con el MCP
+  (`entradas/2026-semana-04/ejemplo_1_contratacion.json`).
+- Fase 4 completada: generadores de LinkedIn y FAQ (prompts `linkedin.md`/`faq.md` y caché
+  por activo). **75 tests en verde** y 3 pruebas reales (LinkedIn con `ejemplo_1`; análisis
+  y FAQ con `ejemplo_2`).
+- Repo del equipo: `No-Country-simulation/G10-LATAM-CommunityLab-equipo47`; rama `prot_rober`.
 
 ## Decisiones (y por qué)
 - Python + LangGraph + Streamlit; nodos como funciones normales. Gemini gratis vía
@@ -21,16 +20,19 @@ aporte.
 - `tipo` es texto libre; `sentimiento`, `ruta` y `estado_aprobacion` son enums estrictos.
 - Modelo `gemini-3.5-flash-lite` (estable). No se le pasa `temperature` (muestreo fijo, lo
   ignora); la reproducibilidad la da la caché, no la temperatura.
-- Análisis: 1 llamada por lote + caché `sha256(modelo + versión prompt + hash entrada)` en
-  `data/salida/cache/`. Reintentos: cliente `max_retries=1`, 429 propio respetando
-  `retry_delay`, 1 reparación, tope 4 llamadas/lote (`config.py`).
+- Análisis y generadores: 1 llamada por operación + caché `sha256(modelo + versión prompt +
+  hash de la entrada)` en `data/salida/cache/`. Reintentos: cliente `max_retries=1`, 429
+  propio respetando `retry_delay`, 1 reparación; topes 4 por operación y 12 por lote.
 - Puntuación: sub-puntuaciones del LLM y pesos en `config.py` (0.4/0.3/0.2/0.1).
 - Trabajo en equipo: rama `prot_rober` → revisión → `dev` → `main`. Nunca push a `dev`/`main`.
 - Formatos del MVP: post de LinkedIn + FAQ. `opencode.json` no se versiona.
+- Equipo: bucket OCI común; clave de Gemini compartida por ahora (500/día y 15/min entre
+  todos). Por eso: 1 llamada por operación + caché + espera.
 
-## Pendiente de decidir
-- Cómo comparte el equipo OCI: cada persona con su bucket o uno común (afecta `.env`).
-- Revisar con el equipo los campos "propuesta" del esquema del paquete.
+## Pendiente de decidir (reunión del 9-oct)
+- FAQ: ¿respuesta generada por el LLM o solo tema y pregunta?
+- Solapamiento entre `status` y `estado_aprobacion` de la FAQ.
+- Empate casi técnico en la elección de la FAQ (Carlos 80.5 vs Valeria 79.8): revisar pesos.
 - Qué cuenta como "duda recurrente" (MVP: `pregunta_tecnica`; después, tema repetido).
 
 ## Aprendizajes y errores a evitar
@@ -42,4 +44,5 @@ aporte.
 - Comprobar el código antes de fiarse de la documentación.
 
 ## Próximos pasos
-- Fase 4 (Generación): 2 formatos (LinkedIn + FAQ) con prompts few-shot por canal.
+- Fase 5: router con bifurcación, aplicar el tope global de 12 llamadas por lote y la espera
+  entre operaciones, armar `paquete-distribucion.json` y subirlo a OCI (`activos/AAAA-semana-NN/`).

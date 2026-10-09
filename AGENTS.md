@@ -9,8 +9,9 @@ para que otras personas lo revisen y lo evalúen.
 - Python + LangGraph (grafo corto) + Streamlit. LLM: Gemini vía LangChain
   (`langchain-google-genai`). Almacenamiento: OCI Object Storage con el SDK `oci`.
 - Gestor de entorno: `uv`. Dependencias en `requirements.txt`.
-- `src/communitylab/`: lógica (`modelos.py`, `config.py`, `ingesta.py`, `analisis.py`,
-  `puntuacion.py`, `router.py`, `generadores/`, `almacenamiento_oci.py`, `grafo.py`).
+- `src/communitylab/`: lógica (`modelos.py`, `config.py`, `ingesta.py`, `llm.py`,
+  `analisis.py`, `puntuacion.py`, `router.py`, `generadores/`, `almacenamiento_oci.py`,
+  `grafo.py`).
 - `app/streamlit_app.py`: interfaz (ver datos, aprobar posts). Sin lógica de negocio.
 - `prompts/`: un archivo por canal (LinkedIn, X, FAQ, newsletter, caso de éxito).
 - `data/entrada/`: datos simulados. `data/salida/`: resultados locales (no se versiona).
@@ -30,15 +31,19 @@ para que otras personas lo revisen y lo evalúen.
 - Modelo y clave vienen de `.env` (`GEMINI_MODEL`, `GEMINI_API_KEY`); nunca en el código.
 - `temperature`: los modelos de muestreo fijo (`gemini-3.5-flash-lite`, `gemini-3.6-flash`)
   ignoran los parámetros de muestreo, así que **no se les pasa `temperature`**; en el resto
-  se usa `0`. La reproducibilidad del análisis la da la **caché**, no la temperatura.
-- Una sola llamada al LLM por lote (todas las interacciones juntas) y caché local en
-  `data/salida/cache/` (clave = modelo + versión del prompt + hash de la entrada). El prompt
-  vive en `prompts/analisis.md`.
+  se usa `0`. La reproducibilidad la da la **caché**, no la temperatura.
+- Presupuesto por lote (3 llamadas nominales: análisis + LinkedIn + FAQ), con tope por
+  operación (4) y tope global (12) que se aplicará en la Fase 5 (hoy solo rige el de 4 por
+  operación), y espera mínima entre llamadas. Si un 429 pide esperar más de lo aceptable, se
+  falla de inmediato sin gastar reintentos. Todo en `config.py`.
+- Una llamada por operación (el análisis recibe el lote completo; cada generador, una
+  interacción) y caché local en `data/salida/cache/` para ambos. Los prompts viven en
+  `prompts/`, uno por canal.
 - Reintentos acotados: el cliente va con `max_retries=1` (sin reintentos ocultos); ante un
-  429 se reintenta respetando `retry_delay`; si la salida no valida con Pydantic, se hace
-  **una** reparación. Tope absoluto de llamadas por lote en `config.py`.
-- Cuota de la capa gratuita (15 solicitudes/min, 250K tokens/min, 500/día): respétala con
-  pocas llamadas, espera entre llamadas y mensaje claro ante un error 429.
+  429 se reintenta respetando `retry_delay`; si la salida no valida con Pydantic o no cumple
+  las restricciones del canal, se hace **una** reparación.
+- Cuota de la capa gratuita (15 solicitudes/min, 250K tokens/min, 500/día), compartida por
+  el equipo: respétala con la caché y pocas llamadas.
 
 ## Convenciones
 - Todo en español: interfaz, prompts, documentación y comentarios. Nombres de código
@@ -46,9 +51,12 @@ para que otras personas lo revisen y lo evalúen.
   mismo módulo.
 - Funciones pequeñas, con tipos. Las salidas del LLM se validan con Pydantic; si falla la
   validación, reintenta una vez y devuelve un error claro (no un resultado a medias).
-- Sin lógica de negocio en Streamlit y sin llamadas al LLM fuera de `analisis.py` y
-  `generadores/`.
+- Sin lógica de negocio en Streamlit y sin llamadas al LLM fuera de `llm.py`, `analisis.py`
+  y `generadores/`.
 - Los prompts viven en `prompts/`, no incrustados en el código.
+- El esquema de los activos se declara una sola vez en `modelos.py`; de ahí derivan las
+  validaciones y el esquema que se pide al LLM. El contenido de los activos se basa solo en
+  las interacciones: nada de cifras, nombres ni testimonios inventados.
 
 ## Reglas de dominio
 - Entrada: lote de interacciones (JSON o CSV simulando canales). Hay 3 lotes de ejemplo en
