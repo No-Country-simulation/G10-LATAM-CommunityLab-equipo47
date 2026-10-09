@@ -90,8 +90,8 @@ class AnalisisInteraccion(BaseModel):
     ruta: Ruta
 
 
-class PostLinkedIn(BaseModel):
-    """Activo de LinkedIn (caso de éxito del MVP)."""
+class PostLinkedInLlm(BaseModel):
+    """Campos del post de LinkedIn que produce el LLM."""
 
     titulo: str
     # `copy` es el nombre exacto del esquema; Pydantic avisa porque tapa un método
@@ -99,17 +99,27 @@ class PostLinkedIn(BaseModel):
     copy: str
     canal_recomendado: str
     potencial_engagement: str
+
+
+class PostLinkedIn(PostLinkedInLlm):
+    """Activo de LinkedIn (caso de éxito del MVP): lo del LLM + estado de aprobación."""
+
     estado_aprobacion: EstadoAprobacion = EstadoAprobacion.PENDIENTE
 
 
-class SugerenciaContenidoFaq(BaseModel):
-    """Activo de FAQ (duda técnica)."""
+class SugerenciaContenidoFaqLlm(BaseModel):
+    """Campos de la FAQ que produce el LLM (tema, pregunta y respuesta)."""
 
     tema: str
-    origen: str
-    status: str
     pregunta: str
     respuesta_sugerida: str
+
+
+class SugerenciaContenidoFaq(SugerenciaContenidoFaqLlm):
+    """Activo de FAQ: lo del LLM + `origen`, `status` y `estado_aprobacion` del código."""
+
+    origen: str
+    status: str
     estado_aprobacion: EstadoAprobacion = EstadoAprobacion.PENDIENTE
 
 
