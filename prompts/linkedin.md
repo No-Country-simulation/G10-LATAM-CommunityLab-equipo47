@@ -27,6 +27,8 @@ Un objeto JSON con los campos del esquema de salida (abajo). No añadas campos e
   resultado.
 - **No uses comillas para citar al autor** salvo que copies una frase literal y completa de
   su texto; ante la duda, parafrasea con "compartió que…" o "contó que…".
+- **No menciones el canal ni el lugar** donde el autor escribió el mensaje (p. ej. «lo
+  escribió en el canal de…»), salvo que el propio texto del autor lo diga.
 - No menciones datos personales que no aparezcan en la interacción.
 - El `copy` debe tener entre 300 y 1300 caracteres, y terminar con **3 a 5 hashtags
   completos** en la última línea (por ejemplo `#ComunidadTech #Aprendizaje #Logros`).
@@ -73,7 +75,7 @@ Salida:
 ```json
 {
   "titulo": "Empezó desde cero y presentó su primer proyecto de datos",
-  "copy": "Paula Iriarte compartió que, después de meses de práctica, presentó su primer proyecto de datos en una entrevista y que le fue muy bien. Según contó, empezó desde cero y la comunidad la acompañó en cada duda. Paula lo escribió en el canal de historias.\n\n¡Felicidades, Paula!\n\n#ComunidadTech #Aprendizaje #PrimerProyecto",
+  "copy": "Paula Iriarte compartió que, después de meses de práctica, presentó su primer proyecto de datos en una entrevista y que le fue muy bien. Según contó, empezó desde cero y la comunidad la acompañó en cada duda. Paula quiso contar su experiencia.\n\n¡Felicidades, Paula!\n\n#ComunidadTech #Aprendizaje #PrimerProyecto",
   "canal_recomendado": "LinkedIn Oficial",
   "potencial_engagement": "Alto"
 }
@@ -108,7 +110,7 @@ Salida:
 ```json
 {
   "titulo": "Terminó el sprint y explicó el concepto de grafos de estados a un compañero",
-  "copy": "Tomás Quiroga contó que terminó el sprint y que por fin entendió los grafos de estados. Según su relato, ayer explicó el concepto a un compañero y se dio cuenta de cuánto había aprendido en esas semanas. Tomás lo escribió en el canal de logros.\n\nGracias, Tomás, por compartirlo.\n\n#Aprendizaje #ComunidadTech #GrafosDeEstados",
+  "copy": "Tomás Quiroga contó que terminó el sprint y que por fin entendió los grafos de estados. Según su relato, ayer explicó el concepto a un compañero y se dio cuenta de cuánto había aprendido en esas semanas.\n\nGracias, Tomás, por compartir tu experiencia con la comunidad.\n\n#Aprendizaje #ComunidadTech #GrafosDeEstados",
   "canal_recomendado": "LinkedIn Oficial",
   "potencial_engagement": "Medio"
 }
