@@ -18,6 +18,15 @@ Un objeto JSON con los campos del esquema de salida (abajo). No añadas campos e
 
 - **Básate solo en la interacción recibida.** No inventes cifras, fechas, nombres,
   cargos, empresas ni testimonios. Si un dato no está en el texto, no lo incluyas.
+- **Solo hechos explícitos del texto.** No añadas roles ni atribuciones de liderazgo
+  (p. ej. «liderado por»), causas ni valoraciones propias (p. ej. «superó las
+  expectativas», «marca la diferencia»). Sí puedes reproducir lo que el autor dice sobre sí
+  mismo o sobre otros, atribuido a él («compartió que…», «según contó…»). Si el autor habla
+  de «nuestro equipo», redáctalo como «su equipo». Puedes cerrar con una felicitación o un
+  agradecimiento breve, siempre que no añada hechos, causas ni valoraciones sobre el
+  resultado.
+- **No uses comillas para citar al autor** salvo que copies una frase literal y completa de
+  su texto; ante la duda, parafrasea con "compartió que…" o "contó que…".
 - No menciones datos personales que no aparezcan en la interacción.
 - El `copy` debe tener entre 300 y 1300 caracteres, y terminar con **3 a 5 hashtags
   completos** en la última línea (por ejemplo `#ComunidadTech #Aprendizaje #Logros`).
@@ -63,8 +72,8 @@ Salida:
 
 ```json
 {
-  "titulo": "De empezar de cero a brillar en su primera entrevista",
-  "copy": "Hay historias que nos recuerdan por qué aprendemos en comunidad.\n\nPaula Iriarte llegó sin experiencia y, tras meses de práctica constante, presentó su primer proyecto de datos en una entrevista. No fue suerte: fue constancia, curiosidad y el acompañamiento de una comunidad que responde cada duda.\n\nSi estás en medio del proceso, recuerda que cada pregunta resuelta te acerca a tu objetivo. El avance no siempre es rápido, pero sí posible cuando no caminas sola.\n\n#ComunidadTech #Aprendizaje #PrimerEmpleo",
+  "titulo": "Empezó desde cero y presentó su primer proyecto de datos",
+  "copy": "Paula Iriarte compartió que, después de meses de práctica, presentó su primer proyecto de datos en una entrevista y que le fue muy bien. Según contó, empezó desde cero y la comunidad la acompañó en cada duda. Paula lo escribió en el canal de historias.\n\n¡Felicidades, Paula!\n\n#ComunidadTech #Aprendizaje #PrimerProyecto",
   "canal_recomendado": "LinkedIn Oficial",
   "potencial_engagement": "Alto"
 }
@@ -98,8 +107,8 @@ Salida:
 
 ```json
 {
-  "titulo": "Aprender enseñando: el sprint que lo cambió todo",
-  "copy": "A veces entendemos algo de verdad cuando lo explicamos a otra persona.\n\nTomás Quiroga cerró el sprint con una sensación distinta: después de semanas de esfuerzo, logró comprender los grafos de estados y ayer los explicó a un compañero. Ese momento le mostró todo lo que había crecido sin darse cuenta.\n\nEnseñar es una de las mejores formas de aprender. Compartir lo que sabes también construye comunidad.\n\n#Aprendizaje #ComunidadTech #Mentoría",
+  "titulo": "Terminó el sprint y explicó el concepto de grafos de estados a un compañero",
+  "copy": "Tomás Quiroga contó que terminó el sprint y que por fin entendió los grafos de estados. Según su relato, ayer explicó el concepto a un compañero y se dio cuenta de cuánto había aprendido en esas semanas. Tomás lo escribió en el canal de logros.\n\nGracias, Tomás, por compartirlo.\n\n#Aprendizaje #ComunidadTech #GrafosDeEstados",
   "canal_recomendado": "LinkedIn Oficial",
   "potencial_engagement": "Medio"
 }
