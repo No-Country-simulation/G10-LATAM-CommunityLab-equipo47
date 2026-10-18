@@ -7,7 +7,12 @@ import streamlit as st
 import json
 from pathlib import Path
 from modules.ui import badge_header, get_lucide, render_callout, clean_html
-from modules.oci_client import guardar_en_oci, listar_activos_oci
+from modules.oci_client import (
+    configuracion_oci_publica,
+    guardar_en_oci,
+    listar_activos_oci,
+    ruta_sugerida_para_paquete,
+)
 
 def render_oci_storage_view():
     badge_header(
@@ -34,11 +39,11 @@ def render_oci_storage_view():
                 clean_html(f"""
                 <div style="display: flex; align-items: center; gap: 8px;">
                     <span style="display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: #10B981;"></span>
-                    <strong style="color: #0F172A; font-size: 0.95rem;">Modo de Almacenamiento Activo: OCI Always Free Mirror</strong>
+                    <strong style="color: #0F172A; font-size: 0.95rem;">Almacenamiento: OCI Object Storage (offline si no hay credenciales)</strong>
                 </div>
                 <p style="margin: 4px 0 0 0; font-size: 0.84rem; color: #64748B; line-height: 1.4;">
-                    El sistema serializa los paquetes en la estructura estándar de OCI Object Storage (<code>bucket/activos/YYYY-MM-DD/objeto.json</code>) 
-                    y mantiene un espejo local persistente para garantizar una demo fluida sin interrupciones por tokens o cuotas.
+                    El sistema serializa los paquetes en la estructura estándar de OCI Object Storage (<code>bucket/activos/AAAA-semana-NN/paquete-distribucion.json</code>)
+                    y mantiene un espejo local solo como modo offline cuando no hay credenciales.
                 </p>
                 """),
                 unsafe_allow_html=True
@@ -56,11 +61,23 @@ def render_oci_storage_view():
 
     st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
 
+    config_publica = configuracion_oci_publica()
+    bucket_config = config_publica.get("bucket") or ""
+    region_config = config_publica.get("region") or ""
+
     col1, col2 = st.columns([2, 1])
     with col1:
-        bucket_name = st.text_input("Nombre del Bucket OCI Always Free", value="communitylab-activos-marketing")
+        st.text_input(
+            "Bucket OCI (desde configuración)",
+            value=bucket_config or "(sin configurar)",
+            disabled=True,
+        )
     with col2:
-        region = st.selectbox("Región OCI", ["sa-saopaulo-1", "sa-santiago-1", "us-ashburn-1", "us-phoenix-1"])
+        st.text_input(
+            "Región OCI (desde configuración)",
+            value=region_config or "(sin configurar)",
+            disabled=True,
+        )
 
     st.caption("Cumplimiento estricto con las directrices de costo cero (Always Free) del programa social ONE.")
 
@@ -74,14 +91,30 @@ def render_oci_storage_view():
         return
 
     paquete_a_guardar = st.session_state.get("curated_package", st.session_state.get("generated_package"))
-    ruta_sugerida = paquete_a_guardar.get("almacenamiento_oci", {}).get("ruta_objeto", "activos/paquete-distribucion.json")
+    ruta_sugerida = ruta_sugerida_para_paquete(paquete_a_guardar)
 
     ruta_objeto = st.text_input("Ruta de destino del objeto (URI dentro del Bucket):", value=ruta_sugerida)
+    st.caption(f"Ruta resultante: `{ruta_objeto}`")
+
+    sobrescribir = st.checkbox("Sobrescribir si el objeto ya existe", value=False)
 
     if st.button("Persistir Paquete en OCI Object Storage", type="primary", use_container_width=True):
-        resultado = guardar_en_oci(paquete_a_guardar, bucket_name=bucket_name, ruta_objeto=ruta_objeto)
+        resultado = guardar_en_oci(
+            paquete_a_guardar,
+            bucket_name=bucket_config or None,
+            ruta_objeto=ruta_objeto,
+            sobrescribir=sobrescribir,
+        )
         st.session_state["ultimo_guardado_oci"] = resultado
-        st.success(f"Paquete persistido exitosamente en el Bucket '{bucket_name}' ({resultado.get('modo')})")
+        estado = resultado.get("status")
+        if estado == "guardado_con_exito":
+            st.success(f"Paquete guardado en OCI en el Bucket '{resultado.get('bucket')}' ({resultado.get('modo')})")
+        elif estado == "ya_existe":
+            st.warning("El objeto ya existe en el bucket. Marca 'Sobrescribir si el objeto ya existe' y vuelve a intentarlo.")
+        elif estado == "guardado_local":
+            st.warning(resultado.get("aviso") or "Modo offline: guardado solo en local.")
+        else:
+            st.error(resultado.get("error_nube") or "No se pudo guardar en OCI.")
 
     if "ultimo_guardado_oci" in st.session_state:
         res = st.session_state["ultimo_guardado_oci"]
@@ -127,12 +160,12 @@ def render_oci_storage_view():
                 {get_lucide('database', size=19, color='#475569')}
                 <h4 style="margin: 0; font-size: 1.1rem; font-weight: 600; color: #1E293B;">Explorador de Objetos Persistidos en el Bucket</h4>
             </div>
-            <span style="font-size: 0.8rem; color: #64748B;">Bucket: <code>{bucket_name}</code></span>
+            <span style="font-size: 0.8rem; color: #64748B;">Bucket: <code>{bucket_config or "(sin configurar)"}</code></span>
         </div>
         """),
         unsafe_allow_html=True
     )
-    objetos = listar_activos_oci(bucket_name=bucket_name)
+    objetos = listar_activos_oci(bucket_name=bucket_config or None)
 
     if objetos:
         st.caption(f"Se encontraron **{len(objetos)} paquetes** almacenados en el bucket:")
@@ -140,7 +173,9 @@ def render_oci_storage_view():
             peso_kb = round(obj.get("tamano_bytes", 0) / 1024, 2)
             with st.expander(f"{obj['ruta_objeto']} ({peso_kb} KB)"):
                 st.caption(f"**Archivo:** {obj['nombre']}")
-                ruta_local = Path("oci_bucket_simulation") / bucket_name / obj['ruta_objeto']
+                ruta_local = Path(obj.get("ruta_local") or (
+                    Path("oci_bucket_simulation") / (bucket_config or "sin-bucket") / obj["ruta_objeto"]
+                ))
                 if ruta_local.exists():
                     try:
                         with open(ruta_local, "r", encoding="utf-8") as f:

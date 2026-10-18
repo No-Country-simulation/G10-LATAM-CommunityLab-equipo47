@@ -19,27 +19,46 @@ class ErrorConfiguracion(Exception):
 
 @dataclass(frozen=True)
 class Configuracion:
-    """Configuración de la aplicación, leída del entorno."""
+    """Configuración de la aplicación, leída del entorno o de secretos."""
 
     gemini_api_key: str = field(default="", repr=False)
     gemini_model: str = "gemini-3.5-flash-lite"
     oci_config_file: str = "~/.oci/config"
     oci_config_profile: str = "DEFAULT"
-    oci_region: str = "sa-santiago-1"
+    oci_region: str = ""
     oci_namespace: str = ""
-    oci_bucket: str = "communitylab-activos-marketing"
+    oci_bucket: str = ""
+    oci_user: str = ""
+    oci_fingerprint: str = ""
+    oci_tenancy: str = ""
+    oci_key_content: str = field(default="", repr=False)
+    oci_key_file: str = ""
 
     @property
     def ruta_config_oci(self) -> str:
         """Ruta real al archivo de configuración de OCI, con `~` expandido."""
         return str(Path(self.oci_config_file).expanduser())
 
+    @property
+    def credenciales_explicitas_completas(self) -> bool:
+        """True si hay credenciales explícitas completas (sin contar el perfil DEFAULT)."""
+        return bool(
+            self.oci_user
+            and self.oci_fingerprint
+            and self.oci_tenancy
+            and (self.oci_key_content or self.oci_key_file)
+        )
 
-def cargar_configuracion(ruta_env: str | None = None) -> Configuracion:
-    """Carga `.env` y devuelve la configuración validada.
 
-    `ruta_env` permite apuntar a un archivo concreto (útil en tests); si es `None`,
-    se usa el `.env` habitual del proyecto.
+def cargar_configuracion(
+    ruta_env: str | None = None,
+    *,
+    validar_oci: bool = True,
+) -> Configuracion:
+    """Carga `.env` y devuelve la configuración.
+
+    `validar_oci=False` permite construir la configuración aunque falten datos de OCI;
+    el adaptador lo usa para decidir el modo offline sin romper la aplicación.
     """
     load_dotenv(dotenv_path=ruta_env)
 
@@ -48,20 +67,27 @@ def cargar_configuracion(ruta_env: str | None = None) -> Configuracion:
         gemini_model=os.getenv("GEMINI_MODEL", "gemini-3.5-flash-lite"),
         oci_config_file=os.getenv("OCI_CONFIG_FILE", "~/.oci/config"),
         oci_config_profile=os.getenv("OCI_CONFIG_PROFILE", "DEFAULT"),
-        oci_region=os.getenv("OCI_REGION", "sa-santiago-1"),
+        oci_region=os.getenv("OCI_REGION", ""),
         oci_namespace=os.getenv("OCI_NAMESPACE", ""),
         oci_bucket=os.getenv("OCI_BUCKET", ""),
+        oci_user=os.getenv("OCI_USER", ""),
+        oci_fingerprint=os.getenv("OCI_FINGERPRINT", ""),
+        oci_tenancy=os.getenv("OCI_TENANCY", ""),
+        oci_key_content=os.getenv("OCI_KEY_CONTENT", ""),
+        oci_key_file=os.getenv("OCI_KEY_FILE", ""),
     )
 
-    obligatorios = {
-        "OCI_NAMESPACE": config.oci_namespace,
-        "OCI_BUCKET": config.oci_bucket,
-    }
-    faltan = [nombre for nombre, valor in obligatorios.items() if not valor]
-    if faltan:
-        raise ErrorConfiguracion(
-            "Faltan variables obligatorias en el entorno: " + ", ".join(faltan)
-        )
+    if validar_oci:
+        obligatorios = {
+            "OCI_REGION": config.oci_region,
+            "OCI_NAMESPACE": config.oci_namespace,
+            "OCI_BUCKET": config.oci_bucket,
+        }
+        faltan = [nombre for nombre, valor in obligatorios.items() if not valor]
+        if faltan:
+            raise ErrorConfiguracion(
+                "Faltan variables obligatorias en el entorno: " + ", ".join(faltan)
+            )
 
     return config
 

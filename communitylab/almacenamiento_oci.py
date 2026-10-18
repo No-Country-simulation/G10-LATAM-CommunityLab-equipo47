@@ -11,6 +11,7 @@ Los mensajes de error nunca incluyen claves ni rutas de archivos `.pem`.
 
 from __future__ import annotations
 
+import configparser
 import json
 import re
 from datetime import date, datetime
@@ -28,6 +29,10 @@ _PATRON_PERIODO = re.compile(r"semana[_\-\s]*(\d{1,2})", re.IGNORECASE)
 
 class ErrorAlmacenamiento(Exception):
     """Error claro al operar con OCI Object Storage."""
+
+
+class ObjetoYaExiste(ErrorAlmacenamiento):
+    """El objeto ya existe en el bucket y no se pidió sobrescribir."""
 
 
 def resolver_semana(periodo_referencia: str, fecha: date | None = None) -> tuple[int, int]:
@@ -67,8 +72,63 @@ def construir_nombre_objeto(categoria: str, anio: int, semana: int, nombre_archi
     return f"{categoria}/{int(anio)}-semana-{semana:02d}/{archivo}"
 
 
+def _validar_datos_oci(config: Configuracion) -> None:
+    """Valida que estén región, namespace y bucket, sin exponer valores."""
+    faltan = [
+        nombre
+        for nombre, valor in {
+            "OCI_REGION": config.oci_region,
+            "OCI_NAMESPACE": config.oci_namespace,
+            "OCI_BUCKET": config.oci_bucket,
+        }.items()
+        if not valor
+    ]
+    if faltan:
+        raise ErrorAlmacenamiento("Faltan datos de OCI: " + ", ".join(faltan) + ".")
+
+
+def perfil_default_disponible(config: Configuracion) -> bool:
+    """Comprueba si existe el perfil configurado, sin leer la clave."""
+    camino = Path(config.ruta_config_oci)
+    if not camino.is_file():
+        return False
+
+    parser = configparser.ConfigParser()
+    try:
+        parser.read(camino, encoding="utf-8")
+    except (OSError, configparser.Error):
+        return False
+
+    # `[DEFAULT]` es una sección especial para configparser.
+    if config.oci_config_profile.upper() == "DEFAULT":
+        return bool(parser.defaults())
+    return parser.has_section(config.oci_config_profile)
+
+
 def crear_cliente(config: Configuracion) -> oci.object_storage.ObjectStorageClient:
-    """Crea el cliente de Object Storage con el perfil configurado."""
+    """Crea el cliente con credenciales explícitas o con el perfil configurado."""
+    _validar_datos_oci(config)
+
+    if config.credenciales_explicitas_completas:
+        datos_config = {
+            "user": config.oci_user,
+            "fingerprint": config.oci_fingerprint,
+            "tenancy": config.oci_tenancy,
+            "region": config.oci_region,
+        }
+        if config.oci_key_content:
+            datos_config["key_content"] = config.oci_key_content
+        elif config.oci_key_file:
+            datos_config["key_file"] = str(Path(config.oci_key_file).expanduser())
+
+        try:
+            oci.config.validate_config(datos_config)
+        except Exception as exc:
+            raise ErrorAlmacenamiento(
+                "La configuración explícita de OCI no es válida."
+            ) from exc
+        return oci.object_storage.ObjectStorageClient(datos_config)
+
     try:
         datos_config = oci.config.from_file(
             file_location=config.ruta_config_oci,
@@ -124,7 +184,7 @@ def subir_objeto(
         cuerpo = bytes(contenido)
 
     if not sobrescribir and existe_objeto(cliente, config, nombre_objeto):
-        raise ErrorAlmacenamiento(
+        raise ObjetoYaExiste(
             f"El objeto {nombre_objeto} ya existe; usa sobrescribir=True para reemplazarlo."
         )
 
@@ -167,13 +227,13 @@ def subir_archivo(
     )
 
 
-def listar_objetos(
+def listar_objetos_detalle(
     cliente: oci.object_storage.ObjectStorageClient,
     config: Configuracion,
     prefijo: str = "",
-) -> list[str]:
-    """Lista los nombres de objeto del bucket, paginando hasta el final."""
-    nombres: list[str] = []
+) -> list[dict[str, Any]]:
+    """Lista los objetos del bucket con nombre, tamaño y fecha, paginando hasta el final."""
+    resultados: list[dict[str, Any]] = []
     inicio: str | None = None
 
     while True:
@@ -187,12 +247,29 @@ def listar_objetos(
         except oci.exceptions.ServiceError as exc:
             raise ErrorAlmacenamiento(_mensaje_servicio("listar", prefijo or "todos", exc)) from exc
 
-        nombres.extend(objeto.name for objeto in respuesta.data.objects)
+        for objeto in respuesta.data.objects:
+            resultados.append(
+                {
+                    "name": objeto.name,
+                    "size": getattr(objeto, "size", None) or 0,
+                    "time_modified": getattr(objeto, "time_modified", None),
+                }
+            )
+
         inicio = respuesta.data.next_start_with
         if not inicio:
             break
 
-    return nombres
+    return resultados
+
+
+def listar_objetos(
+    cliente: oci.object_storage.ObjectStorageClient,
+    config: Configuracion,
+    prefijo: str = "",
+) -> list[str]:
+    """Lista los nombres de objeto del bucket, paginando hasta el final."""
+    return [item["name"] for item in listar_objetos_detalle(cliente, config, prefijo)]
 
 
 def _mensaje_servicio(accion: str, referencia: str, exc: oci.exceptions.ServiceError) -> str:
