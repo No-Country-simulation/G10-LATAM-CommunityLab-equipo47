@@ -1,6 +1,7 @@
 """Pruebas de integración OCI con mocks (sin red)."""
 
 from datetime import date
+import json
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
@@ -310,3 +311,79 @@ def test_configuracion_publica_no_expone_secretos():
 
     assert set(publica) == {"region", "bucket", "namespace", "hay_credenciales"}
     assert "SECRETO-QUE-NO-DEBE-SALIR" not in str(publica)
+
+
+def test_limpiar_paquete_quita_activos_vacios_sin_mutar_original():
+    paquete = {
+        "activos_distribucion_generados": {
+            "post_linkedin": {"titulo": "", "copy": "copy"},
+            "destaque_newsletter_semanal": {"titular": "t", "resumen": "   "},
+            "sugerencia_contenido_faq": {"tema": "  "},
+        }
+    }
+
+    limpio = adaptador.limpiar_paquete_para_guardar(paquete)
+
+    assert limpio["activos_distribucion_generados"] == {}
+    assert paquete["activos_distribucion_generados"]["post_linkedin"]["titulo"] == ""
+
+
+def test_limpiar_paquete_conserva_activos_completos():
+    activos = {
+        "post_linkedin": {"titulo": "Titulo", "copy": "Copy"},
+        "destaque_newsletter_semanal": {"titular": "Titular", "resumen": "Resumen"},
+        "sugerencia_contenido_faq": {"tema": "Tema"},
+    }
+    paquete = {"activos_distribucion_generados": activos}
+
+    limpio = adaptador.limpiar_paquete_para_guardar(paquete)
+
+    assert limpio["activos_distribucion_generados"] == activos
+    assert limpio is not paquete
+
+
+def test_guardar_en_oci_limpia_antes_de_subir():
+    config = _config(
+        oci_user="u",
+        oci_fingerprint="f",
+        oci_tenancy="t",
+        oci_key_content="k",
+    )
+    paquete = {
+        "activos_distribucion_generados": {
+            "post_linkedin": {"titulo": "", "copy": "Copy"},
+            "sugerencia_contenido_faq": {"tema": "Tema"},
+        }
+    }
+
+    with (
+        patch.object(adaptador, "_configuracion_oci", return_value=config),
+        patch.object(adaptador, "hay_credenciales", return_value=True),
+        patch.object(adaptador, "crear_cliente", return_value=MagicMock()),
+        patch.object(adaptador, "subir_objeto", return_value=RUTA) as subir,
+    ):
+        adaptador.guardar_en_oci(paquete, ruta_objeto=RUTA)
+
+    contenido = subir.call_args.args[3]
+    assert "post_linkedin" not in contenido["activos_distribucion_generados"]
+    assert "sugerencia_contenido_faq" in contenido["activos_distribucion_generados"]
+    assert "post_linkedin" in paquete["activos_distribucion_generados"]
+
+
+def test_guardar_en_oci_offline_limpia(tmp_path):
+    paquete = {
+        "activos_distribucion_generados": {
+            "post_linkedin": {"titulo": "", "copy": "Copy"},
+        }
+    }
+
+    with (
+        patch.object(adaptador, "_configuracion_oci", return_value=_config()),
+        patch.object(adaptador, "hay_credenciales", return_value=False),
+        patch.object(adaptador, "DIRECTORIO_OFFLINE", tmp_path),
+    ):
+        adaptador.guardar_en_oci(paquete, ruta_objeto=RUTA)
+
+    destino = tmp_path / "bucket-test" / RUTA
+    contenido = json.loads(destino.read_text(encoding="utf-8"))
+    assert "post_linkedin" not in contenido["activos_distribucion_generados"]

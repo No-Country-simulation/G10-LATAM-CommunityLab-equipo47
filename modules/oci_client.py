@@ -8,6 +8,7 @@ y añade el estado y el modo necesarios para no reportar éxito falso.
 from __future__ import annotations
 
 import json
+from copy import deepcopy
 from dataclasses import replace
 from pathlib import Path
 
@@ -93,6 +94,45 @@ def _mensaje_error(exc: Exception) -> str:
     return f"Error al operar con OCI ({type(exc).__name__})."
 
 
+def _vacio(valor) -> bool:
+    return valor is None or not str(valor).strip()
+
+
+def limpiar_paquete_para_guardar(paquete: dict) -> dict:
+    """Devuelve una copia con los activos incompletos eliminados (sin mutar el original).
+
+    - LinkedIn: fuera si faltan `titulo` o `copy`.
+    - Newsletter: fuera si faltan `titular` o `resumen`.
+    - FAQ: fuera si falta `tema`.
+    """
+    limpio = deepcopy(paquete)
+    activos = limpio.get("activos_distribucion_generados")
+    if not isinstance(activos, dict):
+        return limpio
+
+    post = activos.get("post_linkedin")
+    if post is not None and (
+        not isinstance(post, dict)
+        or _vacio(post.get("titulo"))
+        or _vacio(post.get("copy"))
+    ):
+        activos.pop("post_linkedin", None)
+
+    newsletter = activos.get("destaque_newsletter_semanal")
+    if newsletter is not None and (
+        not isinstance(newsletter, dict)
+        or _vacio(newsletter.get("titular"))
+        or _vacio(newsletter.get("resumen"))
+    ):
+        activos.pop("destaque_newsletter_semanal", None)
+
+    faq = activos.get("sugerencia_contenido_faq")
+    if faq is not None and (not isinstance(faq, dict) or _vacio(faq.get("tema"))):
+        activos.pop("sugerencia_contenido_faq", None)
+
+    return limpio
+
+
 def _guardar_offline(paquete: dict, bucket: str, ruta: str) -> dict:
     destino = DIRECTORIO_OFFLINE / bucket / ruta
     destino.parent.mkdir(parents=True, exist_ok=True)
@@ -123,13 +163,14 @@ def guardar_en_oci(
 
     ruta = ruta_objeto or ruta_sugerida_para_paquete(paquete)
     bucket = config.oci_bucket or bucket_name or "sin-bucket"
+    paquete_limpio = limpiar_paquete_para_guardar(paquete)
 
     if not hay_credenciales(config):
-        return _guardar_offline(paquete, bucket, ruta)
+        return _guardar_offline(paquete_limpio, bucket, ruta)
 
     try:
         cliente = crear_cliente(config)
-        subir_objeto(cliente, config, ruta, paquete, sobrescribir=sobrescribir)
+        subir_objeto(cliente, config, ruta, paquete_limpio, sobrescribir=sobrescribir)
     except ObjetoYaExiste as exc:
         return {
             "bucket": bucket,

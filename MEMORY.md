@@ -4,31 +4,35 @@
 - Base del proyecto: **prototipo de Alex** en `dev_hackaton` (rama `prot_rober_v2`).
 - `C:\CommunityLab` (rama `prot_rober`, respaldado) es la **fuente** de piezas ya hechas.
 - **Paso 0 hecho:** `AGENTS.md`, `MEMORY.md`, `docs/` (esquema + ejemplo) y `prompts/`.
+- Paso 3 (pipeline real) implementado: `router.py`, `pipeline.py` y `modules/pipeline_client.py`;
+  tests nuevos pendientes de ejecutar.
 - Entrega funcional: **lunes 19-oct antes de las 17:00 (hora Chile)**. Demo Day: **martes
   27-oct**.
 - Pendiente: integrar `communitylab/` (lógica real) sin reescribir la UI de Alex.
 
 ## Decisiones
-- Paquete `communitylab/` en la raíz de `dev_hackaton`.
-- Esquema **superconjunto compatible**: se conservan las claves de Alex; `analisis_interacciones`,
-  `estado_aprobacion` y `pregunta`/`respuesta_sugerida` son opcionales; la FAQ conserva
-  `tema`/`origen`/`status`; `status` y `estado_aprobacion` no se solapan.
-- Credenciales OCI **duales**: `st.secrets` (prioridad) y perfil `DEFAULT` local; región,
-  namespace y bucket validados por entorno/secretos.
-- Fallback OCI local solo offline, etiquetado `guardado_local` y con aviso; nunca éxito falso.
-- `modules/oci_client.py` mantiene su API pública como adaptador delgado.
-- Newsletter opcional; las vistas toleran su ausencia; no generarla por ahora.
-- CSV en `communitylab/ingesta.py`: **después del lunes** (junto con newsletter y LangGraph).
-- Router con los tipos de Alex (`logro`, `duda`, `dificultades`) y tabla en `config.py`.
-- "Duda recurrente" = `pregunta_tecnica` o `duda`. Desempate FAQ determinista; pesos sin cambios.
-- Caché versionada para los 3 lotes de demo + modo simulado etiquetado.
+- Paquete `communitylab/` en la raíz.
+- Esquema superconjunto compatible: claves de Alex + `analisis_interacciones`, `estado_aprobacion`
+  y `pregunta`/`respuesta_sugerida` opcionales; FAQ conserva `tema`/`origen`/`status`.
+- `resumen_comunidad.sentimiento_predominante` usa etiqueta humana (`SENTIMIENTO_ETIQUETAS`);
+  `analisis_interacciones` conserva el enum.
+- Router: apoyo primero; testimonio/logro → LinkedIn con positivo/muy positivo; otros tipos solo
+  con muy positivo; pregunta_tecnica/duda → FAQ. Tabla en `config.py`.
+- Credenciales OCI duales (`st.secrets` y `DEFAULT`); offline etiquetado `guardado_local`; nunca
+  éxito falso. `oci_client` limpia activos vacíos antes de guardar.
+- Newsletter opcional; no se genera. La marca `paquete_simulado` avisa en la vista OCI.
+- "Duda recurrente" = `pregunta_tecnica`/`duda`; desempate FAQ determinista.
+- Tope global 12 = 3 operaciones × 4, sin contador global. Timeout LLM 120 s.
+- Caché versionada para los 3 lotes de demo; modo simulado etiquetado.
+- CSV, newsletter generada y LangGraph: después del lunes.
 - No escribir en `oci_bucket_simulation/` por defecto.
 
 ## Pendiente de decidir / coordinar
 - Esquema definitivo (campos "propuesta") y FAQ con respuesta.
-- Despliegue y promoción a `main` (lo ve el equipo).
-- Cambios de vistas no imprescindibles (coordinar con Fullstack).
-- `oci_bucket_simulation/` en git (el usuario lo consulta con Alex).
+- Selección: `_mejor_por_ruta`/`_puntuacion_faq` coinciden en fórmula y desempate con
+  `seleccion.py`, pero el conjunto LinkedIn difiere por el umbral del router (pendiente).
+- Despliegue/promoción a `main`; cambios de vistas no imprescindibles (Fullstack).
+- `oci_bucket_simulation/` en git (lo consulta el usuario con Alex).
 
 ## Errores a evitar
 - `mock_engine.py` es heurístico, **NO** un LLM; no presentarlo como IA.

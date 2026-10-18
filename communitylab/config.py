@@ -12,6 +12,8 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+from .modelos import Ruta
+
 
 class ErrorConfiguracion(Exception):
     """Falta un valor obligatorio de configuración."""
@@ -124,7 +126,7 @@ MAX_ESPERA_ACEPTABLE_SEG = 60
 ESPERA_MINIMA_ENTRE_LLAMADAS_SEG = 4.0  # 15 RPM -> 60/15 = 4 s entre llamadas
 ESPERA_POR_DEFECTO_429_SEG = 20.0  # si el error 429 no trae `retry_delay`
 ESPERA_MAXIMA_REINTENTO_SEG = 60.0  # tope de espera ante un 429
-TIMEOUT_LLM_SEG = 60
+TIMEOUT_LLM_SEG = 120
 
 # Rutas de trabajo, ancladas a la raíz del proyecto (el padre de `communitylab/`).
 RAIZ_PROYECTO = Path(__file__).resolve().parent.parent
@@ -142,11 +144,37 @@ LONGITUD_MAX_COPY_LINKEDIN = 1300
 HASHTAGS_MIN_LINKEDIN = 3
 HASHTAGS_MAX_LINKEDIN = 5
 
-# Selección temporal de la interacción hasta el router (Fase 5). No hay llamadas nuevas
-# al LLM: se reordenan las sub-puntuaciones ya calculadas.
-TIPOS_LINKEDIN: tuple[str, ...] = ("testimonio",)
-SENTIMIENTOS_LINKEDIN: tuple[str, ...] = ("muy_positivo",)
-TIPOS_FAQ: tuple[str, ...] = ("pregunta_tecnica",)
+# Router: tabla tipo→ruta (única fuente) y umbral de sentimiento para LinkedIn.
+MAPA_TIPOS_RUTA: dict[str, Ruta] = {
+    "testimonio": Ruta.POST_LINKEDIN,
+    "logro": Ruta.POST_LINKEDIN,
+    "pregunta_tecnica": Ruta.FAQ,
+    "duda": Ruta.FAQ,
+    "alerta_apoyo": Ruta.APOYO,
+    "dificultades": Ruta.APOYO,
+}
+TIPOS_LINKEDIN: tuple[str, ...] = tuple(
+    tipo for tipo, ruta in MAPA_TIPOS_RUTA.items() if ruta is Ruta.POST_LINKEDIN
+)
+TIPOS_FAQ: tuple[str, ...] = tuple(
+    tipo for tipo, ruta in MAPA_TIPOS_RUTA.items() if ruta is Ruta.FAQ
+)
+TIPOS_APOYO: tuple[str, ...] = tuple(
+    tipo for tipo, ruta in MAPA_TIPOS_RUTA.items() if ruta is Ruta.APOYO
+)
+SENTIMIENTOS_LINKEDIN_TESTIMONIO: tuple[str, ...] = ("muy_positivo", "positivo")
+SENTIMIENTOS_LINKEDIN_OTROS: tuple[str, ...] = ("muy_positivo",)
+# Alias que usa el selector temporal de `generadores/seleccion.py`; su valor no cambia.
+SENTIMIENTOS_LINKEDIN: tuple[str, ...] = SENTIMIENTOS_LINKEDIN_TESTIMONIO
+
+# Etiqueta humana solo para `resumen_comunidad.sentimiento_predominante`.
+SENTIMIENTO_ETIQUETAS: dict[str, str] = {
+    "muy_positivo": "Altamente Positivo",
+    "positivo": "Positivo",
+    "neutro": "Neutro",
+    "negativo": "Negativo",
+}
+
 PESOS_SELECCION_FAQ: dict[str, float] = {
     "claridad": 0.5,
     "relevancia_comunidad": 0.35,

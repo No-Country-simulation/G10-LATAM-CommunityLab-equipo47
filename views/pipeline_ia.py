@@ -7,6 +7,21 @@ import streamlit as st
 import time
 from modules.ui import badge_header, get_lucide, render_tag, render_callout, render_linkedin_mockup, clean_html
 from modules.mock_engine import process_community_payload
+from modules.pipeline_client import construir_configuracion
+from communitylab.pipeline import procesar_lote
+from communitylab.analisis import ErrorAnalisis
+from communitylab.config import ErrorConfiguracion
+from communitylab.generadores import ErrorGeneracion
+from communitylab.llm import ErrorLlm
+
+ERRORES_PROYECTO = (ErrorAnalisis, ErrorGeneracion, ErrorConfiguracion, ErrorLlm)
+
+
+def _mensaje_error(exc: Exception) -> str:
+    if isinstance(exc, ERRORES_PROYECTO):
+        return str(exc)
+    return f"Error inesperado ({type(exc).__name__}). Revisa el lote e inténtalo de nuevo."
+
 
 def render_pipeline_view():
     badge_header(
@@ -69,11 +84,15 @@ def render_pipeline_view():
             unsafe_allow_html=True
         )
     with col_cfg2:
-        modelo = st.selectbox(
+        modo = st.selectbox(
             "Motor de Inferencia LLM",
-            ["Google Gemini 2.5 Flash", "OpenAI GPT-4o", "Modo Simulado / Hackathon MVP"],
-            index=0
+            ["Gemini (real)", "Modo simulado (sin IA)"],
+            index=0,
         )
+
+    es_simulado = modo == "Modo simulado (sin IA)"
+    if es_simulado:
+        st.warning("Simulado: textos de ejemplo, no generados por IA.")
 
     # Botón principal de ejecución
     if st.button("Ejecutar Análisis y Router Condicional", type="primary", use_container_width=True):
@@ -82,22 +101,41 @@ def render_pipeline_view():
             time.sleep(0.3)
             st.write("2. Extrayendo polaridad de sentimiento y entidades clave...")
             time.sleep(0.3)
-            st.write("3. Evaluando condiciones de bifurcación (Logros -> LinkedIn, Pulso -> Newsletter, Dudas -> FAQ)...")
+            st.write("3. Evaluando condiciones de bifurcación (Logros -> LinkedIn, Dudas -> FAQ)...")
             time.sleep(0.3)
             st.write("4. Redactando activos adaptados al tono de Educación Superior...")
             time.sleep(0.3)
-            
-            paquete = process_community_payload(payload)
-            st.session_state["generated_package"] = paquete
-            st.session_state["curated_package"] = paquete.copy()
-            status.update(label="Pipeline ejecutado exitosamente con router condicional", state="complete", expanded=False)
 
-    # Si aún no se ha ejecutado en esta sesión pero ya existe o acaba de generarse
+            try:
+                if es_simulado:
+                    paquete = process_community_payload(payload)
+                    paquete.setdefault("resumen_comunidad", {})
+                    paquete["resumen_comunidad"]["origen_comunidad"] = payload.get(
+                        "origen_comunidad", ""
+                    )
+                    paquete["resumen_comunidad"]["periodo_referencia"] = payload.get(
+                        "periodo_referencia", ""
+                    )
+                else:
+                    config = construir_configuracion()
+                    paquete = procesar_lote(payload, config)
+            except Exception as exc:
+                status.update(label="Error al ejecutar el pipeline", state="error", expanded=True)
+                st.error(f"No se pudo ejecutar el pipeline: {_mensaje_error(exc)}")
+            else:
+                st.session_state["generated_package"] = paquete
+                st.session_state["curated_package"] = paquete.copy()
+                st.session_state["paquete_simulado"] = es_simulado
+                status.update(label="Pipeline ejecutado exitosamente con router condicional", state="complete", expanded=False)
+
     if "generated_package" not in st.session_state:
-        # Si ya había raw_payload, procesar automáticamente para conveniencia del usuario
-        paquete = process_community_payload(payload)
-        st.session_state["generated_package"] = paquete
-        st.session_state["curated_package"] = paquete.copy()
+        render_callout(
+            text="Pulsa 'Ejecutar Análisis y Router Condicional' para procesar el lote.",
+            title="Sin paquete generado",
+            icon_name="info",
+            color="#2563EB",
+        )
+        return
 
     if "generated_package" in st.session_state:
         paquete = st.session_state["generated_package"]
@@ -150,119 +188,143 @@ def render_pipeline_view():
 
         # TAB 1: LINKEDIN
         with tab_linkedin:
-            post_lk = activos.get("post_linkedin", {})
-            titulo_lk = post_lk.get("titulo", "")
-            copy_lk = post_lk.get("copy", "")
-            canal_lk = post_lk.get("canal_recomendado", "LinkedIn Institucional")
-            potencial_lk = post_lk.get("potencial_engagement", "Alto")
+            post_lk = activos.get("post_linkedin")
+            if not post_lk:
+                st.info("Este lote no genera post de LinkedIn.")
+            else:
+                titulo_lk = post_lk.get("titulo", "")
+                copy_lk = post_lk.get("copy", "")
+                canal_lk = post_lk.get("canal_recomendado", "LinkedIn Institucional")
+                potencial_lk = post_lk.get("potencial_engagement", "Alto")
 
-            st.markdown(
-                clean_html(f"""
-                <div style="background: #EFF6FF; border: 1px solid #BFDBFE; padding: 12px 16px; border-radius: 8px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        {get_lucide('check-circle-2', size=18, color='#1D4ED8')}
-                        <span style="color: #1E40AF; font-size: 0.9rem; font-weight: 600;">
-                            Ruta de LinkedIn activada por el Router tras detectar historias de impacto estudiantil
-                        </span>
+                st.markdown(
+                    clean_html(f"""
+                    <div style="background: #EFF6FF; border: 1px solid #BFDBFE; padding: 12px 16px; border-radius: 8px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            {get_lucide('check-circle-2', size=18, color='#1D4ED8')}
+                            <span style="color: #1E40AF; font-size: 0.9rem; font-weight: 600;">
+                                Ruta de LinkedIn activada por el Router tras detectar historias de impacto estudiantil
+                            </span>
+                        </div>
+                        <a href="https://www.linkedin.com/feed/" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: #FFFFFF; background-color: #0A66C2; padding: 6px 14px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">
+                            {get_lucide('external-link', size=13, color='#FFFFFF')}
+                            Abrir LinkedIn
+                        </a>
                     </div>
-                    <a href="https://www.linkedin.com/feed/" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: #FFFFFF; background-color: #0A66C2; padding: 6px 14px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">
-                        {get_lucide('external-link', size=13, color='#FFFFFF')}
-                        Abrir LinkedIn
-                    </a>
-                </div>
-                """),
-                unsafe_allow_html=True
-            )
+                    """),
+                    unsafe_allow_html=True
+                )
 
-            # Previsualización Fotorrealista del Post de LinkedIn
-            render_linkedin_mockup(titulo=titulo_lk, copy=copy_lk, canal=canal_lk, engagement=potencial_lk)
+                # Previsualización Fotorrealista del Post de LinkedIn
+                render_linkedin_mockup(titulo=titulo_lk, copy=copy_lk, canal=canal_lk, engagement=potencial_lk)
 
-            st.markdown("<div style='height: 12px;'></div>", unsafe_allow_html=True)
+                st.markdown("<div style='height: 12px;'></div>", unsafe_allow_html=True)
 
-            # Bloque para copiar el texto
-            st.markdown("##### Copiar texto completo listo para publicar:")
-            texto_completo_lk = f"{titulo_lk}\n\n{copy_lk}"
-            st.code(texto_completo_lk, language=None)
+                # Bloque para copiar el texto
+                st.markdown("##### Copiar texto completo listo para publicar:")
+                texto_completo_lk = f"{titulo_lk}\n\n{copy_lk}"
+                st.code(texto_completo_lk, language=None)
 
-            col_acc1, col_acc2 = st.columns([1, 1])
-            with col_acc1:
-                if st.button("Copiar texto de LinkedIn", key="btn_copy_lk"):
-                    st.success("Texto seleccionado arriba. Utiliza el icono de copiar en la esquina del recuadro.")
-            with col_acc2:
-                st.caption("Para realizar ajustes editoriales, puedes dirigirte al menú lateral '3. Panel de Curaduría'.")
+                col_acc1, col_acc2 = st.columns([1, 1])
+                with col_acc1:
+                    if st.button("Copiar texto de LinkedIn", key="btn_copy_lk"):
+                        st.success("Texto seleccionado arriba. Utiliza el icono de copiar en la esquina del recuadro.")
+                with col_acc2:
+                    st.caption("Para realizar ajustes editoriales, puedes dirigirte al menú lateral '3. Panel de Curaduría'.")
 
         # TAB 2: NEWSLETTER
         with tab_newsletter:
-            nl = activos.get("destaque_newsletter_semanal", {})
-            seccion_nl = nl.get("seccion", "Logro Estudiantil")
-            titular_nl = nl.get("titular", "")
-            resumen_nl = nl.get("resumen", "")
+            nl = activos.get("destaque_newsletter_semanal")
+            if not nl:
+                st.info("Este lote no genera newsletter (formato opcional).")
+            else:
+                seccion_nl = nl.get("seccion", "Logro Estudiantil")
+                titular_nl = nl.get("titular", "")
+                resumen_nl = nl.get("resumen", "")
 
-            st.markdown(
-                clean_html(f"""
-                <div style="background: #ECFDF5; border: 1px solid #A7F3D0; padding: 12px 16px; border-radius: 8px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                    {get_lucide('newspaper', size=18, color='#059669')}
-                    <span style="color: #065F46; font-size: 0.9rem; font-weight: 600;">
-                        Ruta de Newsletter Semanal: Síntesis optimizada para el boletín académico y graduados
-                    </span>
-                </div>
-                """),
-                unsafe_allow_html=True
-            )
-
-            with st.container(border=True):
                 st.markdown(
                     clean_html(f"""
-                    <div style="padding: 6px;">
-                        <span style="background: #E0F2FE; color: #0369A1; font-size: 0.75rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase;">
-                            Sección: {seccion_nl}
+                    <div style="background: #ECFDF5; border: 1px solid #A7F3D0; padding: 12px 16px; border-radius: 8px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                        {get_lucide('newspaper', size=18, color='#059669')}
+                        <span style="color: #065F46; font-size: 0.9rem; font-weight: 600;">
+                            Ruta de Newsletter Semanal: Síntesis optimizada para el boletín académico y graduados
                         </span>
-                        <h4 style="margin: 8px 0 6px 0; font-size: 1.12rem; color: #0F172A; font-weight: 700;">{titular_nl}</h4>
-                        <p style="margin: 0; color: #334155; font-size: 0.92rem; line-height: 1.5;">{resumen_nl}</p>
                     </div>
                     """),
                     unsafe_allow_html=True
                 )
 
-            st.markdown("##### Copiar bloque de boletín:")
-            texto_nl = f"[{seccion_nl.upper()}]\n{titular_nl}\n\n{resumen_nl}"
-            st.code(texto_nl, language=None)
+                with st.container(border=True):
+                    st.markdown(
+                        clean_html(f"""
+                        <div style="padding: 6px;">
+                            <span style="background: #E0F2FE; color: #0369A1; font-size: 0.75rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase;">
+                                Sección: {seccion_nl}
+                            </span>
+                            <h4 style="margin: 8px 0 6px 0; font-size: 1.12rem; color: #0F172A; font-weight: 700;">{titular_nl}</h4>
+                            <p style="margin: 0; color: #334155; font-size: 0.92rem; line-height: 1.5;">{resumen_nl}</p>
+                        </div>
+                        """),
+                        unsafe_allow_html=True
+                    )
+
+                st.markdown("##### Copiar bloque de boletín:")
+                texto_nl = f"[{seccion_nl.upper()}]\n{titular_nl}\n\n{resumen_nl}"
+                st.code(texto_nl, language=None)
 
         # TAB 3: FAQ / TIPS
         with tab_faq:
-            faq = activos.get("sugerencia_contenido_faq", {})
-            tema_faq = faq.get("tema", "")
-            origen_faq = faq.get("origen", "")
-            status_faq = faq.get("status", "derivado_a_ayudantes_de_catedra")
+            faq = activos.get("sugerencia_contenido_faq")
+            if not faq:
+                st.info("Este lote no genera FAQ.")
+            else:
+                tema_faq = faq.get("tema", "")
+                origen_faq = faq.get("origen", "")
+                status_faq = faq.get("status", "derivado_a_ayudantes_de_catedra")
 
-            st.markdown(
-                clean_html(f"""
-                <div style="background: #FFFBEB; border: 1px solid #FDE68A; padding: 12px 16px; border-radius: 8px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                    {get_lucide('help-circle', size=18, color='#D97706')}
-                    <span style="color: #92400E; font-size: 0.9rem; font-weight: 600;">
-                        Ruta de Soporte de Cátedra: Identificación de dudas repetitivas para generar material preventivo
-                    </span>
-                </div>
-                """),
-                unsafe_allow_html=True
-            )
-
-            with st.container(border=True):
                 st.markdown(
                     clean_html(f"""
-                    <div style="padding: 6px;">
-                        <span style="background: #FEF3C7; color: #92400E; font-size: 0.75rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase;">
-                            Estado: {status_faq.replace('_', ' ').title()}
+                    <div style="background: #FFFBEB; border: 1px solid #FDE68A; padding: 12px 16px; border-radius: 8px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                        {get_lucide('help-circle', size=18, color='#D97706')}
+                        <span style="color: #92400E; font-size: 0.9rem; font-weight: 600;">
+                            Ruta de Soporte de Cátedra: Identificación de dudas repetitivas para generar material preventivo
                         </span>
-                        <h4 style="margin: 8px 0 6px 0; font-size: 1.12rem; color: #0F172A; font-weight: 700;">{tema_faq}</h4>
-                        <p style="margin: 0; color: #64748B; font-size: 0.88rem;"><strong>Detección:</strong> {origen_faq}</p>
                     </div>
                     """),
                     unsafe_allow_html=True
                 )
 
-            texto_faq = f"[FAQ DE CÁTEDRA]\nTema: {tema_faq}\nOrigen: {origen_faq}\nEstado: {status_faq}"
-            st.code(texto_faq, language=None)
+                with st.container(border=True):
+                    st.markdown(
+                        clean_html(f"""
+                        <div style="padding: 6px;">
+                            <span style="background: #FEF3C7; color: #92400E; font-size: 0.75rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase;">
+                                Estado: {status_faq.replace('_', ' ').title()}
+                            </span>
+                            <h4 style="margin: 8px 0 6px 0; font-size: 1.12rem; color: #0F172A; font-weight: 700;">{tema_faq}</h4>
+                            <p style="margin: 0; color: #64748B; font-size: 0.88rem;"><strong>Detección:</strong> {origen_faq}</p>
+                        </div>
+                        """),
+                        unsafe_allow_html=True
+                    )
+
+                if faq.get("pregunta"):
+                    st.text_area(
+                        "Pregunta",
+                        value=faq["pregunta"],
+                        disabled=True,
+                        key="faq_pregunta_ro",
+                    )
+                if faq.get("respuesta_sugerida"):
+                    st.text_area(
+                        "Respuesta sugerida",
+                        value=faq["respuesta_sugerida"],
+                        disabled=True,
+                        key="faq_respuesta_ro",
+                    )
+
+                texto_faq = f"[FAQ DE CÁTEDRA]\nTema: {tema_faq}\nOrigen: {origen_faq}\nEstado: {status_faq}"
+                st.code(texto_faq, language=None)
 
         # EXPANDER JSON OFICIAL
         with st.expander("Ver JSON estructurado de salida (Esquema Oficial)"):

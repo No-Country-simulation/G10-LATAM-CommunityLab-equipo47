@@ -116,10 +116,16 @@ class SugerenciaContenidoFaqLlm(BaseModel):
 
 
 class SugerenciaContenidoFaq(SugerenciaContenidoFaqLlm):
-    """Activo de FAQ: lo del LLM + `origen`, `status` y `estado_aprobacion` del código."""
+    """Activo de FAQ: lo del LLM + `origen`, `status` y `estado_aprobacion` del código.
+
+    En el paquete final `pregunta` y `respuesta_sugerida` son opcionales; el esquema
+    que se pide al LLM (`SugerenciaContenidoFaqLlm`) sí las exige.
+    """
 
     origen: str
     status: str
+    pregunta: str | None = None
+    respuesta_sugerida: str | None = None
     estado_aprobacion: EstadoAprobacion = EstadoAprobacion.PENDIENTE
 
 
@@ -133,10 +139,10 @@ class DestaqueNewsletter(BaseModel):
 
 
 class ActivosDistribucion(BaseModel):
-    """Activos de marketing generados a partir del análisis."""
+    """Activos de marketing generados a partir del análisis (todos opcionales)."""
 
-    post_linkedin: PostLinkedIn
-    sugerencia_contenido_faq: SugerenciaContenidoFaq
+    post_linkedin: PostLinkedIn | None = None
+    sugerencia_contenido_faq: SugerenciaContenidoFaq | None = None
     destaque_newsletter_semanal: DestaqueNewsletter | None = None
 
 
@@ -159,7 +165,7 @@ class PaqueteDistribucion(BaseModel):
     status: str
     mensaje_error: str | None = None
     resumen_comunidad: ResumenComunidad
-    analisis_interacciones: list[AnalisisInteraccion]
+    analisis_interacciones: list[AnalisisInteraccion] = Field(default_factory=list)
     activos_distribucion_generados: ActivosDistribucion
     almacenamiento_oci: AlmacenamientoOCI
 

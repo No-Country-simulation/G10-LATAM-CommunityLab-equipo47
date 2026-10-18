@@ -98,6 +98,9 @@ def render_oci_storage_view():
 
     sobrescribir = st.checkbox("Sobrescribir si el objeto ya existe", value=False)
 
+    if st.session_state.get("paquete_simulado"):
+        st.warning("Este paquete es SIMULADO: no fue generado por IA")
+
     if st.button("Persistir Paquete en OCI Object Storage", type="primary", use_container_width=True):
         resultado = guardar_en_oci(
             paquete_a_guardar,
