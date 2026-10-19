@@ -11,6 +11,7 @@ from modules.oci_client import (
     configuracion_oci_publica,
     guardar_en_oci,
     listar_activos_oci,
+    preparar_paquete_para_guardar,
     ruta_sugerida_para_paquete,
 )
 
@@ -145,8 +146,15 @@ def render_oci_storage_view():
             }
             st.json(confirmacion)
 
-            # Botón de descarga directa
-            json_str = json.dumps(paquete_a_guardar, indent=2, ensure_ascii=False)
+            # Botón de descarga directa: mismo contenido que el paquete subido.
+            bucket_guardado = res.get("bucket") or bucket_config
+            ruta_guardada = res.get("ruta_objeto") or ruta_objeto
+            paquete_descarga = preparar_paquete_para_guardar(
+                paquete_a_guardar,
+                bucket_guardado,
+                ruta_guardada,
+            )
+            json_str = json.dumps(paquete_descarga, indent=2, ensure_ascii=False)
             st.download_button(
                 label="Descargar Paquete JSON Oficial para Evaluación",
                 data=json_str,
