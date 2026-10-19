@@ -18,6 +18,7 @@ from communitylab.almacenamiento_oci import (
     subir_objeto,
 )
 from communitylab.config import Configuracion
+from communitylab.modelos import EstadoAprobacion, PaqueteDistribucion
 
 FECHA = date(2026, 10, 18)  # semana ISO 42
 RUTA = "activos/2026-semana-04/paquete-distribucion.json"
@@ -39,6 +40,12 @@ def _paquete(periodo="Semestre_2026_1_Semana_04") -> dict:
         "activos_distribucion_generados": {},
         "almacenamiento_oci": {},
     }
+
+
+def _paquete_con_activos(activos: dict, periodo="Semestre_2026_1_Semana_04") -> dict:
+    paquete = _paquete(periodo)
+    paquete["activos_distribucion_generados"] = activos
+    return paquete
 
 
 # --- Ruta por semana ----------------------------------------------------------
@@ -387,3 +394,309 @@ def test_guardar_en_oci_offline_limpia(tmp_path):
     destino = tmp_path / "bucket-test" / RUTA
     contenido = json.loads(destino.read_text(encoding="utf-8"))
     assert "post_linkedin" not in contenido["activos_distribucion_generados"]
+
+
+# --- Preparación del paquete para guardar ------------------------------------
+
+def test_preparar_paquete_actualiza_metadatos_y_no_muta_original():
+    paquete = _paquete_con_activos(
+        {
+            "post_linkedin": {
+                "titulo": "Titulo",
+                "copy": "Copy",
+                "canal_recomendado": "LinkedIn",
+                "potencial_engagement": "Alto",
+                "estado_aprobacion": "pendiente",
+                "estado_curaduria": "Aprobado para Publicar",
+            }
+        }
+    )
+    paquete["almacenamiento_oci"] = {
+        "bucket": "bucket-viejo",
+        "ruta_objeto": RUTA,
+        "status": "guardado_con_exito",
+    }
+
+    preparado = adaptador.preparar_paquete_para_guardar(
+        paquete,
+        bucket="bucket-real",
+        ruta="pruebas/roberto/prueba-ui.json",
+    )
+
+    assert preparado["almacenamiento_oci"] == {
+        "bucket": "bucket-real",
+        "ruta_objeto": "pruebas/roberto/prueba-ui.json",
+    }
+    assert preparado is not paquete
+    assert (
+        preparado["activos_distribucion_generados"]
+        is not paquete["activos_distribucion_generados"]
+    )
+    assert paquete["almacenamiento_oci"]["bucket"] == "bucket-viejo"
+    assert paquete["almacenamiento_oci"]["status"] == "guardado_con_exito"
+
+
+def test_guardar_en_oci_sube_copia_con_ruta_real_sin_mutar_original():
+    config = _config(
+        oci_user="u",
+        oci_fingerprint="f",
+        oci_tenancy="t",
+        oci_key_content="k",
+    )
+    paquete = _paquete_con_activos(
+        {
+            "post_linkedin": {
+                "titulo": "Titulo",
+                "copy": "Copy",
+                "canal_recomendado": "LinkedIn",
+                "potencial_engagement": "Alto",
+                "estado_aprobacion": "pendiente",
+                "estado_curaduria": "Aprobado para Publicar",
+            }
+        }
+    )
+    paquete["almacenamiento_oci"] = {
+        "bucket": "bucket-test",
+        "ruta_objeto": RUTA,
+    }
+
+    with (
+        patch.object(adaptador, "_configuracion_oci", return_value=config),
+        patch.object(adaptador, "hay_credenciales", return_value=True),
+        patch.object(adaptador, "crear_cliente", return_value=MagicMock()),
+        patch.object(adaptador, "subir_objeto", return_value="ok") as subir,
+    ):
+        resultado = adaptador.guardar_en_oci(
+            paquete,
+            ruta_objeto="pruebas/roberto/prueba-ui.json",
+        )
+
+    contenido = subir.call_args.args[3]
+    assert contenido["almacenamiento_oci"] == {
+        "bucket": "bucket-test",
+        "ruta_objeto": "pruebas/roberto/prueba-ui.json",
+    }
+    assert (
+        contenido["activos_distribucion_generados"]["post_linkedin"][
+            "estado_aprobacion"
+        ]
+        == "aprobado"
+    )
+    assert paquete["almacenamiento_oci"]["ruta_objeto"] == RUTA
+    assert resultado["ruta_objeto"] == "pruebas/roberto/prueba-ui.json"
+
+
+@pytest.mark.parametrize(
+    "decision, estado_inicial, esperado",
+    [
+        ("Aprobado para Publicar", "pendiente", "aprobado"),
+        ("Pendiente de Modificaciones", "aprobado", "pendiente"),
+        ("Rechazado", "aprobado", "rechazado"),
+    ],
+)
+def test_preparar_paquete_mapea_aprobacion_linkedin(
+    decision, estado_inicial, esperado
+):
+    paquete = _paquete_con_activos(
+        {
+            "post_linkedin": {
+                "titulo": "Titulo",
+                "copy": "Copy",
+                "canal_recomendado": "LinkedIn",
+                "potencial_engagement": "Alto",
+                "estado_aprobacion": estado_inicial,
+                "estado_curaduria": decision,
+            }
+        }
+    )
+
+    preparado = adaptador.preparar_paquete_para_guardar(paquete, "bucket", RUTA)
+
+    assert (
+        preparado["activos_distribucion_generados"]["post_linkedin"][
+            "estado_aprobacion"
+        ]
+        == esperado
+    )
+
+
+@pytest.mark.parametrize(
+    "decision, esperado",
+    [
+        ("Incluir en la Edición Semanal", "aprobado"),
+        ("Omitir en este envío", "rechazado"),
+    ],
+)
+def test_preparar_paquete_mapea_aprobacion_newsletter(decision, esperado):
+    paquete = _paquete_con_activos(
+        {
+            "destaque_newsletter_semanal": {
+                "seccion": "Seccion",
+                "titular": "Titular",
+                "resumen": "Resumen",
+                "estado_aprobacion": "pendiente",
+                "estado_curaduria": decision,
+            }
+        }
+    )
+
+    preparado = adaptador.preparar_paquete_para_guardar(paquete, "bucket", RUTA)
+
+    assert (
+        preparado["activos_distribucion_generados"][
+            "destaque_newsletter_semanal"
+        ]["estado_aprobacion"]
+        == esperado
+    )
+
+
+def test_preparar_paquete_sin_estado_curaduria_no_cambia_aprobacion():
+    paquete = _paquete_con_activos(
+        {
+            "post_linkedin": {
+                "titulo": "Titulo",
+                "copy": "Copy",
+                "canal_recomendado": "LinkedIn",
+                "potencial_engagement": "Alto",
+                "estado_aprobacion": "rechazado",
+            },
+            "destaque_newsletter_semanal": {
+                "seccion": "Seccion",
+                "titular": "Titular",
+                "resumen": "Resumen",
+            },
+        }
+    )
+
+    preparado = adaptador.preparar_paquete_para_guardar(paquete, "bucket", RUTA)
+
+    post = preparado["activos_distribucion_generados"]["post_linkedin"]
+    newsletter = preparado["activos_distribucion_generados"][
+        "destaque_newsletter_semanal"
+    ]
+    assert post["estado_aprobacion"] == "rechazado"
+    assert "estado_aprobacion" not in newsletter
+
+
+def test_preparar_paquete_no_toca_faq():
+    paquete = _paquete_con_activos(
+        {
+            "sugerencia_contenido_faq": {
+                "tema": "Tema",
+                "origen": "Comunidad",
+                "status": "descartado",
+                "pregunta": "Pregunta",
+                "respuesta_sugerida": "Respuesta",
+                "estado_aprobacion": "aprobado",
+            }
+        }
+    )
+
+    preparado = adaptador.preparar_paquete_para_guardar(paquete, "bucket", RUTA)
+
+    faq = preparado["activos_distribucion_generados"]["sugerencia_contenido_faq"]
+    assert faq["status"] == "descartado"
+    assert faq["estado_aprobacion"] == "aprobado"
+
+
+def test_guardar_en_oci_offline_escribe_metadatos_y_aprobacion(tmp_path):
+    paquete = _paquete_con_activos(
+        {
+            "post_linkedin": {
+                "titulo": "Titulo",
+                "copy": "Copy",
+                "canal_recomendado": "LinkedIn",
+                "potencial_engagement": "Alto",
+                "estado_aprobacion": "pendiente",
+                "estado_curaduria": "Aprobado para Publicar",
+            }
+        }
+    )
+    paquete["almacenamiento_oci"] = {
+        "bucket": "bucket-viejo",
+        "ruta_objeto": RUTA,
+    }
+
+    with (
+        patch.object(adaptador, "_configuracion_oci", return_value=_config()),
+        patch.object(adaptador, "hay_credenciales", return_value=False),
+        patch.object(adaptador, "DIRECTORIO_OFFLINE", tmp_path),
+    ):
+        resultado = adaptador.guardar_en_oci(
+            paquete,
+            ruta_objeto="pruebas/roberto/prueba-ui-offline.json",
+        )
+
+    assert resultado["status"] == "guardado_local"
+    destino = tmp_path / "bucket-test" / "pruebas/roberto/prueba-ui-offline.json"
+    contenido = json.loads(destino.read_text(encoding="utf-8"))
+    assert contenido["almacenamiento_oci"] == {
+        "bucket": "bucket-test",
+        "ruta_objeto": "pruebas/roberto/prueba-ui-offline.json",
+    }
+    assert (
+        contenido["activos_distribucion_generados"]["post_linkedin"][
+            "estado_aprobacion"
+        ]
+        == "aprobado"
+    )
+    assert paquete["almacenamiento_oci"]["bucket"] == "bucket-viejo"
+
+
+def test_paquete_preparado_valida_con_el_modelo():
+    ruta_ejemplo = (
+        Path(__file__).resolve().parent.parent
+        / "docs"
+        / "ejemplo-paquete-distribucion.json"
+    )
+    paquete = json.loads(ruta_ejemplo.read_text(encoding="utf-8"))
+    paquete["activos_distribucion_generados"]["post_linkedin"][
+        "estado_curaduria"
+    ] = "Aprobado para Publicar"
+
+    preparado = adaptador.preparar_paquete_para_guardar(
+        paquete,
+        bucket="bucket-real",
+        ruta="pruebas/roberto/prueba-ui.json",
+    )
+    validado = PaqueteDistribucion.model_validate(preparado)
+
+    assert validado.almacenamiento_oci.bucket == "bucket-real"
+    assert validado.almacenamiento_oci.ruta_objeto == "pruebas/roberto/prueba-ui.json"
+    assert validado.almacenamiento_oci.status is None
+    assert (
+        validado.activos_distribucion_generados.post_linkedin.estado_aprobacion
+        == EstadoAprobacion.APROBADO
+    )
+
+
+def test_preparar_paquete_combina_limpieza_y_metadatos():
+    paquete = _paquete_con_activos(
+        {
+            "post_linkedin": {"titulo": "", "copy": "Copy"},
+            "sugerencia_contenido_faq": {
+                "tema": "Tema",
+                "origen": "Comunidad",
+                "status": "derivado_a_mentoria",
+            },
+        }
+    )
+    paquete["almacenamiento_oci"] = {
+        "bucket": "bucket-viejo",
+        "ruta_objeto": RUTA,
+    }
+
+    preparado = adaptador.preparar_paquete_para_guardar(
+        paquete,
+        bucket="bucket-test",
+        ruta="activos/2026-semana-05/paquete-distribucion.json",
+    )
+
+    activos = preparado["activos_distribucion_generados"]
+    assert "post_linkedin" not in activos
+    assert "sugerencia_contenido_faq" in activos
+    assert preparado["almacenamiento_oci"] == {
+        "bucket": "bucket-test",
+        "ruta_objeto": "activos/2026-semana-05/paquete-distribucion.json",
+    }
+    assert "post_linkedin" in paquete["activos_distribucion_generados"]

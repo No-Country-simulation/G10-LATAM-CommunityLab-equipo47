@@ -25,8 +25,18 @@ from communitylab.almacenamiento_oci import (
     subir_objeto,
 )
 from communitylab.config import Configuracion, cargar_configuracion
+from communitylab.modelos import EstadoAprobacion
 
 DIRECTORIO_OFFLINE = Path(__file__).resolve().parent.parent / "data" / "salida" / "oci_offline"
+
+# Decisiones de la vista de Curaduría -> literales de `EstadoAprobacion`.
+_MAPA_ESTADO_CURADURIA = {
+    "Aprobado para Publicar": EstadoAprobacion.APROBADO.value,
+    "Pendiente de Modificaciones": EstadoAprobacion.PENDIENTE.value,
+    "Rechazado": EstadoAprobacion.RECHAZADO.value,
+    "Incluir en la Edición Semanal": EstadoAprobacion.APROBADO.value,
+    "Omitir en este envío": EstadoAprobacion.RECHAZADO.value,
+}
 
 
 def _leer_secretos_oci() -> dict | None:
@@ -133,6 +143,39 @@ def limpiar_paquete_para_guardar(paquete: dict) -> dict:
     return limpio
 
 
+def preparar_paquete_para_guardar(paquete: dict, bucket: str, ruta: str) -> dict:
+    """Copia el paquete lista para subir, sin mutar el original.
+
+    - Limpia los activos incompletos.
+    - Fija el bucket y la ruta reales del objeto.
+    - Mapea `estado_curaduria` a `estado_aprobacion` en LinkedIn y newsletter.
+    - No escribe el `status` de la subida: solo bucket y ruta_objeto.
+    """
+    preparado = limpiar_paquete_para_guardar(paquete)
+
+    almacenamiento = preparado.get("almacenamiento_oci")
+    if not isinstance(almacenamiento, dict):
+        almacenamiento = {}
+        preparado["almacenamiento_oci"] = almacenamiento
+    almacenamiento["bucket"] = bucket
+    almacenamiento["ruta_objeto"] = ruta
+    almacenamiento.pop("status", None)
+
+    activos = preparado.get("activos_distribucion_generados")
+    if not isinstance(activos, dict):
+        return preparado
+
+    for nombre in ("post_linkedin", "destaque_newsletter_semanal"):
+        activo = activos.get(nombre)
+        if not isinstance(activo, dict):
+            continue
+        decision = activo.get("estado_curaduria")
+        if decision in _MAPA_ESTADO_CURADURIA:
+            activo["estado_aprobacion"] = _MAPA_ESTADO_CURADURIA[decision]
+
+    return preparado
+
+
 def _guardar_offline(paquete: dict, bucket: str, ruta: str) -> dict:
     destino = DIRECTORIO_OFFLINE / bucket / ruta
     destino.parent.mkdir(parents=True, exist_ok=True)
@@ -163,7 +206,7 @@ def guardar_en_oci(
 
     ruta = ruta_objeto or ruta_sugerida_para_paquete(paquete)
     bucket = config.oci_bucket or bucket_name or "sin-bucket"
-    paquete_limpio = limpiar_paquete_para_guardar(paquete)
+    paquete_limpio = preparar_paquete_para_guardar(paquete, bucket, ruta)
 
     if not hay_credenciales(config):
         return _guardar_offline(paquete_limpio, bucket, ruta)
