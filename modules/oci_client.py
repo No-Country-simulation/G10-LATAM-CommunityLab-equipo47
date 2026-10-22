@@ -20,11 +20,11 @@ def _obtener_config_entorno():
     if hasattr(st, "secrets") and "oci" in st.secrets:
         oci_secrets = st.secrets["oci"]
     
-    config_file = oci_secrets.get("config_file") if oci_secrets else os.getenv("OCI_CONFIG_FILE", "~/.oci/config")
-    profile = oci_secrets.get("config_profile") if oci_secrets else os.getenv("OCI_CONFIG_PROFILE", "DEFAULT")
-    region = oci_secrets.get("region") if oci_secrets else os.getenv("OCI_REGION", "sa-santiago-1")
-    namespace = oci_secrets.get("namespace") if oci_secrets else os.getenv("OCI_NAMESPACE", "axsui3upub83")
-    bucket = oci_secrets.get("bucket") if oci_secrets else os.getenv("OCI_BUCKET", "communitylab-activos-marketing")
+    config_file = (oci_secrets.get("config_file") if oci_secrets else None) or os.getenv("OCI_CONFIG_FILE", "~/.oci/config")
+    profile = (oci_secrets.get("config_profile") if oci_secrets else None) or os.getenv("OCI_CONFIG_PROFILE", "DEFAULT")
+    region = (oci_secrets.get("region") if oci_secrets else None) or os.getenv("OCI_REGION", "sa-santiago-1")
+    namespace = (oci_secrets.get("namespace") if oci_secrets else None) or os.getenv("OCI_NAMESPACE", "axsui3upub83")
+    bucket = (oci_secrets.get("bucket") if oci_secrets else None) or os.getenv("OCI_BUCKET", "communitylab-activos-marketing")
     
     return {
         "config_file": config_file,
@@ -41,7 +41,7 @@ def verificar_estado_conexion_oci():
     Devuelve un diccionario con el diagnostico para que el usuario comun entienda el estado.
     """
     cfg = _obtener_config_entorno()
-    ruta_cfg = Path(cfg["config_file"]).expanduser()
+    ruta_cfg = Path(cfg["config_file"]).expanduser() if cfg.get("config_file") else None
     
     sdk_instalado = False
     try:
@@ -50,7 +50,7 @@ def verificar_estado_conexion_oci():
     except ImportError:
         pass
 
-    tiene_archivo_config = ruta_cfg.exists()
+    tiene_archivo_config = ruta_cfg.exists() if ruta_cfg else False
     cliente, ns, bucket, region, err = _obtener_cliente_oci_real()
     
     conectado_a_nube = cliente is not None
@@ -58,8 +58,8 @@ def verificar_estado_conexion_oci():
     if conectado_a_nube:
         mensaje = f"Conectado exitosamente a Oracle Cloud (Namespace: {ns}, Bucket: {bucket}, Región: {region})"
         tipo = "nube_real"
-    elif not tiene_archivo_config:
-        mensaje = f"Modo Espejo Local Activo: No se encontró el archivo de credenciales '{cfg['config_file']}'. Los archivos se guardan localmente en tu PC y NO en el namespace '{ns}' de Oracle Cloud."
+    elif not tiene_archivo_config and not (cfg.get("secrets") and (cfg["secrets"].get("key_content") or cfg["secrets"].get("key_file"))):
+        mensaje = f"Modo Espejo Local Activo: No se encontraron credenciales OCI configuradas. Los archivos se guardan localmente y NO en el namespace '{ns}' de Oracle Cloud."
         tipo = "falta_config"
     elif not sdk_instalado:
         mensaje = "Modo Espejo Local Activo: SDK 'oci' no disponible."
@@ -74,7 +74,7 @@ def verificar_estado_conexion_oci():
         "mensaje": mensaje,
         "sdk_instalado": sdk_instalado,
         "tiene_archivo_config": tiene_archivo_config,
-        "ruta_config_esperada": str(ruta_cfg),
+        "ruta_config_esperada": str(ruta_cfg) if ruta_cfg else "st.secrets['oci']",
         "namespace": ns or cfg["namespace"],
         "bucket": bucket or cfg["bucket"],
         "region": region or cfg["region"],
@@ -96,7 +96,42 @@ def _obtener_cliente_oci_real():
     try:
         import oci
         
-        # 1. Intentar desde archivos de configuración disponibles
+        # 1. Intentar PRIMERO desde st.secrets o variables de entorno directas (Prioridad en la nube)
+        oci_secrets = cfg["secrets"]
+        user = (oci_secrets.get("user") if oci_secrets else None) or os.getenv("OCI_USER")
+        fingerprint = (oci_secrets.get("fingerprint") if oci_secrets else None) or os.getenv("OCI_FINGERPRINT")
+        tenancy = (oci_secrets.get("tenancy") if oci_secrets else None) or os.getenv("OCI_TENANCY")
+        key_content = (oci_secrets.get("key_content") if oci_secrets else None) or os.getenv("OCI_KEY_CONTENT")
+        key_file = (oci_secrets.get("key_file") if oci_secrets else None) or os.getenv("OCI_KEY_FILE")
+
+        if user and fingerprint and tenancy and (key_content or key_file):
+            try:
+                config = {
+                    "user": user.strip(),
+                    "fingerprint": fingerprint.strip(),
+                    "tenancy": tenancy.strip(),
+                    "region": region.strip(),
+                }
+                if key_content:
+                    config["key_content"] = key_content.strip()
+                elif key_file:
+                    config["key_file"] = key_file.strip()
+
+                oci.config.validate_config(config)
+                client = oci.object_storage.ObjectStorageClient(config)
+                
+                try:
+                    ns_real = client.get_namespace().data
+                    if ns_real:
+                        namespace = ns_real
+                except Exception:
+                    pass
+
+                return client, namespace, bucket, region, None
+            except Exception as e:
+                return None, namespace, bucket, region, f"Error autenticando con st.secrets: {str(e)}"
+
+        # 2. Intentar desde archivos de configuración disponibles (~/.oci/config o proyecto)
         rutas_a_probar = []
         if cfg.get("config_file"):
             rutas_a_probar.append(Path(cfg["config_file"]).expanduser())
@@ -112,7 +147,7 @@ def _obtener_cliente_oci_real():
 
         ultimo_error = None
         for ruta_cfg in rutas_a_probar:
-            if not ruta_cfg.exists():
+            if not ruta_cfg or not ruta_cfg.exists():
                 continue
             try:
                 datos_config = oci.config.from_file(
@@ -146,38 +181,6 @@ def _obtener_cliente_oci_real():
             except Exception as e:
                 ultimo_error = f"Error leyendo {ruta_cfg}: {str(e)}"
 
-        # 2. Intentar desde st.secrets o variables de entorno directas
-        oci_secrets = cfg["secrets"]
-        user = oci_secrets.get("user") if oci_secrets else os.getenv("OCI_USER")
-        fingerprint = oci_secrets.get("fingerprint") if oci_secrets else os.getenv("OCI_FINGERPRINT")
-        tenancy = oci_secrets.get("tenancy") if oci_secrets else os.getenv("OCI_TENANCY")
-        key_content = oci_secrets.get("key_content") if oci_secrets else os.getenv("OCI_KEY_CONTENT")
-        key_file = oci_secrets.get("key_file") if oci_secrets else os.getenv("OCI_KEY_FILE")
-
-        if user and fingerprint and tenancy and (key_content or key_file):
-            config = {
-                "user": user,
-                "fingerprint": fingerprint,
-                "tenancy": tenancy,
-                "region": region,
-            }
-            if key_content:
-                config["key_content"] = key_content
-            elif key_file:
-                config["key_file"] = key_file
-
-            oci.config.validate_config(config)
-            client = oci.object_storage.ObjectStorageClient(config)
-            
-            try:
-                ns_real = client.get_namespace().data
-                if ns_real:
-                    namespace = ns_real
-            except Exception:
-                pass
-
-            return client, namespace, bucket, region, None
-            
         return None, namespace, bucket, region, ultimo_error or "No se encontraron credenciales OCI válidas"
 
     except ImportError:
