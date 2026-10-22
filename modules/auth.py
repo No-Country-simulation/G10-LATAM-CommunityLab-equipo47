@@ -10,6 +10,34 @@ except ImportError:
     from modules.ui import get_lucide, GITHUB_REPO_URL, clean_html
     DEMO_URL = "https://proyectohackathonocigit-7uw8m9h4owwxopeavwlvun.streamlit.app/"
 
+# Diccionario de usuarios autorizados
+USUARIOS_AUTORIZADOS = {
+    "admin": {
+        "claves": ["admin", "12345"],
+        "nombre": "Equipo 47 (Admin)"
+    },
+    "isabel.dorado": {
+        "claves": ["12345"],
+        "nombre": "Isabel Dorado"
+    },
+    "alex.carrasco": {
+        "claves": ["12345"],
+        "nombre": "Alex Carrasco"
+    },
+    "roberto": {
+        "claves": ["12345"],
+        "nombre": "Roberto"
+    },
+    "david": {
+        "claves": ["12345"],
+        "nombre": "David"
+    },
+    "equipo47": {
+        "claves": ["12345"],
+        "nombre": "Equipo 47"
+    }
+}
+
 def check_login():
     """Verifica si el usuario está autenticado en la sesión actual."""
     if "authenticated" not in st.session_state:
@@ -59,7 +87,7 @@ def render_login_form():
                 """),
                 unsafe_allow_html=True
             )
-            st.caption("Credenciales predeterminadas para evaluación técnica: **admin** / **admin**")
+            st.caption("Credenciales para evaluación y equipo: **admin / admin** (o miembros del equipo con clave **12345**)")
             
             with st.form("login_form"):
                 user_input = st.text_input("Usuario", placeholder="admin", value="admin")
@@ -67,13 +95,15 @@ def render_login_form():
                 submit = st.form_submit_button("Ingresar al Panel", use_container_width=True, type="primary")
 
                 if submit:
-                    if user_input.strip() == "admin" and pass_input.strip() == "admin":
+                    usr_clean = user_input.strip().lower()
+                    pwd_clean = pass_input.strip()
+                    if usr_clean in USUARIOS_AUTORIZADOS and pwd_clean in USUARIOS_AUTORIZADOS[usr_clean]["claves"]:
                         st.session_state.authenticated = True
-                        st.session_state.username = "Equipo 47 (Admin)"
-                        st.toast("Sesión iniciada correctamente")
+                        st.session_state.username = USUARIOS_AUTORIZADOS[usr_clean]["nombre"]
+                        st.toast(f"Bienvenido, {st.session_state.username}")
                         st.rerun()
                     else:
-                        st.error("Credenciales incorrectas. Ingresa admin / admin para acceder.")
+                        st.error("Credenciales incorrectas. Verifica tu usuario y contraseña.")
 
         # Enlaces al demo en vivo y repositorio de GitHub
         sparkle_svg = get_lucide("sparkles", size=14, color="#E04F16")
