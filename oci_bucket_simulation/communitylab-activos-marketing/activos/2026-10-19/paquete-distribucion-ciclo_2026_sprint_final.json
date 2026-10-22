@@ -1,0 +1,37 @@
+{
+  "status": "exito",
+  "motor_utilizado": "Google Gemini (gemini-3.5-flash-lite) [En vivo]",
+  "resumen_comunidad": {
+    "total_interacciones_procesadas": 14,
+    "sentimiento_predominante": "Altamente positivo, colaborativo y motivador, impulsado por testimonios de inserción laboral exitosa y fuerte soporte técnico entre pares.",
+    "temas_principales": [
+      "Inserción laboral y triunfos profesionales",
+      "Buenas prácticas de desarrollo Cloud (OCI y Streamlit)",
+      "Implementación de Agentes de IA y procesamiento de lenguaje natural"
+    ]
+  },
+  "activos_distribucion_generados": {
+    "post_linkedin": {
+      "titulo": "¡El talento de la comunidad ONE cruza fronteras y llega a las mejores empresas tech!",
+      "copy": "Nuestra comunidad no para de dar frutos excepcionales. 🚀 En este Sprint Final del Hackathon ONE G10, celebramos múltiples contrataciones en empresas líderes como Globant, Mercado Libre y programas de trainees en Oracle. Estudiantes de toda Latinoamérica están demostrando que el aprendizaje basado en proyectos reales de arquitectura Cloud (OCI) y pipelines de IA marca la diferencia en las entrevistas técnicas. Gracias a los instructores de Alura y al poder del pair programming, seguimos transformando vidas a través de la educación tecnológica. ¡Felicitaciones a todos los equipos! #OracleNextEducation #AluraLatam #OracleCloud #ComunidadONE #EducacionTech",
+      "canal_recomendado": "LinkedIn Oficial / Red Alumni",
+      "potencial_engagement": "Alto",
+      "estado_curaduria": "Aprobado para Publicar"
+    },
+    "destaque_newsletter_semanal": {
+      "seccion": "Pulso de la Comunidad & Wins",
+      "titular": "De las aulas virtuales de ONE a las grandes ligas de la tecnología",
+      "resumen": "Esta semana, múltiples graduados y estudiantes avanzados del programa ONE G10 compartieron sus contrataciones en empresas de primer nivel. Demostraron que el dominio de arquitecturas serverless en Oracle Cloud Infrastructure (OCI) y las soluciones impulsadas por IA son herramientas determinantes para destacar en el mercado laboral actual."
+    },
+    "sugerencia_contenido_faq": {
+      "tema": "Configuración segura del SDK de OCI en Streamlit Cloud sin exponer archivos temporales",
+      "origen": "DISC-ONE-503 / DISC-ONE-504 (#dudas-desarrollo-cloud)",
+      "status": "validado_por_mentor"
+    }
+  },
+  "almacenamiento_oci": {
+    "bucket": "communitylab-activos-marketing",
+    "ruta_objeto": "activos/2026-10-19/paquete-distribucion-ciclo_2026_sprint_final.json",
+    "status": "guardado_con_exito"
+  }
+}

@@ -1,0 +1,199 @@
+{
+  "status": "exito",
+  "resumen_comunidad": {
+    "origen_comunidad": "Campus_Digital_Facultad_Ingenieria_ONE",
+    "periodo_referencia": "Semestre_2026_1_Semana_04",
+    "total_interacciones_procesadas": 12,
+    "sentimiento_predominante": "Altamente Positivo",
+    "temas_principales": [
+      "Empleabilidad e hitos",
+      "LangGraph y Pydantic",
+      "Infraestructura OCI"
+    ]
+  },
+  "analisis_interacciones": [
+    {
+      "autor": "Mariana Souza",
+      "canal": "#logros-laborales-y-grado",
+      "tipo": "testimonio",
+      "sentimiento": "muy_positivo",
+      "temas": [
+        "Contratación laboral",
+        "Proyectos LangChain",
+        "Oracle Cloud"
+      ],
+      "puntuacion_relevancia": 95,
+      "motivo_puntuacion": "Excelente testimonio de contratación impulsado por el proyecto práctico de la facultad.",
+      "ruta": "post_linkedin"
+    },
+    {
+      "autor": "Lucas Albuquerque",
+      "canal": "#laboratorio-ia-agentes",
+      "tipo": "pregunta_tecnica",
+      "sentimiento": "neutro",
+      "temas": [
+        "LangGraph",
+        "JSON incompleto",
+        "Pydantic"
+      ],
+      "puntuacion_relevancia": 77,
+      "motivo_puntuacion": "Pregunta técnica muy clara y útil sobre validación en grafos de agentes.",
+      "ruta": "faq"
+    },
+    {
+      "autor": "Mateo Gómez",
+      "canal": "#anuncios-academicos",
+      "tipo": "agradecimiento",
+      "sentimiento": "muy_positivo",
+      "temas": [
+        "Workshop OCI",
+        "Gobierno de costos"
+      ],
+      "puntuacion_relevancia": 77,
+      "motivo_puntuacion": "Agradecimiento sobre talleres cloud prácticos y control de costos.",
+      "ruta": "post_linkedin"
+    },
+    {
+      "autor": "Sofía Paredes",
+      "canal": "#logros-laborales-y-grado",
+      "tipo": "testimonio",
+      "sentimiento": "muy_positivo",
+      "temas": [
+        "Promoción laboral",
+        "Tech Lead",
+        "Serverless OCI"
+      ],
+      "puntuacion_relevancia": 93,
+      "motivo_puntuacion": "Inspiradora historia de crecimiento profesional a Tech Lead gracias al programa.",
+      "ruta": "post_linkedin"
+    },
+    {
+      "autor": "Gabriel Morales",
+      "canal": "#laboratorio-ia-agentes",
+      "tipo": "recurso",
+      "sentimiento": "positivo",
+      "temas": [
+        "Script de fallback",
+        "LangGraph",
+        "Pydantic"
+      ],
+      "puntuacion_relevancia": 87,
+      "motivo_puntuacion": "Aporte de recurso técnico directo que resuelve la duda anterior sobre validación.",
+      "ruta": "sin_activo"
+    },
+    {
+      "autor": "Prof. Fernando Cabrera",
+      "canal": "#anuncios-academicos",
+      "tipo": "anuncio",
+      "sentimiento": "muy_positivo",
+      "temas": [
+        "Reconocimiento docente",
+        "Empleabilidad real"
+      ],
+      "puntuacion_relevancia": 80,
+      "motivo_puntuacion": "Mensaje institucional que valida el éxito de los estudiantes y fomenta la comunidad.",
+      "ruta": "post_linkedin"
+    },
+    {
+      "autor": "Valeria Rivas",
+      "canal": "#logros-laborales-y-grado",
+      "tipo": "testimonio",
+      "sentimiento": "muy_positivo",
+      "temas": [
+        "Concurso interuniversitario",
+        "Triaje médico",
+        "Microservicios OCI"
+      ],
+      "puntuacion_relevancia": 90,
+      "motivo_puntuacion": "Logro destacado en un concurso de innovación usando arquitectura en la nube.",
+      "ruta": "post_linkedin"
+    },
+    {
+      "autor": "Andrés Villegas",
+      "canal": "#dudas-cloud-oci",
+      "tipo": "pregunta_tecnica",
+      "sentimiento": "neutro",
+      "temas": [
+        "OCI Object Storage",
+        "SDK Python"
+      ],
+      "puntuacion_relevancia": 68,
+      "motivo_puntuacion": "Consulta técnica específica sobre el uso del SDK de almacenamiento en OCI.",
+      "ruta": "faq"
+    },
+    {
+      "autor": "Camila Herrera",
+      "canal": "#dudas-cloud-oci",
+      "tipo": "recurso",
+      "sentimiento": "positivo",
+      "temas": [
+        "OCI Object Storage",
+        "Siempre Gratis"
+      ],
+      "puntuacion_relevancia": 76,
+      "motivo_puntuacion": "Respuesta clara y reutilizable sobre el método de subida en Always Free.",
+      "ruta": "sin_activo"
+    },
+    {
+      "autor": "Tomás Silva",
+      "canal": "#logros-laborales-y-grado",
+      "tipo": "testimonio",
+      "sentimiento": "muy_positivo",
+      "temas": [
+        "Pasantía cloud",
+        "Portfolio GitHub"
+      ],
+      "puntuacion_relevancia": 88,
+      "motivo_puntuacion": "Testimonio exitoso que destaca el valor del portfolio en GitHub para conseguir empleo.",
+      "ruta": "post_linkedin"
+    },
+    {
+      "autor": "Elena Rostova",
+      "canal": "#logros-laborales-y-grado",
+      "tipo": "agradecimiento",
+      "sentimiento": "positivo",
+      "temas": [
+        "Motivación grupal",
+        "Aprendizaje práctico"
+      ],
+      "puntuacion_relevancia": 69,
+      "motivo_puntuacion": "Mensaje motivacional de agradecimiento hacia la dinámica de la comunidad.",
+      "ruta": "sin_activo"
+    },
+    {
+      "autor": "Ignacio Durán",
+      "canal": "#anuncios-academicos",
+      "tipo": "sugerencia",
+      "sentimiento": "positivo",
+      "temas": [
+        "Consejos CV",
+        "GitHub y OCI"
+      ],
+      "puntuacion_relevancia": 87,
+      "motivo_puntuacion": "Sugerencia práctica muy útil para armar portfolios atractivos para reclutadores.",
+      "ruta": "sin_activo"
+    }
+  ],
+  "activos_distribucion_generados": {
+    "post_linkedin": {
+      "titulo": "Firmó su contrato como Ingeniera de Datos / IA Junior antes de defender su tesis",
+      "copy": "Mariana Souza compartió una PRUEBAEDICION: firmó su contrato como Ingeniera de Datos / IA Junior en una consultora multinacional, aun antes de defender su tesis de grado. Según contó, en el live coding le pidieron explicar arquitectura de agentes y mostró exactamente el proyecto práctico que construyó en la cátedra con LangChain y los buckets de Oracle Cloud Infrastructure. Mariana relató que los evaluadores quedaron impresionados de que en la facultad desarrollen soluciones en la nube listas para producción y agradeció a los docentes y al grupo de estudio por el apoyo.\n\n¡Felicidades, Mariana!\n\n#IngenieriaDeDatos #InteligenciaArtificial #CloudComputing #EmpleabilidadTech",
+      "canal_recomendado": "LinkedIn Oficial",
+      "potencial_engagement": "Alto",
+      "estado_aprobacion": "aprobado",
+      "estado_curaduria": "Aprobado para Publicar"
+    },
+    "sugerencia_contenido_faq": {
+      "tema": "Validación con Pydantic y reintento en LangGraph",
+      "pregunta": "¿Cómo puedo hacer que un router condicional capture un JSON incompleto y reintente con un prompt de corrección usando Pydantic?",
+      "respuesta_sugerida": "Para manejar salidas incompletas, configura un modelo con Pydantic e intégralo en el flujo del grafo para validar la respuesta del LLM. Si la validación falla, dirige la ejecución hacia un nodo de corrección que reenvíe el prompt con el error detectado. Puedes comprobar que funciona lanzando una prueba con una respuesta simulada incompleta y observando si el router activa el reintento.",
+      "origen": "Duda planteada por Lucas Albuquerque en #laboratorio-ia-agentes",
+      "status": "derivado_a_mentoria",
+      "estado_aprobacion": "pendiente"
+    }
+  },
+  "almacenamiento_oci": {
+    "bucket": "communitylab-activos-marketing",
+    "ruta_objeto": "pruebas/roberto/prueba-ui2.json"
+  }
+}

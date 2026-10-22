@@ -26,6 +26,7 @@ from views.pipeline_ia import render_pipeline_view
 from views.curaduria import render_curatorship_view
 from views.dashboard import render_dashboard_view
 from views.almacenamiento_oci import render_oci_storage_view
+from views.auditoria import render_auditing_view
 
 # Configuración de página
 st.set_page_config(
@@ -199,7 +200,8 @@ with st.sidebar:
         "2. Pipeline de IA & Router",
         "3. Panel de Curaduría",
         "4. Dashboard de Sentimiento",
-        "5. OCI Object Storage"
+        "5. OCI Object Storage",
+        "6. Auditoría OCI"
     ]
 
     opcion_menu = st.radio(
@@ -253,14 +255,25 @@ fork_svg = get_lucide("git-fork", size=14, color="#7C3AED")
 pkg_svg = get_lucide("layers", size=14, color="#2563EB")
 sparkle_svg = get_lucide("sparkles", size=14, color="#E04F16")
 
+if "oci_conectado" not in st.session_state:
+    try:
+        from modules.oci_client import verificar_estado_conexion_oci
+        st.session_state["oci_conectado"] = verificar_estado_conexion_oci().get("conectado_a_nube", False)
+    except Exception:
+        st.session_state["oci_conectado"] = False
+
+es_nube_oci = st.session_state.get("oci_conectado", False)
+txt_storage = "OCI Always Free (Nube OCI Activa)" if es_nube_oci else "OCI Always Free (Espejo Local Activo)"
+dot_color = "#10B981" if es_nube_oci else "#F59E0B"
+
 st.markdown(
     clean_html(f"""
     <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 10px 16px; margin-bottom: 1.5rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; box-shadow: 0 1px 2px rgba(15,23,42,0.03);">
         <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
             <div style="display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: #334155;">
-                <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #10B981;"></span>
+                <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: {dot_color};"></span>
                 <span style="color: #64748B; font-weight: 500;">Storage:</span>
-                <strong style="color: #0F172A; font-weight: 600;">OCI Always Free (Espejo Local Activo)</strong>
+                <strong style="color: #0F172A; font-weight: 600;">{txt_storage}</strong>
             </div>
             <span style="color: #CBD5E1;">|</span>
             <div style="display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: #334155;">
@@ -297,6 +310,8 @@ elif opcion_menu == "4. Dashboard de Sentimiento":
     render_dashboard_view()
 elif opcion_menu == "5. OCI Object Storage":
     render_oci_storage_view()
+elif opcion_menu == "6. Auditoría OCI":
+    render_auditing_view()
 
 # 4. Pie de página institucional común
 render_footer()

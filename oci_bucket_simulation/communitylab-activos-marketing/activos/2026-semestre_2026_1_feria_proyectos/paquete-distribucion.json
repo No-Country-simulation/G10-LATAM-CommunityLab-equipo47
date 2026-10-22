@@ -1,0 +1,37 @@
+{
+  "status": "exito",
+  "motor_utilizado": "Google Gemini (gemini-3.5-flash-lite) [En vivo]",
+  "resumen_comunidad": {
+    "total_interacciones_procesadas": 12,
+    "sentimiento_predominante": "Altamente positivo, entusiasta, colaborativo y enfocado en la innovación tecnológica y el impacto social.",
+    "temas_principales": [
+      "Implementación exitosa de IA Generativa y OCI Always Free",
+      "Vinculación temprana con la industria y pre-incubación tecnológica",
+      "Resolución colaborativa de retos técnicos universitarios"
+    ]
+  },
+  "activos_distribucion_generados": {
+    "post_linkedin": {
+      "titulo": "¡El futuro de la tecnología se construye en las aulas de América Latina!",
+      "copy": "El Hackathon Universitario Campus ONE G10 ha demostrado el inmenso talento de nuestra comunidad estudiantil. Con más de 20 proyectos innovadores desarrollados 100% sobre OCI Always Free y herramientas de vanguardia como IA Generativa, nuestros estudiantes están cerrando la brecha entre la academia y la industria. Desde asistentes de diagnóstico de código hasta soluciones de IA para el agro, el impacto real ya está llamando la atención de empresas tecnológicas y aceleradoras. ¡Gracias a los mentores de Oracle y Alura por guiar este camino hacia la excelencia técnica!\n\n#OracleCloud #ComunidadONE #EducacionSuperior #InnovacionTecnologica #IA",
+      "canal_recomendado": "LinkedIn Oficial / Red Alumni",
+      "potencial_engagement": "Alto",
+      "estado_curaduria": "Aprobado para Publicar"
+    },
+    "destaque_newsletter_semanal": {
+      "seccion": "Logro Estudiantil / Pulso de la Comunidad",
+      "titular": "Innovación sin límites: Proyectos universitarios del Hackathon ONE G10 llegan a la pre-incubación",
+      "resumen": "La reciente Feria de Proyectos dejó cifras récord y soluciones de alto impacto social desarrolladas por estudiantes de toda la región. Equipos destacados como 'EduCare Bot' y 'AgroTech IA' ya han recibido propuestas de incubación comercial y alianzas estratégicas. Este es el resultado tangible de combinar la educación pública de calidad con infraestructura cloud de nivel empresarial."
+    },
+    "sugerencia_contenido_faq": {
+      "tema": "Optimización de recursos en la nube: Cómo cachear embeddings en instancias OCI Compute Always Free sin exceder la RAM",
+      "origen": "Consulta técnica de Gabriel Vaca (Ingeniería en Redes) resuelta por Mariana Souza en el canal #feria-de-proyectos-ia",
+      "status": "resuelto_en_comunidad"
+    }
+  },
+  "almacenamiento_oci": {
+    "bucket": "communitylab-activos-marketing",
+    "ruta_objeto": "activos/2026-semestre-2026-1-feria-proyectos/paquete-distribucion.json",
+    "status": "guardado_con_exito"
+  }
+}

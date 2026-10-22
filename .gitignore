@@ -220,3 +220,8 @@ __marimo__/
 # Documentos locales
 hackcathon_proyecto.pdf
 *.pdf
+
+# Credenciales y llaves privadas OCI
+*.pem
+oci/
+.oci/

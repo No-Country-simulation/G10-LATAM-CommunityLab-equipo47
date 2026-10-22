@@ -7,6 +7,7 @@ import streamlit as st
 import time
 from modules.ui import badge_header, get_lucide, render_tag, render_callout, render_linkedin_mockup, clean_html
 from modules.mock_engine import process_community_payload
+from modules.gemini_engine import procesar_con_gemini
 
 def render_pipeline_view():
     badge_header(
@@ -71,7 +72,7 @@ def render_pipeline_view():
     with col_cfg2:
         modelo = st.selectbox(
             "Motor de Inferencia LLM",
-            ["Google Gemini 2.5 Flash", "OpenAI GPT-4o", "Modo Simulado / Hackathon MVP"],
+            ["Google Gemini 3.5 Flash Lite", "Google Gemini 2.5 Flash", "Modo Simulado / Hackathon MVP"],
             index=0
         )
 
@@ -82,20 +83,36 @@ def render_pipeline_view():
             time.sleep(0.3)
             st.write("2. Extrayendo polaridad de sentimiento y entidades clave...")
             time.sleep(0.3)
-            st.write("3. Evaluando condiciones de bifurcación (Logros -> LinkedIn, Pulso -> Newsletter, Dudas -> FAQ)...")
-            time.sleep(0.3)
-            st.write("4. Redactando activos adaptados al tono de Educación Superior...")
+            st.write("3. Evaluando condiciones de bifurcación hacia canales de marketing...")
             time.sleep(0.3)
             
-            paquete = process_community_payload(payload)
+            if "Gemini" in modelo:
+                st.write("4. Generando activos con Google Gemini Flash en tiempo real...")
+                modelo_gemini = "gemini-3.5-flash-lite" if "3.5" in modelo else "gemini-2.5-flash"
+                paquete, ok, msg = procesar_con_gemini(payload, modelo_gemini)
+                if ok:
+                    status.update(label="Pipeline orquestado exitosamente con Google Gemini Flash (En vivo)", state="complete", expanded=False)
+                else:
+                    st.warning(msg)
+                    status.update(label="Pipeline ejecutado con fallback simulado", state="complete", expanded=False)
+            else:
+                st.write("4. Redactando activos adaptados con motor simulado...")
+                time.sleep(0.3)
+                paquete = process_community_payload(payload)
+                paquete["motor_utilizado"] = "Modo Simulado / Hackathon MVP"
+                status.update(label="Pipeline ejecutado exitosamente en Modo Simulado", state="complete", expanded=False)
+
             st.session_state["generated_package"] = paquete
             st.session_state["curated_package"] = paquete.copy()
-            status.update(label="Pipeline ejecutado exitosamente con router condicional", state="complete", expanded=False)
 
     # Si aún no se ha ejecutado en esta sesión pero ya existe o acaba de generarse
     if "generated_package" not in st.session_state:
-        # Si ya había raw_payload, procesar automáticamente para conveniencia del usuario
-        paquete = process_community_payload(payload)
+        if "Gemini" in modelo:
+            modelo_gemini = "gemini-3.5-flash-lite" if "3.5" in modelo else "gemini-2.5-flash"
+            paquete, ok, msg = procesar_con_gemini(payload, modelo_gemini)
+        else:
+            paquete = process_community_payload(payload)
+            paquete["motor_utilizado"] = "Modo Simulado / Hackathon MVP"
         st.session_state["generated_package"] = paquete
         st.session_state["curated_package"] = paquete.copy()
 
@@ -105,6 +122,12 @@ def render_pipeline_view():
         activos = paquete.get("activos_distribucion_generados", {})
 
         st.divider()
+
+        motor_usado = paquete.get("motor_utilizado", "Google Gemini Flash (En vivo)")
+        if "Gemini" in motor_usado and "En vivo" in motor_usado:
+            st.success(f"✨ **Inferencia Activa:** {motor_usado} — Orquestación en tiempo real")
+        else:
+            st.info(f"⚙️ **Inferencia Activa:** {motor_usado}")
 
         # Diagnóstico semántico
         st.markdown(
