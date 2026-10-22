@@ -200,20 +200,26 @@ def process_community_payload(data: dict) -> dict:
     # FORMATO 3: Sugerencia de Contenido FAQ / Tip Rápido (Derivado de dudas de cátedra)
     if es_caso_oficial_pdf:
         faq = {
-            "tema": "Tip Rapido: Como crear nodos de reintento en LangGraph",
+            "tema": "Tip Rápido: Cómo crear nodos de reintento en LangGraph",
             "origen": "Duda frecuente planteada por Lucas Albuquerque en el canal de soporte",
+            "pregunta": "¿Cómo configurar un nodo condicional en LangGraph para reintentar la llamada al LLM ante un error 429?",
+            "respuesta_sugerida": "Define una función de borde condicional con state['retries'] < MAX_RETRIES que reenvíe el estado al nodo de invocación del modelo aplicando backoff exponencial con time.sleep(retry_delay). Si supera el umbral, deriva al nodo fallback de contingencia.",
             "status": "derivado_a_mentoria"
         }
     elif es_caso_discord_one:
         faq = {
             "tema": "Tip de Arquitectura: Cómo inicializar el SDK de OCI en Streamlit Cloud usando st.secrets",
             "origen": "Consulta técnica planteada por Thiago Barbosa en #dudas-desarrollo-cloud",
+            "pregunta": "¿Cómo autenticar el SDK de Python de OCI en entornos efímeros (Streamlit Cloud) sin escribir un archivo .pem en disco?",
+            "respuesta_sugerida": "Utiliza el parámetro directo config['key_content'] = st.secrets['oci']['key_content'] al instanciar ObjectStorageClient(config). Esto permite cargar la clave privada RSA en memoria sin depender de ~/.oci/config ni vulnerar las llaves en git.",
             "status": "derivado_a_mentoria"
         }
     elif es_caso_slack_alumni:
         faq = {
             "tema": "Buenas prácticas: Compartir informes de OCI Object Storage mediante Pre-Authenticated Requests (PAR)",
             "origen": "Debate iniciado por Facundo Navarro en #soporte-arquitectura-cloud",
+            "pregunta": "¿Cómo otorgar acceso de solo lectura y temporal a un evaluador externo sobre un paquete JSON en un bucket privado de OCI?",
+            "respuesta_sugerida": "Genera una solicitud preautenticada (PAR) con alcance OBJECT_READ y fecha de expiración acotada (por ejemplo, 72 horas). De esta manera el evaluador descarga el JSON vía HTTP GET seguro sin requerir credenciales IAM de Oracle Cloud.",
             "status": "publicado_en_campus_virtual"
         }
     elif preguntas:
@@ -221,18 +227,24 @@ def process_community_payload(data: dict) -> dict:
         faq = {
             "tema": f"Tip de Cátedra: Resolución de dudas frecuentes sobre {temas[-1] if temas else 'Laboratorio Cloud'}",
             "origen": f"Duda planteada por {pregunta_obj.get('autor')} en el canal {pregunta_obj.get('canal', '#soporte-academico')}",
+            "pregunta": f"¿Cómo resolver la duda recurrente: {pregunta_obj.get('texto', 'Duda sobre arquitectura en la nube')}?",
+            "respuesta_sugerida": "Revisar la configuración de permisos IAM en el compartment asignado y verificar que las credenciales de conexión a OCI estén validadas antes de ejecutar el pipeline.",
             "status": "derivado_a_ayudantes_de_catedra"
         }
     elif alertas_apoyo:
         faq = {
             "tema": "Guía de Primeros Auxilios Académicos: 5 conceptos esenciales para destrabar el sprint",
             "origen": "Iniciativa de tutoría par generada a partir de alertas de sobrecarga en foros",
+            "pregunta": "¿Qué pasos seguir cuando un equipo se encuentra bloqueado con errores de cuota o rate-limit (429)?",
+            "respuesta_sugerida": "1) Activar la caché local de respuestas. 2) Reducir la frecuencia de llamados usando lotes consolidados. 3) En caso de cuota agotada, alternar al modo simulado validado para la demostración académica.",
             "status": "publicado_en_campus_virtual"
         }
     else:
         faq = {
             "tema": "Buenas prácticas de gestión de cuotas y llaves RSA en OCI Always Free",
             "origen": "Material preventivo elaborado por el equipo de cátedra",
+            "pregunta": "¿Cómo evitar exceder los límites de la capa Always Free en almacenamiento de objetos?",
+            "respuesta_sugerida": "Configurar ciclos de vida de objetos (Lifecycle Rules) en el bucket para archivar lotes antiguos y mantener una estructura de prefijos estandarizada (activos/AAAA-semana-NN/).",
             "status": "programado"
         }
 

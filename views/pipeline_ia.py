@@ -183,15 +183,14 @@ def render_pipeline_view():
                 clean_html(f"""
                 <div style="background: #EFF6FF; border: 1px solid #BFDBFE; padding: 12px 16px; border-radius: 8px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
                     <div style="display: flex; align-items: center; gap: 8px;">
-                        {get_lucide('check-circle-2', size=18, color='#1D4ED8')}
+                        {get_lucide('clock', size=18, color='#1D4ED8')}
                         <span style="color: #1E40AF; font-size: 0.9rem; font-weight: 600;">
-                            Ruta de LinkedIn activada por el Router tras detectar historias de impacto estudiantil
+                            Borrador preliminar generado por el Router · Pendiente de validación en Curaduría
                         </span>
                     </div>
-                    <a href="https://www.linkedin.com/feed/" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: #FFFFFF; background-color: #0A66C2; padding: 6px 14px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">
-                        {get_lucide('external-link', size=13, color='#FFFFFF')}
-                        Abrir LinkedIn
-                    </a>
+                    <span style="font-size: 0.76rem; background: #FEF3C7; color: #92400E; padding: 4px 10px; border-radius: 6px; font-weight: 700; border: 1px solid #FCD34D;">
+                        Pendiente de Aprobación
+                    </span>
                 </div>
                 """),
                 unsafe_allow_html=True
@@ -202,17 +201,12 @@ def render_pipeline_view():
 
             st.markdown("<div style='height: 12px;'></div>", unsafe_allow_html=True)
 
-            # Bloque para copiar el texto
-            st.markdown("##### Copiar texto completo listo para publicar:")
+            # Bloque de borrador
+            st.markdown("##### Borrador preliminar generado:")
             texto_completo_lk = f"{titulo_lk}\n\n{copy_lk}"
             st.code(texto_completo_lk, language=None)
 
-            col_acc1, col_acc2 = st.columns([1, 1])
-            with col_acc1:
-                if st.button("Copiar texto de LinkedIn", key="btn_copy_lk"):
-                    st.success("Texto seleccionado arriba. Utiliza el icono de copiar en la esquina del recuadro.")
-            with col_acc2:
-                st.caption("Para realizar ajustes editoriales, puedes dirigirte al menú lateral '3. Panel de Curaduría'.")
+            st.info("ℹ️ Para editar el tono institucional, validar y aprobar este post antes de su difusión, continúa al menú lateral '3. Panel de Curaduría'.")
 
         # TAB 2: NEWSLETTER
         with tab_newsletter:
@@ -278,13 +272,15 @@ def render_pipeline_view():
                             Estado: {status_faq.replace('_', ' ').title()}
                         </span>
                         <h4 style="margin: 8px 0 6px 0; font-size: 1.12rem; color: #0F172A; font-weight: 700;">{tema_faq}</h4>
-                        <p style="margin: 0; color: #64748B; font-size: 0.88rem;"><strong>Detección:</strong> {origen_faq}</p>
+                        {f'<p style="margin: 0 0 6px 0; color: #1E293B; font-size: 0.88rem; font-weight: 600;">❓ {faq.get("pregunta")}</p>' if faq.get("pregunta") else ''}
+                        {f'<div style="background: #F8FAFC; border-left: 3px solid #D97706; padding: 8px 10px; border-radius: 4px; font-size: 0.86rem; color: #334155; line-height: 1.5; margin-bottom: 8px;">💡 <strong>Respuesta:</strong> {faq.get("respuesta_sugerida")}</div>' if faq.get("respuesta_sugerida") else ''}
+                        <p style="margin: 0; color: #64748B; font-size: 0.82rem;"><strong>Detección:</strong> {origen_faq}</p>
                     </div>
                     """),
                     unsafe_allow_html=True
                 )
 
-            texto_faq = f"[FAQ DE CÁTEDRA]\nTema: {tema_faq}\nOrigen: {origen_faq}\nEstado: {status_faq}"
+            texto_faq = f"[FAQ DE CÁTEDRA]\nTema: {tema_faq}\nPregunta: {faq.get('pregunta', '')}\nRespuesta: {faq.get('respuesta_sugerida', '')}\nOrigen: {origen_faq}\nEstado: {status_faq}"
             st.code(texto_faq, language=None)
 
         # EXPANDER JSON OFICIAL

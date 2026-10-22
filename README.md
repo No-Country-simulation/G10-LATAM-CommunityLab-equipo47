@@ -1,6 +1,6 @@
 # CommunityLab — Motor Inteligente de Transformación y Distribución para Comunidades Digitales
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://proyectohackathon-vmuqmx28sqeyagkyoebamt.streamlit.app/)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://proyectohackathonocigit-7uw8m9h4owwxopeavwlvun.streamlit.app/)
 [![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)](https://python.org)
 [![Oracle Cloud](https://img.shields.io/badge/Oracle_Cloud-OCI_Always_Free-F80000?logo=oracle&logoColor=white)](https://cloud.oracle.com)
 [![Google Gemini](https://img.shields.io/badge/Google_Gemini-2.5_Flash-4285F4?logo=google&logoColor=white)](https://ai.google.dev/)
@@ -17,7 +17,7 @@
 
 La aplicación se encuentra desplegada y operativa en producción en **Streamlit Cloud**:
 
-👉 **[Abrir CommunityLab | Equipo 47 ONE LATAM · Streamlit](https://proyectohackathon-vmuqmx28sqeyagkyoebamt.streamlit.app/)** 👈
+👉 **[Abrir CommunityLab | Equipo 47 ONE LATAM · Streamlit](https://proyectohackathonocigit-7uw8m9h4owwxopeavwlvun.streamlit.app/)** 👈
 
 - **Usuario de evaluación:** `admin`
 - **Contraseña:** `admin`

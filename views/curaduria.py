@@ -57,7 +57,7 @@ def render_curatorship_view():
 
     tab_linkedin, tab_newsletter, tab_faq = st.tabs([
         "Post para LinkedIn", 
-        "Destaque de Newsletter", 
+        "Destaque de Newsletter (Opcional)", 
         "Sugerencia de FAQ y Cátedra"
     ])
 
@@ -149,9 +149,14 @@ def render_curatorship_view():
         
         st.markdown(
             clean_html(f"""
-            <div style="display: flex; align-items: center; gap: 8px; margin: 0.5rem 0 1rem 0;">
-                {get_lucide('newspaper', size=18, color='#059669')}
-                <h4 style="margin: 0; font-size: 1.1rem; font-weight: 600; color: #1E293B;">Sección para Newsletter / Boletín Académico</h4>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin: 0.5rem 0 1rem 0;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    {get_lucide('newspaper', size=18, color='#059669')}
+                    <h4 style="margin: 0; font-size: 1.1rem; font-weight: 600; color: #1E293B;">Sección para Newsletter / Boletín Académico</h4>
+                </div>
+                <span style="font-size: 0.76rem; background: #F8FAFC; color: #64748B; padding: 4px 10px; border-radius: 6px; font-weight: 600; border: 1px solid #E2E8F0;">
+                    Canal Complementario (El MVP prioriza LinkedIn y FAQ)
+                </span>
             </div>
             """),
             unsafe_allow_html=True
@@ -248,6 +253,8 @@ def render_curatorship_view():
             )
             st.caption(f"**Origen detectado en comunidad:** {faq.get('origen', 'Comunidad')}")
             nuevo_tema_faq = st.text_input("Tema propuesto para el tip o FAQ:", value=faq.get("tema", ""), key="faq_tema_input")
+            nueva_pregunta_faq = st.text_input("Pregunta técnica identificada:", value=faq.get("pregunta", ""), key="faq_pregunta_input")
+            nueva_respuesta_faq = st.text_area("Respuesta técnica sugerida (para soporte/cátedra):", value=faq.get("respuesta_sugerida", ""), height=120, key="faq_resp_input")
             
             opciones_status = ["derivado_a_mentoria", "derivado_a_ayudantes_de_catedra", "convertir_en_tutorial_corto", "publicado_en_campus_virtual", "descartado"]
             idx_default = 0
@@ -263,10 +270,12 @@ def render_curatorship_view():
 
             if st.button("Guardar Decisión de FAQ / Tip", type="primary", use_container_width=True):
                 faq["tema"] = nuevo_tema_faq
+                faq["pregunta"] = nueva_pregunta_faq
+                faq["respuesta_sugerida"] = nueva_respuesta_faq
                 faq["status"] = nuevo_status_faq
                 paquete["activos_distribucion_generados"]["sugerencia_contenido_faq"] = faq
                 st.session_state["curated_package"] = paquete
-                st.success("Acción de documentación y soporte guardada.")
+                st.success("Acción de documentación y soporte guardada con respuesta técnica.")
 
         with col_faq_prev:
             st.markdown(
@@ -285,8 +294,14 @@ def render_curatorship_view():
                         <span style="background: #FEF3C7; color: #92400E; font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase;">
                             Estado: {nuevo_status_faq.replace('_', ' ').title()}
                         </span>
-                        <h4 style="margin: 8px 0 6px 0; font-size: 1.08rem; color: #0F172A; font-weight: 700;">{nuevo_tema_faq}</h4>
-                        <p style="margin: 0; color: #64748B; font-size: 0.85rem; line-height: 1.4;">
+                        <h4 style="margin: 8px 0 6px 0; font-size: 1.05rem; color: #0F172A; font-weight: 700;">{nuevo_tema_faq}</h4>
+                        <div style="margin-bottom: 8px; font-size: 0.88rem; color: #1E293B; font-weight: 600;">
+                            ❓ {nueva_pregunta_faq if nueva_pregunta_faq else 'Pregunta de soporte de cátedra'}
+                        </div>
+                        <div style="background: #F8FAFC; border-left: 3px solid #D97706; padding: 8px 10px; border-radius: 4px; font-size: 0.86rem; color: #334155; line-height: 1.5; margin-bottom: 8px;">
+                            💡 <strong>Respuesta sugerida:</strong><br>{nueva_respuesta_faq if nueva_respuesta_faq else 'Sin respuesta técnica redactada.'}
+                        </div>
+                        <p style="margin: 0; color: #64748B; font-size: 0.8rem; line-height: 1.4;">
                             <strong>Detección automática:</strong> {faq.get('origen', '')}
                         </p>
                     </div>
@@ -294,7 +309,7 @@ def render_curatorship_view():
                     unsafe_allow_html=True
                 )
 
-            texto_faq_copiar = f"[FAQ DE CÁTEDRA]\nTema: {nuevo_tema_faq}\nAcción: {nuevo_status_faq.replace('_', ' ').title()}\nOrigen: {faq.get('origen', '')}"
+            texto_faq_copiar = f"[FAQ DE CÁTEDRA]\nTema: {nuevo_tema_faq}\nPregunta: {nueva_pregunta_faq}\nRespuesta: {nueva_respuesta_faq}\nAcción: {nuevo_status_faq.replace('_', ' ').title()}\nOrigen: {faq.get('origen', '')}"
             st.code(texto_faq_copiar, language=None)
 
     st.divider()

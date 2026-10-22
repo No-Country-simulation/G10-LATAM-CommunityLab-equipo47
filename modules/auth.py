@@ -8,7 +8,7 @@ try:
     from modules.ui import get_lucide, GITHUB_REPO_URL, DEMO_URL, clean_html
 except ImportError:
     from modules.ui import get_lucide, GITHUB_REPO_URL, clean_html
-    DEMO_URL = "https://proyectohackathon-vmuqmx28sqeyagkyoebamt.streamlit.app/"
+    DEMO_URL = "https://proyectohackathonocigit-7uw8m9h4owwxopeavwlvun.streamlit.app/"
 
 def check_login():
     """Verifica si el usuario está autenticado en la sesión actual."""

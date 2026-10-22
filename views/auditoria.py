@@ -186,6 +186,10 @@ def render_auditing_view():
                     faq_item = activos_data.get("sugerencia_contenido_faq", {})
                     st.markdown("##### ❓ Sugerencia Contenido FAQ:")
                     st.markdown(f"**Tema:** {faq_item.get('tema', 'N/A')}")
+                    if faq_item.get("pregunta"):
+                        st.markdown(f"**Pregunta:** `{faq_item.get('pregunta')}`")
+                    if faq_item.get("respuesta_sugerida"):
+                        st.caption(f"💡 **Respuesta:** {faq_item.get('respuesta_sugerida')}")
                     st.markdown(f"**Origen:** {faq_item.get('origen', 'N/A')}")
                     st.caption(f"Status: {faq_item.get('status', 'N/A')}")
 
