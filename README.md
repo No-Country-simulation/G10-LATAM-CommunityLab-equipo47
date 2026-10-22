@@ -1,249 +1,173 @@
 # CommunityLab — Motor Inteligente de Transformación y Distribución para Comunidades Digitales
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://proyectohackathon-vmuqmx28sqeyagkyoebamt.streamlit.app/)
-[![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)](https://python.org)
-[![Oracle Cloud](https://img.shields.io/badge/Oracle_Cloud-OCI_Always_Free-F80000?logo=oracle&logoColor=white)](https://cloud.oracle.com)
-[![Google Gemini](https://img.shields.io/badge/Google_Gemini-2.5_Flash-4285F4?logo=google&logoColor=white)](https://ai.google.dev/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+> Demo desplegada: [CommunityLab en Streamlit](https://proyectohackathon-vmuqmx28sqeyagkyoebamt.streamlit.app/). Es una demo, no un entorno productivo.
+>
+> Acceso de evaluación: `admin` / `admin`, solo para la demo.
 
-> Proyecto desarrollado en el marco del **Hackathon ONE – No Country G10**  
-> **Oracle Next Education & Alura LATAM** · **Equipo 47**  
-> Sector: **MarTech / Gestión de Comunidades Digitales / Educación Superior Tecnológica**  
-> Demo Day: **29/10/2026**
+## Estado del proyecto
 
----
+Este README describe la rama de integración. La demo desplegada sigue `main` y mostrará estos cambios cuando se fusione el PR revisado por el equipo. Demo Day: 27-oct-2026.
 
-## 🚀 Demostración en Vivo (Acceso Directo)
+Stack actual: Python 3.12, Streamlit, Gemini mediante LangChain, Pydantic y el SDK de OCI. El pipeline real es una secuencia de funciones; no usa LangGraph.
 
-La aplicación se encuentra desplegada y operativa en producción en **Streamlit Cloud**:
+## 1. Qué hace
 
-👉 **[Abrir CommunityLab | Equipo 47 ONE LATAM · Streamlit](https://proyectohackathon-vmuqmx28sqeyagkyoebamt.streamlit.app/)** 👈
+CommunityLab recibe un lote JSON de interacciones simuladas de una comunidad, analiza sentimiento, temas y relevancia con Gemini, aplica un router y genera un post de LinkedIn y/o una FAQ. Un curador humano revisa, edita y decide; el paquete se guarda en OCI Object Storage o en un espejo local etiquetado.
 
-- **Usuario de evaluación:** `admin`
-- **Contraseña:** `admin`
-- **Repositorio oficial:** [GitHub: G10-LATAM-CommunityLab-equipo47](https://github.com/No-Country-simulation/G10-LATAM-CommunityLab-equipo47)
+## 2. Arquitectura
 
----
-
-## 📌 El Problema
-
-Las comunidades digitales activas (servidores de Discord, canales de Slack, foros académicos de Moodle, GitHub Discussions y formularios de retroalimentación) generan diariamente decenas de testimonios de inserción laboral, consultas técnicas enriquecedoras e ideas de proyectos.
-
-Sin embargo, **el 85% de este contenido de alto valor se pierde en el historial de los canales**. Curar, resumir y redactar manualmente publicaciones adaptadas a diferentes redes sociales (LinkedIn, boletines informativos por correo, FAQs y tutoriales) consume entre **10 y 15 horas semanales** a los equipos de Community Management, Prensa y Admisiones.
-
----
-
-## 💡 La Solución: CommunityLab
-
-**CommunityLab** es una plataforma inteligente que ingesta en lote o en tiempo real las conversaciones orgánicas de una comunidad digital, las analiza semánticamente mediante Modelos de Lenguaje (LLMs) y, a través de un **Router Condicional automatizado**, bifurca la información para generar simultáneamente activos de marketing listos para publicar:
-
-1. **Detector de Historias de Éxito & UGC Marketing:** Identifica contrataciones, ascensos y proyectos destacados para redactar posts persuasivos para **LinkedIn** y redes sociales.
-2. **Resumen y Síntesis de Comunidad:** Extrae el pulso semanal y los temas en tendencia para generar el bloque principal de la **Newsletter**.
-3. **Motor de FAQ Dinámico & Tips de Cátedra:** Detecta dudas técnicas recurrentes sobre laboratorios o herramientas para derivarlas a mentoría par o material de ayuda rápida.
-4. **Dashboard de Salud y Sentimiento:** Monitorea el clima comunitario en tiempo real, detectando alertas tempranas de sobrecarga o estudiantes que requieren apoyo.
-5. **Persistencia en la Nube:** Almacena todos los paquetes de activos generados en **Oracle Cloud Infrastructure (OCI) Object Storage** bajo la capa gratuita **Always Free**.
-
----
-
-## 🏗️ Arquitectura del Sistema
+Flujo real:
 
 ```mermaid
 flowchart TD
-    subgraph INGESTA["1. Capa de Ingestión"]
-        A1["Discord (Canales de Soporte y Wins)"] --> INGEST["Módulo de Ingestión & Limpieza"]
-        A2["Slack / Foros de Cátedra"] --> INGEST
-        A3["Datasets JSON / CSV (Samples)"] --> INGEST
-    end
-
-    subgraph IA_ROUTER["2. Motor de IA & Router Condicional"]
-        INGEST --> LLM["Análisis Semántico & Extracción de Entidades<br/>(Google Gemini / OpenAI / Heurística)"]
-        LLM --> ROUTER{"Router Condicional<br/>(Bifurcación por Intención)"}
-        ROUTER -->|"Testimonio / Empleo"| LNK["Generación Copy LinkedIn<br/>(Tono UGC Persuasivo + Hashtags)"]
-        ROUTER -->|"Pulso General / Logros"| NWS["Destaque Newsletter Semanal<br/>(Titular + Resumen Editorial)"]
-        ROUTER -->|"Duda Técnica Frecuente"| FAQ["Sugerencia FAQ / Tip de Cátedra<br/>(Derivado a Mentoría / Soporte)"]
-    end
-
-    subgraph CURADURIA["3. Panel de Curaduría (Human-in-the-Loop)"]
-        LNK --> EDIT["Edición en Vivo (st.text_area)"]
-        NWS --> EDIT
-        FAQ --> EDIT
-        EDIT --> APROB["Aprobación y Visto Bueno Institucional"]
-    end
-
-    subgraph OCI["4. Persistencia en la Nube (Always Free)"]
-        APROB --> SDK["OCI Object Storage Client<br/>(oci.object_storage.ObjectStorageClient)"]
-        SDK --> BUCKET[("Bucket OCI Always Free<br/>communitylab-activos-marketing")]
-    end
-
-    subgraph METRICAS["5. Dashboard & Salud Comunitaria"]
-        LLM --> DASH["Métricas de Sentimiento & Alertas Tempranas"]
-    end
+    A["Ingesta de un lote JSON"] --> B["Análisis con Gemini"]
+    B --> C["Router"]
+    C -->|"testimonio o logro"| D["Generador de LinkedIn"]
+    C -->|"duda técnica"| E["Generador de FAQ"]
+    C -->|"alerta de apoyo"| F["Apoyo, solo se marca"]
+    C -->|"resto"| G["Sin activo"]
+    D --> H["Curaduría humana"]
+    E --> H
+    H --> I["Paquete JSON"]
+    I --> J["OCI Object Storage o guardado local"]
 ```
 
----
+El modo simulado no pasa por el router: reemplaza el análisis y la generación por un mock heurístico y arma un paquete con los tres bloques. Se muestra aparte para no mezclarlo con el flujo real:
 
-## 📋 Contrato de Salida Requerido (JSON Schema Oficial)
-
-El motor de CommunityLab entrega y persiste los datos cumpliendo estrictamente la especificación requerida:
-
-```json
-{
-  "status": "exito",
-  "resumen_comunidad": {
-    "total_interacciones_procesadas": 2,
-    "sentimiento_predominante": "Altamente Positivo",
-    "temas_principales": ["Contratacion / Logros", "LangGraph / Nodos Condicionales"]
-  },
-  "activos_distribucion_generados": {
-    "post_linkedin": {
-      "titulo": "De la Comunidad al Mercado: El impacto de los proyectos practicos de IA",
-      "copy": "Nada nos da mas orgullo que ver a nuestros talentos conquistando el mercado de tecnologia! 🚀\n\nNuestra estudiante Mariana Souza acaba de ser contratada como Desarrolladora Junior de IA tras destacar sus proyectos practicos desarrollados con LangChain y Oracle Cloud Infrastructure.\n\nHistorias como la de Mariana demuestran que construir soluciones reales es el mejor camino para impulsar la carrera tech. Felicitaciones, Mariana! 👏\n\n#TalentosTech #InteligenciaArtificial #OracleCloud #CarreraDev",
-      "canal_recomendado": "LinkedIn Oficial",
-      "potencial_engagement": "Alto"
-    },
-    "destaque_newsletter_semanal": {
-      "seccion": "Logro de la Semana",
-      "titular": "Estudiante consigue empleo dev con portfolio de IA en Oracle Cloud",
-      "resumen": "Mariana Souza obtuvo su primera oportunidad como Dev Jr de IA destacando proyectos desarrollados durante la formacion."
-    },
-    "sugerencia_contenido_faq": {
-      "tema": "Tip Rapido: Como crear nodos de reintento en LangGraph",
-      "origen": "Duda frecuente planteada por Lucas Albuquerque en el canal de soporte",
-      "status": "derivado_a_mentoria"
-    }
-  },
-  "almacenamiento_oci": {
-    "bucket": "communitylab-activos-marketing",
-    "ruta_objeto": "activos/2026-semana-04/paquete-distribucion.json",
-    "status": "guardado_con_exito"
-  }
-}
+```mermaid
+flowchart TD
+    A["Ingesta de un lote JSON"] --> B["Modo simulado etiquetado"]
+    B --> C["Mock heurístico, no es IA"]
+    C --> D["Paquete con LinkedIn, newsletter y FAQ"]
+    D --> E["Curaduría humana"]
+    E --> F["OCI Object Storage o guardado local"]
 ```
 
----
+## 3. Router y flujo
 
-## 🗂️ Datasets y Casos de Estudio Incluidos (`data/samples/`)
+Reglas actuales del router:
 
-Para facilitar la evaluación técnica y la demostración en vivo a un solo clic, se incluyeron conjuntos de datos representativos con lenguaje natural y situaciones verosímiles de la comunidad tech:
+- `alerta_apoyo` y `dificultades` van a `apoyo`: solo se marcan en el análisis, sin activo.
+- `testimonio` y `logro` van a `post_linkedin` con sentimiento positivo o muy positivo; si no, van a `sin_activo`.
+- `pregunta_tecnica` y `duda` van a `faq`.
+- El resto solo va a `post_linkedin` con sentimiento muy positivo; si no, va a `sin_activo`.
 
-| Archivo | Origen | Mensajes | Foco Temático / Escenario |
-|---|---|:---:|---|
-| `ejemplo_oficial_pdf_one_g10.json` | Discord ONE G10 | 4 | **Demostración Canónica Oficial del PDF** (Mariana Souza y Lucas Albuquerque) |
-| `ejemplo_1_contratacion.json` | Campus ONE | 12 | Testimonios de inserción laboral en Cloud & IA antes de defender tesis |
-| `ejemplo_2_soporte_dudas.json` | Foros Académicos | 12 | Soporte de Cátedra Cloud OCI Always Free, llaves RSA PEM y variables |
-| `ejemplo_3_feedback_mixto.json` | Tutorías Pares | 14 | Alertas de sobrecarga académica, retención estudiantil y red de apoyo |
-| `ejemplo_4_innovacion_hackathon.json` | Feria de Innovación | 12 | Pitches de proyectos finales desplegados en OCI y pre-incubación |
-| `ejemplo_5_discord_comunidad_one.json` | Servidor Discord | 14 | Conversaciones reales de Discord: contrataciones en Globant/MeLi y dudas de SDK |
-| `ejemplo_6_slack_alumni_tech.json` | Slack Alumni Network | 6 | Red de graduados en la industria: Tech Leads, buenas prácticas OCI y mentorías |
-| `ejemplo_7_github_discussions_soporte.json` | GitHub Discussions | 6 | Troubleshooting técnico: buffers en memoria vs persistencia OCI, Structured Outputs |
+El pipeline elige un candidato por ruta según la puntuación de relevancia. No hay ruta de newsletter.
 
----
+## 4. Formatos y esquema del paquete
 
-## 🛠️ Stack Tecnológico
+Formatos del MVP:
 
-| Capa | Tecnología | Justificación y Rol en la Solución |
-|---|---|---|
-| **Frontend / UI** | `Streamlit 1.35+` + `Lucide Icons` | Interfaz web interactiva, responsiva y táctil con diseño SaaS y previsualización fotorrealista de LinkedIn. |
-| **Modelos de IA** | `Google Gemini 2.5 Flash` / `OpenAI GPT-4o` | Inferencia de polaridad de sentimiento, extracción de temas y generación de copys persuasivos. |
-| **Procesamiento de Datos** | `Python 3.11+` / `Pandas` | Normalización de payloads, agregación estadística y validación de esquemas JSON. |
-| **Almacenamiento Cloud** | `Oracle Cloud Infrastructure (OCI) Object Storage` | Persistencia en bucket Always Free mediante `oci.object_storage.ObjectStorageClient`. |
-| **Respaldo Local** | `Emulación de Bucket Espejo` | Permite la ejecución fluida en entornos sin credenciales OCI configuradas sin interrumpir la demo. |
-| **Control de Versiones** | `Git` / `GitHub` | Trabajo colaborativo del Equipo 47 ONE LATAM. |
-| **Despliegue** | `Streamlit Cloud` | Alojamiento en la nube conectado a la rama `main` del repositorio oficial. |
+- `post_linkedin`: título, copy, canal recomendado, potencial de engagement y `estado_aprobacion`.
+- `sugerencia_contenido_faq`: tema, origen, `status`, `pregunta`, `respuesta_sugerida` y `estado_aprobacion`. La pregunta y la respuesta las genera el LLM.
+- `destaque_newsletter_semanal`: opcional en el esquema; no se genera en el pipeline real. El modo simulado sí puede incluir un bloque de newsletter con plantillas.
 
----
+El esquema vive en `docs/esquema-paquete-distribucion.md`. El paquete que se sube lleva `almacenamiento_oci.bucket` y `almacenamiento_oci.ruta_objeto`; el `status` de la subida se devuelve en la respuesta. El ejemplo de `docs/` es ilustrativo; el contrato de subida es el de la sección 7.
 
-## ⚙️ Cómo Ejecutar el Proyecto Localmente
+## 5. Ejecución local con uv
 
-### 1. Clonar el repositorio
-```bash
-git clone https://github.com/No-Country-simulation/G10-LATAM-CommunityLab-equipo47.git
-cd G10-LATAM-CommunityLab-equipo47
-```
+Requisitos: Python 3.12 y `uv`.
 
-### 2. Crear y activar entorno virtual
-```bash
-# En Windows (PowerShell):
-python -m venv venv
-.\venv\Scripts\Activate.ps1
-
-# En Linux / macOS:
-python3 -m venv venv
-source venv/bin/activate
-```
-
-### 3. Instalar dependencias
-```bash
-pip install -r requirements.txt
-```
-
-*(Opcional: Si vas a conectar credenciales reales de Oracle Cloud, instala el SDK oficial: `pip install oci`)*
-
-### 4. Configurar secretos (Opcional)
-Si deseas persistir en un bucket real de OCI o usar la API de Google Gemini en lugar del motor simulado, crea el archivo `.streamlit/secrets.toml`:
-
-```toml
-# Configuración opcional de Gemini
-GEMINI_API_KEY = "tu-api-key-de-gemini"
-
-# Configuración opcional de Oracle Cloud Infrastructure (Always Free)
-[oci]
-user = "ocid1.user.oc1..aaaaaaa..."
-fingerprint = "20:3b:97:..."
-tenancy = "ocid1.tenancy.oc1..aaaaaaa..."
-region = "sa-saopaulo-1"
-key_content = """-----BEGIN RSA PRIVATE KEY-----
-... tu llave pem ...
------END RSA PRIVATE KEY-----"""
-namespace = "tu-namespace-oci"
-bucket_name = "communitylab-activos-marketing"
-```
-
-> **Nota:** Si no se configuran credenciales, CommunityLab activa automáticamente su **motor de emulación local Always Free**, garantizando que el flujo de revisión y guardado funcione al 100% sin caídas.
-
-### 5. Iniciar la aplicación
-```bash
+```powershell
+uv venv
+uv pip install -r requirements.txt
+.venv\Scripts\Activate.ps1
 streamlit run app.py
 ```
-Abre en tu navegador: `http://localhost:8501` e inicia sesión con `admin` / `admin`.
 
----
+En Linux o macOS, activa el entorno con `source .venv/bin/activate`.
 
-## ✅ Checklist de Evaluación del Hackathon
+No hay `pyproject.toml` ni `uv.lock`; por eso no se usa `uv sync`. La aplicación se abre en `http://localhost:8501`.
 
-- [x] **Ingestión funcional de interacciones:** Soporta carga de archivos JSON, CSV o selección de datasets prediseñados a un clic.
-- [x] **Análisis de sentimiento y extracción de temas con LLM:** Diagnóstico de polaridad y categorización temática automática.
-- [x] **Generación de al menos 2 formatos de marketing:** Genera 3 formatos simultáneos (Post LinkedIn, Newsletter y FAQ/Tips).
-- [x] **Orquestación de flujo con router condicional:** Bifurca hacia LinkedIn si detecta logros/empleo, hacia Newsletter para resumen de actividad, y hacia FAQ/Tips para dudas técnicas.
-- [x] **Integración con OCI Object Storage (Always Free):** Persistencia autenticada con SDK oficial y fallback local compatible.
-- [x] **Mínimo 3 ejemplos de demostración:** 7 datasets completos disponibles en `data/samples/`, incluyendo el caso oficial del PDF.
-- [x] **Repositorio en GitHub con documentación y arquitectura:** README detallado, esquemas Mermaid y especificación técnica.
+## 6. Secretos y configuración
 
----
+No escribas valores reales en el README ni en el repositorio. Usa `.env` o `.streamlit/secrets.toml`, que no se versionan.
 
-## 🌟 Diferenciales Implementados
+Nombres para ejecución local:
 
-- **Panel de Curaduría Humana (Human-in-the-Loop):** Edición en vivo mediante `st.text_area` antes de persistir, evitando alucinaciones o errores de tono.
-- **Previsualización Fotorrealista de LinkedIn:** Maqueta interactiva visual que simula con precisión la publicación final en redes.
-- **Doble Modo OCI (Cloud SDK + Emulación Segura):** Resiliencia garantizada para evaluadores sin cuenta de nube activa.
-- **Alertas Tempranas de Retención:** Algoritmo que detecta signos de sobrecarga académica o deserción para alertar a tutores pares.
-- **Despliegue Continuo en Streamlit Cloud:** Aplicación pública en vivo con SSL y alta disponibilidad.
+- Gemini: `GEMINI_API_KEY`, `GEMINI_MODEL`.
+- OCI con perfil `DEFAULT`: `OCI_CONFIG_FILE`, `OCI_CONFIG_PROFILE`, `OCI_REGION`, `OCI_NAMESPACE`, `OCI_BUCKET`.
+- OCI con credenciales explícitas: `OCI_USER`, `OCI_FINGERPRINT`, `OCI_TENANCY`, `OCI_KEY_CONTENT` o `OCI_KEY_FILE`.
 
----
+Nombres para `st.secrets`:
 
-## 👥 Equipo — G10 Equipo 47 (ONE LATAM)
+- `[gemini]`: `api_key`, `model`.
+- `[oci]`: `region`, `namespace`, `bucket`, `user`, `fingerprint`, `tenancy`, `key_content` o `key_file`.
 
-Desarrollado con dedicación para el **Hackathon ONE (Oracle Next Education & Alura)** en simulación con **No Country**.
+En Streamlit Cloud usa `key_content`, no `key_file`. Las claves de `st.secrets` tienen prioridad sobre el entorno. En las guías usa `<region>`, `<namespace>` y `<bucket>`; `sa-santiago-1` puede aparecer solo como ejemplo de región.
 
-| Nombre | Rol | Especialidad |
-|---|---|---|
-| **Equipo 47** | Team Leader & Backend | Arquitectura del pipeline, FastAPI/Python y despliegue |
-| **Equipo 47** | IA & Prompt Engineering | Orquestación LLM, Router condicional y Structured Outputs |
-| **Equipo 47** | Frontend & UX/UI | Streamlit, maquetación fotorrealista y componentes Lucide |
-| **Equipo 47** | Cloud & OCI | Integración Object Storage Always Free y políticas IAM |
+El modelo de Gemini es configurable con `GEMINI_MODEL` o `[gemini] model`; el valor por defecto está en `communitylab/config.py`.
 
----
+## 7. OCI: rutas y estados de guardado
 
-## 📄 Licencia
+La ruta sugerida es `activos/AAAA-semana-NN/paquete-distribucion.json`; el campo es editable en la vista. El archivo guardado lleva el `bucket` y la `ruta_objeto` reales; el `status` de la subida se devuelve en la respuesta.
 
-Distribuido bajo la licencia **MIT**. Consulta el archivo `LICENSE` para más información.
+Estados posibles:
+
+- `guardado_con_exito`: el objeto se subió a OCI. `modo` es `OCI_Cloud_SDK` y `nube_real` es `true`.
+- `ya_existe`: el objeto ya estaba en el bucket y no se sobrescribió.
+- `error_al_guardar`: fallo al subir a OCI. No se cae a local en silencio.
+- `guardado_local`: no hay credenciales válidas de OCI; el paquete se escribió en el espejo local `data/salida/oci_offline/`. `nube_real` es `false` y la vista muestra un aviso.
+
+La sobrescritura está desactivada por defecto. Si se activa la casilla correspondiente, el objeto se reemplaza.
+
+## 8. Despliegue en Streamlit Cloud
+
+1. Crea la app desde el repositorio y la rama que quieras desplegar. La demo actual sigue `main`; los cambios de este README llegarán cuando se fusione el PR.
+2. Usa `app.py` como entrypoint y Python 3.12.
+3. En Secrets, pega las secciones `[gemini]` y `[oci]` con los nombres de la sección 6. En Cloud usa `key_content`, no `key_file`. Para OCI usa una clave de API dedicada y revocable (no tu perfil personal) y rótala al terminar el evento.
+4. Despliega y revisa los logs de arranque.
+5. Verifica el flujo: inicia sesión con la credencial de demo, carga un lote, ejecuta el pipeline real, revisa en Curaduría y guarda en OCI. Confirma `guardado_con_exito`; si ves `guardado_local`, faltan credenciales de OCI.
+
+Streamlit Cloud instala las dependencias desde `requirements.txt`. El flujo con `uv` es para desarrollo local.
+
+## 9. Límites conocidos y honestidad
+
+- El modo simulado es heurístico y no es IA. La interfaz lo etiqueta como “Modo simulado (sin IA)” y muestra un aviso.
+- El modo simulado no pasa por el router; usa `modules/mock_engine.py` y genera LinkedIn, newsletter y FAQ con plantillas.
+- La newsletter no está implementada en el pipeline real; queda como roadmap. El modo simulado sí la incluye.
+- La cuota de Gemini es gratuita y compartida, sujeta a cambios. El proyecto usa caché local y topes de llamadas.
+- Las respuestas de FAQ y los testimonios con nombres requieren revisión humana. El diseño pide que el contenido se base solo en las interacciones de entrada.
+- Las respuestas sugeridas de la FAQ pueden ser técnicamente incompletas o discutibles (en pruebas, una propuso una causa poco probable para un error de autenticación). No deben publicarse sin revisión técnica.
+- Los datos de ejemplo son simulados. No uses datos personales reales.
+- El guardado en OCI no exige aprobación previa del curador.
+- La FAQ queda en `estado_aprobacion: pendiente` porque Curaduría no tiene un control de aprobación para ella.
+- El explorador de objetos puede mostrar `0.0 KB`; es un detalle cosmético.
+- La sobrescritura no pide una confirmación adicional: se controla con la casilla de la vista.
+- El modo offline no es OCI y no debe presentarse como una subida exitosa.
+- La ingesta es por lotes; no hay streaming.
+- La carga de CSV existe en la vista de ingesta, pero no está verificada con el pipeline real.
+
+## 10. Estructura de carpetas
+
+```text
+app.py                         entrypoint de Streamlit
+communitylab/                  lógica: modelos, config, ingesta, análisis, router, generadores, OCI y pipeline
+modules/                       adaptadores: auth, ui, mock_engine, oci_client y pipeline_client
+views/                         vistas: ingesta, pipeline, curaduría, dashboard y OCI
+prompts/                       prompts de análisis, LinkedIn y FAQ
+data/samples/                  8 lotes simulados
+data/salida/                   resultados locales y espejo offline, no versionados
+docs/                          esquema y ejemplo del paquete
+tests/                         pruebas con mocks de LLM y OCI
+.streamlit/                    secrets.example.toml
+requirements.txt               dependencias
+```
+
+## 11. Tests
+
+Las pruebas viven en `tests/` y se ejecutan con `pytest` desde la raíz. `pytest.ini` fija `pythonpath` y `testpaths`. El LLM y OCI se simulan con mocks; las pruebas no dependen de red.
+
+```powershell
+pytest
+```
+
+## 12. Demo, datos y licencia
+
+- Demo desplegada: [CommunityLab en Streamlit](https://proyectohackathon-vmuqmx28sqeyagkyoebamt.streamlit.app/). Es una demo, no un entorno productivo.
+- Acceso de evaluación: `admin` / `admin`, solo para la demo.
+- Datos: 8 lotes simulados en `data/samples/`.
+- Licencia: MIT. Consulta `LICENSE`.
+
+Equipo 47 — Hackathon ONE G10, Oracle Next Education & Alura
+<!-- TODO: nombres y roles del equipo, a completar por el PM -->

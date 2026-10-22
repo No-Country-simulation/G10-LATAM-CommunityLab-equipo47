@@ -220,3 +220,6 @@ __marimo__/
 # Documentos locales
 hackcathon_proyecto.pdf
 *.pdf
+
+# Resultados locales y caché del LLM
+data/salida/
