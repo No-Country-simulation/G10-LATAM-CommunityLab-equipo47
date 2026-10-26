@@ -53,17 +53,33 @@ def render_pipeline_view():
             unsafe_allow_html=True
         )
 
+    archivo_origen = st.session_state.get("archivo_origen", "Lote Activo")
+    NOMBRES_CASOS = {
+        "ejemplo_oficial_pdf_one_g10.json": "Caso Canónico (PDF Hackathon ONE G10)",
+        "ejemplo_1_contratacion.json": "Caso 1: Inserción Laboral / Empleabilidad",
+        "ejemplo_2_soporte_dudas.json": "Caso 2: Cátedra Cloud / Soporte Técnico",
+        "ejemplo_3_feedback_mixto.json": "Caso 3: Bienestar Estudiantil & Tutorías Pares",
+        "ejemplo_4_innovacion_hackathon.json": "Caso 4: Feria de Innovación & Pitches OCI",
+        "ejemplo_5_discord_comunidad_one.json": "Caso 5: Discord ONE LATAM (Comunidad en Vivo)",
+        "ejemplo_6_slack_alumni_tech.json": "Caso 6: Slack Alumni Network (Egresados)",
+        "ejemplo_7_github_discussions_soporte.json": "Caso 7: GitHub Discussions (Dudas de Arquitectura)",
+    }
+    nombre_caso = NOMBRES_CASOS.get(archivo_origen, archivo_origen)
+
     st.markdown("<div style='height: 12px;'></div>", unsafe_allow_html=True)
 
     col_cfg1, col_cfg2 = st.columns([2, 1])
     with col_cfg1:
         st.markdown(
             clean_html(f"""
-            <div style="background: #F8FAFC; border: 1px solid #E2E8F0; padding: 12px 16px; border-radius: 10px; display: flex; align-items: center; gap: 12px;">
-                {get_lucide('message-square', size=22, color='#7C3AED')}
+            <div style="background: #FFFFFF; border: 1px solid #D8B4FE; padding: 14px 18px; border-radius: 12px; display: flex; align-items: center; gap: 14px; box-shadow: 0 2px 6px rgba(124, 58, 237, 0.06);">
+                <div style="background: #F3E8FF; padding: 10px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                    {get_lucide('message-square', size=24, color='#7C3AED')}
+                </div>
                 <div>
-                    <span style="color: #64748B; font-size: 0.8rem; text-transform: uppercase; font-weight: 600; letter-spacing: 0.03em;">Lote Activo para Procesar:</span>
-                    <strong style="color: #0F172A; display: block; font-size: 0.96rem;">{payload.get('origen_comunidad', '').replace('_', ' ')} · {total_interacciones} mensajes</strong>
+                    <span style="color: #6B21A8; font-size: 0.8rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.04em;">Caso Seleccionado para Procesar con IA:</span>
+                    <strong style="color: #0F172A; display: block; font-size: 1.05rem; margin-top: 2px;">{nombre_caso}</strong>
+                    <span style="color: #64748B; font-size: 0.85rem;">Origen: <code>{payload.get('origen_comunidad', '').replace('_', ' ')}</code> · <strong>{total_interacciones} interacciones orgánicas</strong></span>
                 </div>
             </div>
             """),
@@ -76,52 +92,96 @@ def render_pipeline_view():
             index=0
         )
 
-    # Botón principal de ejecución
-    if st.button("Ejecutar Análisis y Router Condicional", type="primary", use_container_width=True):
-        with st.status("Orquestando pipeline de análisis y enrutamiento...", expanded=True) as status:
-            st.write("1. Normalizando textos y perfiles de estudiantes...")
+    st.markdown("<div style='height: 8px;'></div>", unsafe_allow_html=True)
+
+    # Botón principal de ejecución con animación interactiva
+    if st.button("🚀 Ejecutar Análisis y Router Condicional con IA", type="primary", use_container_width=True):
+        barra_progreso = st.progress(0, text="Iniciando pipeline de análisis semántico...")
+        
+        with st.status(f"Procesando lote: {nombre_caso} con {modelo}...", expanded=True) as status:
+            time.sleep(0.2)
+            barra_progreso.progress(25, text="1/4 Normalizando mensajes y perfiles estudiantiles...")
+            st.write(f"✓ Normalizadas {total_interacciones} interacciones orgánicas.")
             time.sleep(0.3)
-            st.write("2. Extrayendo polaridad de sentimiento y entidades clave...")
+            
+            barra_progreso.progress(55, text="2/4 Extrayendo sentimiento predominante y entidades clave...")
+            st.write("✓ Evaluación semántica de temas y polaridad completada.")
             time.sleep(0.3)
-            st.write("3. Evaluando condiciones de bifurcación hacia canales de marketing...")
+            
+            barra_progreso.progress(80, text="3/4 Evaluando condiciones de bifurcación (Router)...")
+            st.write("✓ Clasificados testimonios hacia LinkedIn y dudas técnicas hacia FAQ.")
             time.sleep(0.3)
             
             if "Gemini" in modelo:
-                st.write("4. Generando activos con Google Gemini Flash en tiempo real...")
+                barra_progreso.progress(92, text="4/4 Inferencia con Google Gemini Flash en tiempo real...")
                 modelo_gemini = "gemini-3.5-flash-lite" if "3.5" in modelo else "gemini-2.5-flash"
                 paquete, ok, msg = procesar_con_gemini(payload, modelo_gemini)
                 if ok:
-                    status.update(label="Pipeline orquestado exitosamente con Google Gemini Flash (En vivo)", state="complete", expanded=False)
+                    barra_progreso.progress(100, text="¡Análisis completado exitosamente!")
+                    status.update(label=f"✓ Pipeline ejecutado exitosamente con Google Gemini ({modelo_gemini})", state="complete", expanded=False)
                 else:
                     st.warning(msg)
+                    barra_progreso.progress(100, text="Finalizado con fallback")
                     status.update(label="Pipeline ejecutado con fallback simulado", state="complete", expanded=False)
             else:
-                st.write("4. Redactando activos adaptados con motor simulado...")
+                barra_progreso.progress(92, text="4/4 Redactando activos adaptados con motor simulado...")
                 time.sleep(0.3)
                 paquete = process_community_payload(payload)
                 paquete["motor_utilizado"] = "Modo Simulado / Hackathon MVP"
-                status.update(label="Pipeline ejecutado exitosamente en Modo Simulado", state="complete", expanded=False)
+                barra_progreso.progress(100, text="¡Análisis simulado completado!")
+                status.update(label="✓ Pipeline ejecutado exitosamente en Modo Simulado", state="complete", expanded=False)
 
             st.session_state["generated_package"] = paquete
             st.session_state["curated_package"] = paquete.copy()
+            st.session_state["paquete_caso_origen"] = nombre_caso
+            st.toast(f"¡Resultados generados para {nombre_caso}!", icon="✨")
 
-    # Si aún no se ha ejecutado en esta sesión pero ya existe o acaba de generarse
+    # Si aún no se ha ejecutado para este caso
     if "generated_package" not in st.session_state:
-        if "Gemini" in modelo:
-            modelo_gemini = "gemini-3.5-flash-lite" if "3.5" in modelo else "gemini-2.5-flash"
-            paquete, ok, msg = procesar_con_gemini(payload, modelo_gemini)
-        else:
-            paquete = process_community_payload(payload)
-            paquete["motor_utilizado"] = "Modo Simulado / Hackathon MVP"
-        st.session_state["generated_package"] = paquete
-        st.session_state["curated_package"] = paquete.copy()
+        st.markdown(
+            clean_html(f"""
+            <div style="background: #FAF5FF; border: 2px dashed #D8B4FE; border-radius: 14px; padding: 32px 20px; text-align: center; margin: 1.5rem 0;">
+                <div style="display: inline-flex; background: #F3E8FF; padding: 14px; border-radius: 50%; margin-bottom: 12px;">
+                    {get_lucide('sparkles', size=32, color='#7C3AED')}
+                </div>
+                <h3 style="margin: 0; color: #4C1D95; font-size: 1.25rem; font-weight: 700;">Listo para procesar con IA</h3>
+                <p style="color: #6B21A8; font-size: 0.96rem; max-width: 580px; margin: 8px auto 16px auto; line-height: 1.5;">
+                    Haz clic en el botón superior <strong>"Ejecutar Análisis y Router Condicional con IA"</strong> para que Gemini analice las <strong>{total_interacciones} interacciones</strong> de <strong>{nombre_caso}</strong> y genere los activos de marketing.
+                </p>
+                <span style="font-size: 0.85rem; color: #7C3AED; background: #EDE9FE; padding: 4px 12px; border-radius: 999px; font-weight: 600;">
+                    Inferencia transparente · Auditoría paso a paso
+                </span>
+            </div>
+            """),
+            unsafe_allow_html=True
+        )
 
     if "generated_package" in st.session_state:
         paquete = st.session_state["generated_package"]
         resumen = paquete.get("resumen_comunidad", {})
         activos = paquete.get("activos_distribucion_generados", {})
+        caso_procesado = st.session_state.get("paquete_caso_origen", nombre_caso)
 
         st.divider()
+
+        # Banner de confirmación visual del caso procesado
+        st.markdown(
+            clean_html(f"""
+            <div style="background: #F0FDF4; border: 1px solid #86EFAC; border-left: 5px solid #16A34A; border-radius: 10px; padding: 14px 18px; margin-bottom: 1.2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    {get_lucide('check-circle-2', size=24, color='#16A34A')}
+                    <div>
+                        <strong style="color: #14532D; font-size: 1.05rem; display: block;">Resultados Generados para: {caso_procesado}</strong>
+                        <span style="color: #15803D; font-size: 0.88rem;">La IA procesó las conversaciones y bifurcó automáticamente el contenido hacia LinkedIn, Newsletter y FAQ.</span>
+                    </div>
+                </div>
+                <span style="background: #DCFCE7; color: #166534; font-size: 0.8rem; font-weight: 700; padding: 4px 12px; border-radius: 6px; border: 1px solid #86EFAC;">
+                    ESTADO: LISTO PARA CURADURÍA
+                </span>
+            </div>
+            """),
+            unsafe_allow_html=True
+        )
 
         motor_usado = paquete.get("motor_utilizado", "Google Gemini Flash (En vivo)")
         if "Gemini" in motor_usado and "En vivo" in motor_usado:

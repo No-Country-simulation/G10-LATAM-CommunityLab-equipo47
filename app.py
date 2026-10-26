@@ -28,6 +28,8 @@ from views.dashboard import render_dashboard_view
 from views.almacenamiento_oci import render_oci_storage_view
 from views.auditoria import render_auditing_view
 
+import streamlit.components.v1 as components
+
 # Configuración de página
 st.set_page_config(
     page_title="CommunityLab | Equipo 47 ONE LATAM",
@@ -36,7 +38,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Estilos globales refinados con estética SaaS moderna y profesional
+# Estilos globales refinados con tipografía optimizada y legible para presentación
 st.markdown(
     """
     <style>
@@ -49,6 +51,14 @@ st.markdown(
     html, body, [class*="css"] {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         color: #0F172A;
+        font-size: 15.5px;
+    }
+
+    /* Mejora en lectura de párrafos y textos generales */
+    .stMarkdown p, .stMarkdown li {
+        font-size: 0.96rem !important;
+        line-height: 1.55 !important;
+        color: #1E293B;
     }
 
     /* Fondo general sutil */
@@ -60,8 +70,8 @@ st.markdown(
     .stButton>button {
         border-radius: 10px;
         font-weight: 600;
-        font-size: 0.88rem;
-        padding: 0.55rem 1.1rem;
+        font-size: 0.92rem;
+        padding: 0.6rem 1.2rem;
         transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
         border: 1px solid #CBD5E1;
         box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
@@ -300,6 +310,27 @@ st.markdown(
 )
 
 # 4. Router de Vistas Modular (Simple: 1 menú = 1 función de vista independiente)
+# Desplazamiento automático al inicio (scroll to top) al cambiar de menú
+if st.session_state.get("_last_active_menu") != opcion_menu:
+    st.session_state["_last_active_menu"] = opcion_menu
+    components.html(
+        """
+        <script>
+            try {
+                const mainEl = window.parent.document.querySelector('section.main') || window.parent.document.querySelector('[data-testid="stMain"]');
+                if (mainEl) {
+                    mainEl.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+                }
+                window.parent.scrollTo(0, 0);
+            } catch (e) {
+                window.scrollTo(0, 0);
+            }
+        </script>
+        """,
+        height=0,
+        width=0
+    )
+
 if opcion_menu == "1. Ingestión de Datos":
     render_ingestion_view()
 elif opcion_menu == "2. Pipeline de IA & Router":

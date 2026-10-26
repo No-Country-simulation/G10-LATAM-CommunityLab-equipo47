@@ -37,41 +37,53 @@ def render_ingestion_view():
     )
 
     data_cargada = None
+    archivo_actual = st.session_state.get("archivo_origen", "")
 
     if metodo.startswith("Cargar Casos de Demostración"):
         st.markdown(
             clean_html(f"""
-            <div style="display: flex; align-items: center; gap: 8px; margin: 1.2rem 0 0.6rem 0;">
-                {get_lucide('book-open', size=19, color='#1E293B')}
-                <h4 style="margin: 0; font-size: 1.05rem; font-weight: 600; color: #1E293B;">Selecciona un Caso de Demostración (Datasets Listos para Evaluar)</h4>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin: 1.2rem 0 0.8rem 0; flex-wrap: wrap; gap: 8px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    {get_lucide('book-open', size=20, color='#1E293B')}
+                    <h4 style="margin: 0; font-size: 1.15rem; font-weight: 700; color: #1E293B;">Selecciona un Caso de Demostración</h4>
+                </div>
+                <span style="font-size: 0.85rem; color: #64748B;">Haz clic en cualquier caso para cargarlo de inmediato</span>
             </div>
             """),
             unsafe_allow_html=True
         )
 
         # 1. BOTÓN DESTACADO: CASO OFICIAL DEL PDF DE HACKATHON ONE G10
+        es_oficial_activo = (archivo_actual == "ejemplo_oficial_pdf_one_g10.json")
+        borde_oficial = "#2563EB" if es_oficial_activo else "#E2E8F0"
+        bg_oficial = "#EFF6FF" if es_oficial_activo else "#FFFFFF"
+
         with st.container(border=True):
             col_pdf_txt, col_pdf_btn = st.columns([3, 1])
             with col_pdf_txt:
+                badge_activo = '<span style="background: #10B981; color: #FFFFFF; font-size: 0.76rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-left: 8px;">ACTIVO EN MEMORIA</span>' if es_oficial_activo else ''
                 st.markdown(
                     clean_html(f"""
                     <div style="display: flex; align-items: center; gap: 8px;">
-                        <span style="background: #FEF3C7; color: #92400E; font-size: 0.75rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; border: 1px solid #FDE68A;">
+                        <span style="background: #FEF3C7; color: #92400E; font-size: 0.78rem; font-weight: 700; padding: 3px 8px; border-radius: 4px; border: 1px solid #FDE68A;">
                             ESPECIFICACIÓN OFICIAL
                         </span>
-                        <strong style="color: #0F172A; font-size: 0.98rem;">Caso Canónico</strong>
+                        <strong style="color: #0F172A; font-size: 1.05rem;">Caso Canónico (PDF Hackathon ONE G10)</strong>
+                        {badge_activo}
                     </div>
-                    <p style="margin: 4px 0 0 0; font-size: 0.84rem; color: #64748B;">
-                        Testimonio de <strong>Mariana Souza</strong> (contratada como Dev Jr IA tras proyecto LangChain + OCI) y duda técnica de <strong>Lucas Albuquerque</strong> (LangGraph / Router).
+                    <p style="margin: 6px 0 0 0; font-size: 0.92rem; color: #475569; line-height: 1.45;">
+                        Testimonio de <strong>Mariana Souza</strong> (contratada como Dev Jr IA tras proyecto LangChain + OCI) y duda técnica de <strong>Lucas Albuquerque</strong> (LangGraph / Router condicional).
                     </p>
                     """),
                     unsafe_allow_html=True
                 )
             with col_pdf_btn:
-                if st.button("Cargar Caso Oficial PDF", type="primary", use_container_width=True, help="Carga exactamente el JSON de ejemplo especificado en las páginas 4 y 5 del PDF"):
+                btn_txt = "✓ Caso Oficial Activo" if es_oficial_activo else "Cargar Caso Oficial PDF"
+                if st.button(btn_txt, type="primary" if es_oficial_activo else "secondary", use_container_width=True, help="Carga exactamente el JSON de ejemplo especificado en las páginas 4 y 5 del PDF"):
                     ejemplo_seleccionado = "ejemplo_oficial_pdf_one_g10.json"
 
-        st.caption("Otros casos representativos y canales de comunidad en vivo:")
+        st.markdown("<div style='margin-top: 1rem; margin-bottom: 0.4rem;'><strong style='font-size: 0.95rem; color: #334155;'>Casos de Estudio Temáticos Disponibles:</strong></div>", unsafe_allow_html=True)
+        
         c1, c2, c3, c4 = st.columns(4)
 
         if "ejemplo_seleccionado" not in locals():
@@ -80,111 +92,111 @@ def render_ingestion_view():
         with c1:
             st.markdown(
                 clean_html(f"""
-                <div style="font-size: 0.78rem; font-weight: 700; color: #059669; margin-bottom: 4px; display: flex; align-items: center; gap: 4px;">
-                    {get_lucide('award', size=14, color='#059669')}
+                <div style="font-size: 0.82rem; font-weight: 700; color: #059669; margin-bottom: 4px; display: flex; align-items: center; gap: 4px;">
+                    {get_lucide('award', size=15, color='#059669')}
                     EMPLEABILIDAD
                 </div>
                 """),
                 unsafe_allow_html=True
             )
-            if st.button("Caso 1: Inserción Laboral", use_container_width=True, help="12 mensajes: Testimonios de contratación en IA y Cloud antes de defender tesis"):
+            es_act = (archivo_actual == "ejemplo_1_contratacion.json")
+            label_c1 = "✓ Caso 1 (Activo)" if es_act else "Caso 1: Inserción Laboral"
+            if st.button(label_c1, use_container_width=True, type="primary" if es_act else "secondary", help="12 mensajes: Testimonios de contratación en IA y Cloud antes de defender tesis"):
                 ejemplo_seleccionado = "ejemplo_1_contratacion.json"
 
         with c2:
             st.markdown(
                 clean_html(f"""
-                <div style="font-size: 0.78rem; font-weight: 700; color: #2563EB; margin-bottom: 4px; display: flex; align-items: center; gap: 4px;">
-                    {get_lucide('cpu', size=14, color='#2563EB')}
+                <div style="font-size: 0.82rem; font-weight: 700; color: #2563EB; margin-bottom: 4px; display: flex; align-items: center; gap: 4px;">
+                    {get_lucide('cpu', size=15, color='#2563EB')}
                     SOPORTE CÁTEDRA
                 </div>
                 """),
                 unsafe_allow_html=True
             )
-            if st.button("Caso 2: Cátedra Cloud", use_container_width=True, help="12 mensajes: Dudas de OCI Always Free, llaves PEM y variables de entorno"):
+            es_act = (archivo_actual == "ejemplo_2_soporte_dudas.json")
+            label_c2 = "✓ Caso 2 (Activo)" if es_act else "Caso 2: Cátedra Cloud"
+            if st.button(label_c2, use_container_width=True, type="primary" if es_act else "secondary", help="12 mensajes: Dudas de OCI Always Free, llaves PEM y variables de entorno"):
                 ejemplo_seleccionado = "ejemplo_2_soporte_dudas.json"
 
         with c3:
             st.markdown(
                 clean_html(f"""
-                <div style="font-size: 0.78rem; font-weight: 700; color: #D97706; margin-bottom: 4px; display: align-items: center; gap: 4px;">
-                    {get_lucide('heart', size=14, color='#D97706')}
+                <div style="font-size: 0.82rem; font-weight: 700; color: #D97706; margin-bottom: 4px; display: flex; align-items: center; gap: 4px;">
+                    {get_lucide('heart', size=15, color='#D97706')}
                     BIENESTAR Y RETENCIÓN
                 </div>
                 """),
                 unsafe_allow_html=True
             )
-            if st.button("Caso 3: Tutorías Pares", use_container_width=True, help="14 mensajes: Alertas de sobrecarga académica y red de apoyo par"):
+            es_act = (archivo_actual == "ejemplo_3_feedback_mixto.json")
+            label_c3 = "✓ Caso 3 (Activo)" if es_act else "Caso 3: Tutorías Pares"
+            if st.button(label_c3, use_container_width=True, type="primary" if es_act else "secondary", help="14 mensajes: Alertas de sobrecarga académica y red de apoyo par"):
                 ejemplo_seleccionado = "ejemplo_3_feedback_mixto.json"
 
         with c4:
             st.markdown(
                 clean_html(f"""
-                <div style="font-size: 0.78rem; font-weight: 700; color: #7C3AED; margin-bottom: 4px; display: flex; align-items: center; gap: 4px;">
-                    {get_lucide('sparkles', size=14, color='#7C3AED')}
+                <div style="font-size: 0.82rem; font-weight: 700; color: #7C3AED; margin-bottom: 4px; display: flex; align-items: center; gap: 4px;">
+                    {get_lucide('sparkles', size=15, color='#7C3AED')}
                     HACKATHON & FERIA
                 </div>
                 """),
                 unsafe_allow_html=True
             )
-            if st.button("Caso 4: Feria de Innovación", use_container_width=True, help="12 mensajes: Proyectos finales en OCI, pitches y pre-incubación"):
+            es_act = (archivo_actual == "ejemplo_4_innovacion_hackathon.json")
+            label_c4 = "✓ Caso 4 (Activo)" if es_act else "Caso 4: Feria Innovación"
+            if st.button(label_c4, use_container_width=True, type="primary" if es_act else "secondary", help="12 mensajes: Proyectos finales en OCI, pitches y pre-incubación"):
                 ejemplo_seleccionado = "ejemplo_4_innovacion_hackathon.json"
 
-        # Segunda fila de canales realistas (Discord y Slack)
-        c5, c6 = st.columns(2)
-        with c5:
-            st.markdown(
-                clean_html(f"""
-                <div style="font-size: 0.78rem; font-weight: 700; color: #5865F2; margin-bottom: 4px; display: flex; align-items: center; gap: 4px;">
-                    {get_lucide('message-square', size=14, color='#5865F2')}
-                    DISCORD COMUNIDAD TECH (14 MSGS)
-                </div>
-                """),
-                unsafe_allow_html=True
-            )
-            if st.button("Caso 5: Discord Comunidad ONE LATAM", use_container_width=True, help="14 mensajes reales de Discord: contrataciones en Globant y MeLi, dudas de SDK de OCI y Streamlit"):
-                ejemplo_seleccionado = "ejemplo_5_discord_comunidad_one.json"
-
-        # Segunda fila de canales realistas (Discord, Slack y GitHub)
+        # Segunda fila de canales comunitarios (Discord, Slack y GitHub)
         c5, c6, c7 = st.columns(3)
         with c5:
             st.markdown(
                 clean_html(f"""
-                <div style="font-size: 0.78rem; font-weight: 700; color: #5865F2; margin-bottom: 4px; display: flex; align-items: center; gap: 4px;">
-                    {get_lucide('message-square', size=14, color='#5865F2')}
-                    DISCORD COMUNIDAD (14 MSGS)
+                <div style="font-size: 0.82rem; font-weight: 700; color: #5865F2; margin-bottom: 4px; display: flex; align-items: center; gap: 4px;">
+                    {get_lucide('message-square', size=15, color='#5865F2')}
+                    DISCORD ONE LATAM (14 MSGS)
                 </div>
                 """),
                 unsafe_allow_html=True
             )
-            if st.button("Caso 5: Discord ONE LATAM", use_container_width=True, help="14 mensajes reales de Discord: contrataciones en Globant y MeLi, dudas de SDK de OCI y Streamlit"):
+            es_act = (archivo_actual == "ejemplo_5_discord_comunidad_one.json")
+            label_c5 = "✓ Caso 5 (Activo)" if es_act else "Caso 5: Discord ONE LATAM"
+            if st.button(label_c5, use_container_width=True, type="primary" if es_act else "secondary", help="14 mensajes reales de Discord: contrataciones en Globant y MeLi, dudas de SDK de OCI y Streamlit"):
                 ejemplo_seleccionado = "ejemplo_5_discord_comunidad_one.json"
 
         with c6:
             st.markdown(
                 clean_html(f"""
-                <div style="font-size: 0.78rem; font-weight: 700; color: #E11D48; margin-bottom: 4px; display: align-items: center; gap: 4px;">
-                    {get_lucide('users', size=14, color='#E11D48')}
+                <div style="font-size: 0.82rem; font-weight: 700; color: #E11D48; margin-bottom: 4px; display: flex; align-items: center; gap: 4px;">
+                    {get_lucide('users', size=15, color='#E11D48')}
                     SLACK ALUMNI (6 MSGS)
                 </div>
                 """),
                 unsafe_allow_html=True
             )
-            if st.button("Caso 6: Slack Alumni Network", use_container_width=True, help="6 mensajes de egresados de ONE en la industria: Tech Leads, buenas prácticas OCI y mentorías"):
+            es_act = (archivo_actual == "ejemplo_6_slack_alumni_tech.json")
+            label_c6 = "✓ Caso 6 (Activo)" if es_act else "Caso 6: Slack Alumni Network"
+            if st.button(label_c6, use_container_width=True, type="primary" if es_act else "secondary", help="6 mensajes de egresados de ONE en la industria: Tech Leads, buenas prácticas OCI y mentorías"):
                 ejemplo_seleccionado = "ejemplo_6_slack_alumni_tech.json"
 
         with c7:
             st.markdown(
                 clean_html(f"""
-                <div style="font-size: 0.78rem; font-weight: 700; color: #0284C7; margin-bottom: 4px; display: align-items: center; gap: 4px;">
-                    {get_lucide('github', size=14, color='#0284C7')}
+                <div style="font-size: 0.82rem; font-weight: 700; color: #0284C7; margin-bottom: 4px; display: flex; align-items: center; gap: 4px;">
+                    {get_lucide('github', size=15, color='#0284C7')}
                     GITHUB DISCUSSIONS (6 MSGS)
                 </div>
                 """),
                 unsafe_allow_html=True
             )
-            if st.button("Caso 7: GitHub Discussions", use_container_width=True, help="6 mensajes técnicos: buffer en memoria vs simulación local, schemas de Gemini y buenas prácticas"):
+            es_act = (archivo_actual == "ejemplo_7_github_discussions_soporte.json")
+            label_c7 = "✓ Caso 7 (Activo)" if es_act else "Caso 7: GitHub Discussions"
+            if st.button(label_c7, use_container_width=True, type="primary" if es_act else "secondary", help="6 mensajes técnicos: buffer en memoria vs simulación local, schemas de Gemini y buenas prácticas"):
                 ejemplo_seleccionado = "ejemplo_7_github_discussions_soporte.json"
 
+        # Cargar por defecto si no hay nada en session_state
         if not ejemplo_seleccionado and "raw_payload" not in st.session_state:
             ejemplo_seleccionado = "ejemplo_oficial_pdf_one_g10.json"
 
@@ -195,6 +207,13 @@ def render_ingestion_view():
                     data_cargada = json.load(f)
                     st.session_state["raw_payload"] = data_cargada
                     st.session_state["archivo_origen"] = ejemplo_seleccionado
+                    # Si cambia el lote, reseteamos el paquete para que el Pipeline procese el nuevo caso
+                    if "generated_package" in st.session_state:
+                        del st.session_state["generated_package"]
+                    if "curated_package" in st.session_state:
+                        del st.session_state["curated_package"]
+                    st.toast(f"Lote cargado: {ejemplo_seleccionado}")
+                    st.rerun()
 
     else:
         st.markdown(
@@ -315,19 +334,19 @@ def render_ingestion_view():
                     with st.container(border=True):
                         st.markdown(
                             clean_html(f"""
-                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
                                 <div>
-                                    <strong style="color: #0F172A; font-size: 0.95rem;">{autor}</strong>
-                                    <span style="color: #64748B; font-size: 0.8rem; margin-left: 6px;">({pais}{sub_info})</span>
-                                    <div style="font-size: 0.78rem; color: #94A3B8; margin-top: 2px;">
-                                        Canal: <code style="color: #475569; background: #F1F5F9; padding: 2px 6px; border-radius: 4px;">{canal}</code> · {fecha}
+                                    <strong style="color: #0F172A; font-size: 1.02rem;">{autor}</strong>
+                                    <span style="color: #64748B; font-size: 0.86rem; margin-left: 6px;">({pais}{sub_info})</span>
+                                    <div style="font-size: 0.84rem; color: #64748B; margin-top: 3px;">
+                                        Canal: <code style="color: #1E293B; background: #F1F5F9; padding: 2px 7px; border-radius: 4px; font-weight: 600;">{canal}</code> · <span style="color: #94A3B8;">{fecha}</span>
                                     </div>
                                 </div>
-                                <span style="background: {tipo_bg}; color: {tipo_color}; font-size: 0.72rem; font-weight: 700; padding: 3px 8px; border-radius: 6px; border: 1px solid {tipo_color}30;">
+                                <span style="background: {tipo_bg}; color: {tipo_color}; font-size: 0.78rem; font-weight: 700; padding: 4px 10px; border-radius: 6px; border: 1px solid {tipo_color}35;">
                                     {tipo_label}
                                 </span>
                             </div>
-                            <div style="color: #334155; font-size: 0.91rem; line-height: 1.5; margin-top: 6px;">
+                            <div style="color: #1E293B; font-size: 0.98rem; line-height: 1.6; margin-top: 8px; background: #F8FAFC; padding: 12px 14px; border-radius: 8px; border-left: 3px solid {tipo_color};">
                                 {texto}
                             </div>
                             """),
@@ -341,8 +360,8 @@ def render_ingestion_view():
             st.markdown(
                 clean_html(f"""
                 <div style="display: flex; align-items: center; gap: 8px; margin: 0.6rem 0 0.8rem 0;">
-                    {get_lucide('bar-chart-3', size=18, color='#2563EB')}
-                    <h4 style="margin: 0; font-size: 1.05rem; font-weight: 600; color: #1E293B;">Tabla Normalizada de Mensajes</h4>
+                    {get_lucide('bar-chart-3', size=19, color='#2563EB')}
+                    <h4 style="margin: 0; font-size: 1.1rem; font-weight: 600; color: #1E293B;">Tabla Normalizada de Mensajes</h4>
                 </div>
                 """),
                 unsafe_allow_html=True
@@ -370,22 +389,32 @@ def render_ingestion_view():
             st.markdown(
                 clean_html(f"""
                 <div style="display: flex; align-items: center; gap: 8px; margin: 0.6rem 0 0.8rem 0;">
-                    {get_lucide('file-text', size=18, color='#2563EB')}
-                    <h4 style="margin: 0; font-size: 1.05rem; font-weight: 600; color: #1E293B;">Payload JSON Oficial Ingerido</h4>
+                    {get_lucide('file-text', size=19, color='#2563EB')}
+                    <h4 style="margin: 0; font-size: 1.1rem; font-weight: 600; color: #1E293B;">Payload JSON Oficial Ingerido</h4>
                 </div>
                 """),
                 unsafe_allow_html=True
             )
             st.json(payload)
 
-        # Botón de acción directa para procesar de inmediato
+        # Botón de acción directa para procesar con IA
         st.markdown("---")
-        col_btn1, col_btn2 = st.columns([2, 1])
-        with col_btn1:
-            if st.button("Ejecutar Pipeline de IA y Router Condicional", type="primary", use_container_width=True):
-                paquete = process_community_payload(payload)
-                st.session_state["generated_package"] = paquete
-                st.session_state["curated_package"] = paquete.copy()
-                st.success("Lote analizado con éxito. Continúa en '2. Pipeline de IA & Router' para revisar las bifurcaciones y los activos generados.")
-        with col_btn2:
-            st.caption("Cumplimiento estricto con el esquema JSON oficial del Hackathon ONE G10.")
+        with st.container(border=True):
+            col_next_info, col_next_btn = st.columns([2, 1])
+            with col_next_info:
+                st.markdown(
+                    clean_html(f"""
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        {get_lucide('cpu', size=22, color='#7C3AED')}
+                        <div>
+                            <strong style="color: #0F172A; font-size: 1.05rem;">Lote listo para análisis inteligente</strong>
+                            <p style="margin: 2px 0 0 0; color: #475569; font-size: 0.92rem;">
+                                Pasa al menú <strong>2. Pipeline de IA & Router</strong> para ejecutar el análisis semántico y generar los borradores.
+                            </p>
+                        </div>
+                    </div>
+                    """),
+                    unsafe_allow_html=True
+                )
+            with col_next_btn:
+                st.caption(f"Caso cargado: **{st.session_state.get('archivo_origen', '')}**")

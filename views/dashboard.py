@@ -34,6 +34,9 @@ def render_dashboard_view():
     alertas_cnt = sum(1 for i in interacciones if i.get("tipo") in ["alerta_apoyo", "dificultades"])
     otros_cnt = total_msg - (testimonios_cnt + dudas_cnt + alertas_cnt)
 
+    archivo_actual = st.session_state.get("archivo_origen", "Lote en memoria")
+    st.markdown(f"<div style='margin-bottom: 0.8rem; font-size: 0.92rem; color: #475569;'>Visualizando salud y métricas de: <strong style='color: #0F172A;'>{archivo_actual}</strong> ({total_msg} interacciones)</div>", unsafe_allow_html=True)
+
     # Métricas con estilo visual enriquecido
     col1, col2, col3, col4 = st.columns(4)
     with col1:
@@ -56,7 +59,7 @@ def render_dashboard_view():
             clean_html(f"""
             <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 0.8rem;">
                 {get_lucide('bar-chart-3', size=19, color='#D97706')}
-                <h4 style="margin: 0; font-size: 1.1rem; font-weight: 600; color: #1E293B;">Distribución de Tipos de Mensajes en el Campus</h4>
+                <h4 style="margin: 0; font-size: 1.15rem; font-weight: 700; color: #1E293B;">Distribución de Tipos de Mensajes en el Campus</h4>
             </div>
             """),
             unsafe_allow_html=True
@@ -71,7 +74,7 @@ def render_dashboard_view():
             # Desglose por canal
             df_interacciones = pd.DataFrame(interacciones)
             if "canal" in df_interacciones.columns:
-                st.markdown("<h5 style='margin-top: 1rem; color: #334155; font-size: 0.95rem;'>Actividad por Canal del Campus Virtual:</h5>", unsafe_allow_html=True)
+                st.markdown("<h5 style='margin-top: 1rem; color: #334155; font-size: 1.0rem; font-weight: 600;'>Actividad por Canal del Campus Virtual:</h5>", unsafe_allow_html=True)
                 conteo_canales = df_interacciones["canal"].value_counts()
                 st.dataframe(pd.DataFrame({"Canal": conteo_canales.index, "Mensajes": conteo_canales.values}), hide_index=True, use_container_width=True)
         else:
@@ -82,7 +85,7 @@ def render_dashboard_view():
             clean_html(f"""
             <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 0.8rem;">
                 {get_lucide('alert-circle', size=19, color='#DC2626')}
-                <h4 style="margin: 0; font-size: 1.1rem; font-weight: 600; color: #1E293B;">Alertas Tempranas de Retención</h4>
+                <h4 style="margin: 0; font-size: 1.15rem; font-weight: 700; color: #1E293B;">Alertas Tempranas de Retención</h4>
             </div>
             """),
             unsafe_allow_html=True
@@ -98,16 +101,16 @@ def render_dashboard_view():
                     st.markdown(
                         clean_html(f"""
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                            <strong style="color: #0F172A; font-size: 0.9rem;">{a.get('autor')}{pais_tag}</strong>
-                            <span style="font-size: 0.75rem; font-weight: 600; color: {tipo_color}; background: {tipo_color}14; padding: 2px 8px; border-radius: 4px;">
+                            <strong style="color: #0F172A; font-size: 0.98rem;">{a.get('autor')}{pais_tag}</strong>
+                            <span style="font-size: 0.78rem; font-weight: 700; color: {tipo_color}; background: {tipo_color}14; padding: 3px 8px; border-radius: 4px;">
                                 {a.get('tipo').replace('_', ' ').upper()}
                             </span>
                         </div>
-                        <div style="font-size: 0.78rem; color: #64748B; margin-bottom: 6px;">Canal: <code>{a.get('canal')}</code>{carrera_tag}</div>
+                        <div style="font-size: 0.84rem; color: #64748B; margin-bottom: 6px;">Canal: <code style="font-weight: 600;">{a.get('canal')}</code>{carrera_tag}</div>
                         """),
                         unsafe_allow_html=True
                     )
-                    st.caption(f"_{a.get('texto')[:130]}..._")
+                    st.caption(f"_{a.get('texto')[:140]}..._")
         else:
             st.markdown(
                 clean_html(f"""
