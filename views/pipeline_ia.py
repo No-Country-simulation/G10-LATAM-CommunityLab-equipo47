@@ -5,7 +5,7 @@ Especializado para el sector de Educación Tecnológica Superior & Ecosistema ON
 """
 import streamlit as st
 import time
-from modules.ui import badge_header, get_lucide, render_tag, render_callout, render_linkedin_mockup, clean_html
+from modules.ui import badge_header, get_lucide, render_kpi_card, render_tag, render_callout, render_linkedin_mockup, clean_html
 from modules.mock_engine import process_community_payload
 from modules.gemini_engine import procesar_con_gemini
 
@@ -141,9 +141,31 @@ def render_pipeline_view():
         )
 
         m1, m2, m3 = st.columns(3)
-        m1.metric("Mensajes Procesados", resumen.get("total_interacciones_procesadas", total_interacciones))
-        m2.metric("Sentimiento Predominante", resumen.get("sentimiento_predominante", "N/A"))
-        m3.metric("Temas Clave Detectados", len(resumen.get("temas_principales", [])))
+        with m1:
+            st.markdown(render_kpi_card(
+                "Mensajes Procesados",
+                resumen.get("total_interacciones_procesadas", total_interacciones),
+                icon_name="cpu",
+                color="#2563EB",
+                igualar_altura=True,
+            ), unsafe_allow_html=True)
+        with m2:
+            st.markdown(render_kpi_card(
+                "Sentimiento Predominante",
+                resumen.get("sentimiento_predominante", "N/A"),
+                icon_name="heart",
+                color="#D97706",
+                variant="texto",
+                igualar_altura=True,
+            ), unsafe_allow_html=True)
+        with m3:
+            st.markdown(render_kpi_card(
+                "Temas Clave Detectados",
+                len(resumen.get("temas_principales", [])),
+                icon_name="layers",
+                color="#7C3AED",
+                igualar_altura=True,
+            ), unsafe_allow_html=True)
 
         st.markdown("<p style='font-size: 0.88rem; font-weight: 600; color: #475569; margin-top: 0.8rem; margin-bottom: 0.4rem;'>Temas Prioritarios Extraídos por la IA:</p>", unsafe_allow_html=True)
         tags_html = "".join([render_tag(t, "#F3E8FF", "#6B21A8") for t in resumen.get("temas_principales", [])])

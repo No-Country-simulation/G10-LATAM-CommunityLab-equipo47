@@ -6,7 +6,7 @@ Diseño transparente y usable para el usuario comun.
 import streamlit as st
 import json
 from pathlib import Path
-from modules.ui import badge_header, get_lucide, render_callout, clean_html
+from modules.ui import badge_header, get_lucide, render_kpi_card, render_callout, clean_html
 from modules.oci_client import (
     guardar_en_oci,
     listar_activos_oci,
@@ -47,10 +47,39 @@ def render_oci_storage_view():
     # Tarjeta de Estado
     with st.container(border=True):
         c1, c2, c3, c4 = st.columns(4)
-        c1.metric("Namespace OCI", cfg.get("namespace", "axsui3upub83"))
-        c2.metric("Bucket OCI", cfg.get("bucket", "communitylab-activos-marketing"))
-        c3.metric("Región OCI", cfg.get("region", "sa-santiago-1"))
-        c4.metric("Destino Actual", "☁️ Nube OCI" if estado_oci["conectado_a_nube"] else "💾 Espejo Local")
+        with c1:
+            st.markdown(render_kpi_card(
+                "Namespace OCI",
+                cfg.get("namespace", "axsui3upub83"),
+                icon_name="database",
+                color="#2563EB",
+                igualar_altura=True,
+            ), unsafe_allow_html=True)
+        with c2:
+            st.markdown(render_kpi_card(
+                "Bucket OCI",
+                cfg.get("bucket", "communitylab-activos-marketing"),
+                icon_name="layers",
+                color="#D97706",
+                variant="texto",
+                igualar_altura=True,
+            ), unsafe_allow_html=True)
+        with c3:
+            st.markdown(render_kpi_card(
+                "Región OCI",
+                cfg.get("region", "sa-santiago-1"),
+                icon_name="cloud",
+                color="#7C3AED",
+                igualar_altura=True,
+            ), unsafe_allow_html=True)
+        with c4:
+            st.markdown(render_kpi_card(
+                "Destino Actual",
+                "☁️ Nube OCI" if estado_oci["conectado_a_nube"] else "💾 Espejo Local",
+                icon_name="server",
+                color="#059669",
+                igualar_altura=True,
+            ), unsafe_allow_html=True)
 
     # ASISTENTE PARA CONECTAR A LA NUBE REAL SI TIENEN LAS CREDENCIALES
     if not estado_oci["conectado_a_nube"]:

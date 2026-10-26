@@ -3,6 +3,9 @@ Módulo de interfaz visual y diseño humanizado para CommunityLab.
 Integración completa con iconos vectoriales oficiales de Lucide (lucide.dev).
 Diseño modular adaptado para Educación Superior y Comunidades Digitales de Aprendizaje.
 """
+from html import escape
+from typing import Optional, Union
+
 import streamlit as st
 
 # Repositorio oficial del equipo y Demo desplegado en Streamlit Cloud
@@ -80,11 +83,57 @@ def badge_header(icon_name: str, title: str, subtitle: str = None, color: str = 
     html = f'''<div style="display: flex; align-items: flex-start; gap: 14px; margin-bottom: 1.1rem; padding: 4px 0;"><div style="background-color: {color}14; border: 1px solid {color}30; padding: 10px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">{icon_svg}</div><div>{pill_html}<h2 style="margin: 0; font-size: 1.55rem; font-weight: 700; color: #0F172A; letter-spacing: -0.02em;">{title}</h2>{sub_p}</div></div>'''
     st.markdown(clean_html(html), unsafe_allow_html=True)
 
-def render_kpi_card(title: str, value: str, subtitle: str = None, icon_name: str = "sparkles", color: str = "#2563EB"):
-    """Renderiza una tarjeta KPI moderna con icono Lucide circular."""
+def render_kpi_card(
+    title: str,
+    value: Union[str, int],
+    subtitle: str = None,
+    icon_name: str = "sparkles",
+    color: str = "#2563EB",
+    variant: str = "normal",
+    igualar_altura: bool = False,
+    tooltip: Optional[Union[str, int]] = None,
+):
+    """
+    Renderiza una tarjeta KPI moderna con icono Lucide circular.
+
+    variant="texto" muestra el valor con el tamaño del título y permite salto de
+    línea (sin recorte con puntos suspensivos); la variante normal conserva el
+    tamaño grande. igualar_altura fija una altura mínima común para filas con
+    textos de distinto largo. Todos los textos se escapan porque la tarjeta se
+    inserta con unsafe_allow_html.
+    """
     icon_svg = get_lucide(icon_name, size=20, color=color)
-    sub_html = f'<div style="font-size: 0.78rem; color: #64748B; margin-top: 4px;">{subtitle}</div>' if subtitle else ''
-    html = f'''<div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); display: flex; align-items: center; justify-content: space-between; gap: 12px;"><div><span style="font-size: 0.8rem; font-weight: 600; color: #64748B; text-transform: uppercase; letter-spacing: 0.04em;">{title}</span><div style="font-size: 1.45rem; font-weight: 700; color: #0F172A; margin-top: 2px;">{value}</div>{sub_html}</div><div style="background: {color}14; border: 1px solid {color}25; width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">{icon_svg}</div></div>'''
+
+    valor_texto = "N/A" if value is None else str(value).strip()
+    if not valor_texto:
+        valor_texto = "N/A"
+
+    if tooltip is not None:
+        tooltip_texto = str(tooltip).strip() or valor_texto
+    elif variant == "texto":
+        tooltip_texto = valor_texto
+    else:
+        tooltip_texto = None
+    title_attr = (
+        f' title="{escape(tooltip_texto, quote=True)}"'
+        if tooltip_texto is not None else ''
+    )
+
+    sub_html = (
+        f'<div style="font-size: 0.78rem; color: #64748B; margin-top: 4px;">'
+        f'{escape(str(subtitle))}</div>'
+        if subtitle else ''
+    )
+    if variant == "texto":
+        valor_estilo = (
+            "font-size: 1rem; font-weight: 700; color: #0F172A; margin-top: 2px; "
+            "white-space: normal; overflow-wrap: anywhere; line-height: 1.3;"
+        )
+    else:
+        valor_estilo = "font-size: 1.45rem; font-weight: 700; color: #0F172A; margin-top: 2px;"
+    altura_estilo = " height: 100%; min-height: 120px; box-sizing: border-box;" if igualar_altura else ""
+
+    html = f'''<div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); display: flex; align-items: center; justify-content: space-between; gap: 12px;{altura_estilo}"><div><span style="font-size: 0.8rem; font-weight: 600; color: #64748B; text-transform: uppercase; letter-spacing: 0.04em;">{escape(str(title))}</span><div{title_attr} style="{valor_estilo}">{escape(valor_texto)}</div>{sub_html}</div><div style="background: {color}14; border: 1px solid {color}25; width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">{icon_svg}</div></div>'''
     return clean_html(html)
 
 def render_callout(text: str, title: str = None, icon_name: str = "lightbulb", color: str = "#2563EB"):

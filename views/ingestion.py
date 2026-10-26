@@ -7,7 +7,7 @@ import streamlit as st
 import json
 from pathlib import Path
 import pandas as pd
-from modules.ui import badge_header, get_lucide, render_callout, clean_html
+from modules.ui import badge_header, get_lucide, render_kpi_card, render_callout, clean_html
 from modules.mock_engine import process_community_payload
 
 SAMPLES_DIR = Path("data/samples")
@@ -257,11 +257,41 @@ def render_ingestion_view():
         )
 
         c1, c2, c3, c4 = st.columns(4)
-        c1.metric("Comunidad de Origen", payload.get("origen_comunidad", "N/A").replace("_", " "))
-        c2.metric("Período / Sprint", payload.get("periodo_referencia", "N/A").replace("_", " "))
-        c3.metric("Mensajes Ingeridos", len(interacciones))
+        with c1:
+            st.markdown(render_kpi_card(
+                "Comunidad de Origen",
+                payload.get("origen_comunidad", "N/A").replace("_", " "),
+                icon_name="graduation-cap",
+                color="#2563EB",
+                variant="texto",
+                igualar_altura=True,
+            ), unsafe_allow_html=True)
+        with c2:
+            st.markdown(render_kpi_card(
+                "Período / Sprint",
+                payload.get("periodo_referencia", "N/A").replace("_", " "),
+                icon_name="clock",
+                color="#D97706",
+                variant="texto",
+                igualar_altura=True,
+            ), unsafe_allow_html=True)
+        with c3:
+            st.markdown(render_kpi_card(
+                "Mensajes Ingeridos",
+                len(interacciones),
+                icon_name="message-square",
+                color="#7C3AED",
+                igualar_altura=True,
+            ), unsafe_allow_html=True)
         testimonios_count = sum(1 for i in interacciones if i.get("tipo") in ["testimonio", "logro"])
-        c4.metric("Testimonios para LinkedIn", testimonios_count)
+        with c4:
+            st.markdown(render_kpi_card(
+                "Testimonios para LinkedIn",
+                testimonios_count,
+                icon_name="award",
+                color="#059669",
+                igualar_altura=True,
+            ), unsafe_allow_html=True)
 
         st.markdown("<div style='height: 12px;'></div>", unsafe_allow_html=True)
 
