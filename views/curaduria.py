@@ -221,31 +221,40 @@ def render_curatorship_view():
         if estado_lk == "Rechazado":
             st.markdown(
                 clean_html(f"""
-                <div style="background: #FEF2F2; border: 2px solid #FCA5A5; padding: 16px 20px; border-radius: 12px; display: flex; align-items: center; gap: 14px;">
-                    <div style="background: #DC2626; color: white; width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(220,38,38,0.25);">
-                        {get_lucide('x-circle', size=22, color='#FFFFFF')}
+                <div style="background: #FEF2F2; border: 2px solid #FCA5A5; padding: 18px 22px; border-radius: 12px; display: flex; align-items: center; gap: 16px;">
+                    <div style="background: #DC2626; color: white; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(220,38,38,0.25);">
+                        {get_lucide('x-circle', size=24, color='#FFFFFF')}
                     </div>
                     <div>
-                        <strong style="color: #991B1B; font-size: 1.02rem; display: block;">🚫 Publicación Bloqueada (Post Rechazado por Curaduría)</strong>
-                        <span style="color: #B91C1C; font-size: 0.9rem; line-height: 1.5; display: block; margin-top: 2px;">
-                            El curador humano descartó este post. <strong>El botón de LinkedIn se encuentra desactivado</strong> y no se realizará ninguna publicación externa. Este registro se conservará en OCI exclusivamente para fines de auditoría y trazabilidad institucional.
+                        <strong style="color: #991B1B; font-size: 1.05rem; display: block;">🚫 Publicación Bloqueada (Post Rechazado por Curaduría)</strong>
+                        <span style="color: #B91C1C; font-size: 0.92rem; line-height: 1.5; display: block; margin-top: 3px;">
+                            El curador humano determinó que este contenido no debe publicarse en redes. <strong>El botón y la caja de texto para LinkedIn han sido completamente removidos.</strong> 
+                            Este activo se conservará en Oracle Cloud etiquetado como <em>Rechazado</em> para trazabilidad y auditoría de decisiones éticas.
                         </span>
                     </div>
                 </div>
                 """),
                 unsafe_allow_html=True
             )
+            st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
+            col_r1, col_r2 = st.columns([2, 1])
+            with col_r1:
+                st.caption("Continúa al menú de almacenamiento OCI para guardar este registro de descarte en el bucket:")
+            with col_r2:
+                if st.button("☁️ Ir a 5. OCI Object Storage", use_container_width=True):
+                    st.session_state["nav_selection"] = "5. OCI Object Storage"
+                    st.rerun()
         elif estado_lk == "Pendiente de Modificaciones":
             st.markdown(
                 clean_html(f"""
-                <div style="background: #FFFBEB; border: 2px solid #FCD34D; padding: 16px 20px; border-radius: 12px; display: flex; align-items: center; gap: 14px;">
-                    <div style="background: #D97706; color: white; width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(217,119,6,0.25);">
-                        {get_lucide('clock', size=22, color='#FFFFFF')}
+                <div style="background: #FFFBEB; border: 2px solid #FCD34D; padding: 18px 22px; border-radius: 12px; display: flex; align-items: center; gap: 16px;">
+                    <div style="background: #D97706; color: white; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(217,119,6,0.25);">
+                        {get_lucide('clock', size=24, color='#FFFFFF')}
                     </div>
                     <div>
-                        <strong style="color: #92400E; font-size: 1.02rem; display: block;">⚠️ Publicación en Espera (Borrador en Revisión Editorial)</strong>
-                        <span style="color: #B45309; font-size: 0.9rem; line-height: 1.5; display: block; margin-top: 2px;">
-                            Este post requiere ajustes o confirmación de datos antes de publicarse. <strong>El botón de LinkedIn permanecerá oculto</strong> hasta que realices las modificaciones y presiones <em>'✅ Aprobar'</em>.
+                        <strong style="color: #92400E; font-size: 1.05rem; display: block;">⚠️ Publicación en Espera (Borrador en Revisión Editorial)</strong>
+                        <span style="color: #B45309; font-size: 0.92rem; line-height: 1.5; display: block; margin-top: 3px;">
+                            Este post requiere confirmación de datos o ajustes editoriales. <strong>El botón de LinkedIn permanecerá oculto</strong> hasta que finalices las modificaciones en el editor superior y hagas clic en el botón <em>'✅ Aprobar'</em>.
                         </span>
                     </div>
                 </div>
