@@ -94,33 +94,112 @@ def render_curatorship_view():
             )
             st.caption("Ajusta el titular y el texto. La previsualización de la derecha se adaptará a tus modificaciones:")
             nuevo_titulo_lk = st.text_input("Titular de la publicación:", value=post_lk.get("titulo", ""), key="input_titulo_lk")
-            nuevo_copy_lk = st.text_area("Cuerpo del post (puedes editarlo libremente):", value=post_lk.get("copy", ""), height=220, key="textarea_copy_lk")
+            nuevo_copy_lk = st.text_area("Cuerpo del post (puedes editarlo libremente):", value=post_lk.get("copy", ""), height=200, key="textarea_copy_lk")
 
             opciones_estado_lk = ["Aprobado para Publicar", "Pendiente de Modificaciones", "Rechazado"]
             estado_actual_lk = post_lk.get("estado_curaduria", "Aprobado para Publicar")
-            idx_lk = opciones_estado_lk.index(estado_actual_lk) if estado_actual_lk in opciones_estado_lk else 0
+            if estado_actual_lk not in opciones_estado_lk:
+                estado_actual_lk = "Aprobado para Publicar"
+            idx_lk = opciones_estado_lk.index(estado_actual_lk)
 
+            st.markdown("<div style='height: 4px;'></div>", unsafe_allow_html=True)
+            
+            # Banner de estado actual visible y llamativo
+            if estado_actual_lk == "Aprobado para Publicar":
+                st.markdown(
+                    clean_html(f"""
+                    <div style="background: #ECFDF5; border: 1px solid #A7F3D0; padding: 8px 12px; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="color: #065F46; font-size: 0.86rem; font-weight: 700;">✅ Estado Actual: APROBADO</span>
+                        <span style="background: #10B981; color: white; font-size: 0.74rem; font-weight: 700; padding: 2px 8px; border-radius: 4px;">Listo para LinkedIn</span>
+                    </div>
+                    """),
+                    unsafe_allow_html=True
+                )
+            elif estado_actual_lk == "Pendiente de Modificaciones":
+                st.markdown(
+                    clean_html(f"""
+                    <div style="background: #FFFBEB; border: 1px solid #FCD34D; padding: 8px 12px; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="color: #92400E; font-size: 0.86rem; font-weight: 700;">⚠️ Estado Actual: EN REVISIÓN</span>
+                        <span style="background: #F59E0B; color: white; font-size: 0.74rem; font-weight: 700; padding: 2px 8px; border-radius: 4px;">Publicación en Pausa</span>
+                    </div>
+                    """),
+                    unsafe_allow_html=True
+                )
+            else:
+                st.markdown(
+                    clean_html(f"""
+                    <div style="background: #FEF2F2; border: 1px solid #FCA5A5; padding: 8px 12px; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="color: #991B1B; font-size: 0.86rem; font-weight: 700;">🚫 Estado Actual: DESCARTADO / RECHAZADO</span>
+                        <span style="background: #EF4444; color: white; font-size: 0.74rem; font-weight: 700; padding: 2px 8px; border-radius: 4px;">Publicación Bloqueada</span>
+                    </div>
+                    """),
+                    unsafe_allow_html=True
+                )
+
+            # Botones de acción directa con 1 solo clic
+            col_b1, col_b2, col_b3 = st.columns(3)
+            with col_b1:
+                if st.button("✅ Aprobar", type="primary", use_container_width=True, help="Aprueba el post y activa el botón de LinkedIn"):
+                    post_lk["titulo"] = nuevo_titulo_lk
+                    post_lk["copy"] = nuevo_copy_lk
+                    post_lk["estado_curaduria"] = "Aprobado para Publicar"
+                    paquete["estado_curaduria"] = "Aprobado para Publicar"
+                    paquete["activos_distribucion_generados"]["post_linkedin"] = post_lk
+                    st.session_state["curated_package"] = paquete
+                    st.session_state["curaduria_lk_radio"] = "Aprobado para Publicar"
+                    st.toast("✅ Post aprobado para publicación en LinkedIn.", icon="✅")
+                    st.rerun()
+            with col_b2:
+                if st.button("✏️ En Revisión", use_container_width=True, help="Guarda el texto editado y pausa la publicación"):
+                    post_lk["titulo"] = nuevo_titulo_lk
+                    post_lk["copy"] = nuevo_copy_lk
+                    post_lk["estado_curaduria"] = "Pendiente de Modificaciones"
+                    paquete["estado_curaduria"] = "Pendiente de Modificaciones"
+                    paquete["activos_distribucion_generados"]["post_linkedin"] = post_lk
+                    st.session_state["curated_package"] = paquete
+                    st.session_state["curaduria_lk_radio"] = "Pendiente de Modificaciones"
+                    st.toast("⚠️ Post marcado en revisión (publicación en pausa).", icon="⚠️")
+                    st.rerun()
+            with col_b3:
+                if st.button("🚫 Rechazar", use_container_width=True, help="Descarta el post y bloquea permanentemente el botón de LinkedIn"):
+                    post_lk["titulo"] = nuevo_titulo_lk
+                    post_lk["copy"] = nuevo_copy_lk
+                    post_lk["estado_curaduria"] = "Rechazado"
+                    paquete["estado_curaduria"] = "Rechazado"
+                    paquete["activos_distribucion_generados"]["post_linkedin"] = post_lk
+                    st.session_state["curated_package"] = paquete
+                    st.session_state["curaduria_lk_radio"] = "Rechazado"
+                    st.toast("🚫 Post rechazado. Botón de LinkedIn bloqueado.", icon="🚫")
+                    st.rerun()
+
+            # Selector radio para cambio reactivo
             estado_lk = st.radio(
-                "Decisión del Curador:",
+                "O selecciona tu decisión editorial:",
                 opciones_estado_lk,
                 index=idx_lk,
                 horizontal=True,
                 key="curaduria_lk_radio"
             )
 
-            if st.button("Guardar Decisión de LinkedIn", type="primary", use_container_width=True):
+            # Sincronización instantánea si el usuario hace clic en el radio
+            if estado_lk != estado_actual_lk:
                 post_lk["titulo"] = nuevo_titulo_lk
                 post_lk["copy"] = nuevo_copy_lk
                 post_lk["estado_curaduria"] = estado_lk
                 paquete["estado_curaduria"] = estado_lk
                 paquete["activos_distribucion_generados"]["post_linkedin"] = post_lk
                 st.session_state["curated_package"] = paquete
-                if estado_lk == "Rechazado":
-                    st.error("🚫 Decisión registrada: Post RECHAZADO. Queda bloqueado para publicación y registrado en OCI como descartado.")
-                elif estado_lk == "Pendiente de Modificaciones":
-                    st.warning("⚠️ Decisión registrada: Post en REVISIÓN. Requiere modificaciones antes de ser publicado.")
-                else:
-                    st.success("✅ Decisión registrada: Post APROBADO para publicación en LinkedIn y OCI.")
+                st.rerun()
+
+            # Guardar modificaciones de texto manuales
+            if st.button("💾 Guardar Cambios en Titular y Copy", use_container_width=True):
+                post_lk["titulo"] = nuevo_titulo_lk
+                post_lk["copy"] = nuevo_copy_lk
+                post_lk["estado_curaduria"] = estado_lk
+                paquete["estado_curaduria"] = estado_lk
+                paquete["activos_distribucion_generados"]["post_linkedin"] = post_lk
+                st.session_state["curated_package"] = paquete
+                st.success("Borrador actualizado correctamente.")
                 st.rerun()
 
         with col_prev_lk:
@@ -142,12 +221,14 @@ def render_curatorship_view():
         if estado_lk == "Rechazado":
             st.markdown(
                 clean_html(f"""
-                <div style="background: #FEF2F2; border: 1px solid #FCA5A5; padding: 14px 18px; border-radius: 10px; display: flex; align-items: center; gap: 12px;">
-                    {get_lucide('x-circle', size=22, color='#DC2626')}
+                <div style="background: #FEF2F2; border: 2px solid #FCA5A5; padding: 16px 20px; border-radius: 12px; display: flex; align-items: center; gap: 14px;">
+                    <div style="background: #DC2626; color: white; width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(220,38,38,0.25);">
+                        {get_lucide('x-circle', size=22, color='#FFFFFF')}
+                    </div>
                     <div>
-                        <strong style="color: #991B1B; font-size: 0.98rem; display: block;">Publicación Bloqueada (Post Rechazado)</strong>
-                        <span style="color: #B91C1C; font-size: 0.88rem;">
-                            El curador humano determinó que este contenido no debe publicarse en redes sociales. El paquete se conservará en OCI para fines de trazabilidad y auditoría.
+                        <strong style="color: #991B1B; font-size: 1.02rem; display: block;">🚫 Publicación Bloqueada (Post Rechazado por Curaduría)</strong>
+                        <span style="color: #B91C1C; font-size: 0.9rem; line-height: 1.5; display: block; margin-top: 2px;">
+                            El curador humano descartó este post. <strong>El botón de LinkedIn se encuentra desactivado</strong> y no se realizará ninguna publicación externa. Este registro se conservará en OCI exclusivamente para fines de auditoría y trazabilidad institucional.
                         </span>
                     </div>
                 </div>
@@ -157,12 +238,14 @@ def render_curatorship_view():
         elif estado_lk == "Pendiente de Modificaciones":
             st.markdown(
                 clean_html(f"""
-                <div style="background: #FFFBEB; border: 1px solid #FCD34D; padding: 14px 18px; border-radius: 10px; display: flex; align-items: center; gap: 12px;">
-                    {get_lucide('clock', size=22, color='#D97706')}
+                <div style="background: #FFFBEB; border: 2px solid #FCD34D; padding: 16px 20px; border-radius: 12px; display: flex; align-items: center; gap: 14px;">
+                    <div style="background: #D97706; color: white; width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(217,119,6,0.25);">
+                        {get_lucide('clock', size=22, color='#FFFFFF')}
+                    </div>
                     <div>
-                        <strong style="color: #92400E; font-size: 0.98rem; display: block;">Publicación en Espera (Borrador en Revisión)</strong>
-                        <span style="color: #B45309; font-size: 0.88rem;">
-                            Este post requiere confirmación de datos o ajustes editoriales antes de autorizar su publicación en LinkedIn.
+                        <strong style="color: #92400E; font-size: 1.02rem; display: block;">⚠️ Publicación en Espera (Borrador en Revisión Editorial)</strong>
+                        <span style="color: #B45309; font-size: 0.9rem; line-height: 1.5; display: block; margin-top: 2px;">
+                            Este post requiere ajustes o confirmación de datos antes de publicarse. <strong>El botón de LinkedIn permanecerá oculto</strong> hasta que realices las modificaciones y presiones <em>'✅ Aprobar'</em>.
                         </span>
                     </div>
                 </div>
@@ -170,6 +253,17 @@ def render_curatorship_view():
                 unsafe_allow_html=True
             )
         else:
+            st.markdown(
+                clean_html(f"""
+                <div style="background: #ECFDF5; border: 1px solid #A7F3D0; padding: 10px 16px; border-radius: 8px; display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                    {get_lucide('check-circle-2', size=20, color='#059669')}
+                    <span style="color: #065F46; font-size: 0.92rem; font-weight: 600;">
+                        Post Aprobado para Publicación Oficial en LinkedIn. Puedes copiar el texto o abrir LinkedIn directamente:
+                    </span>
+                </div>
+                """),
+                unsafe_allow_html=True
+            )
             col_pub_izq, col_pub_der = st.columns([3, 1])
             with col_pub_izq:
                 texto_a_copiar = f"{nuevo_titulo_lk}\n\n{nuevo_copy_lk}"
@@ -178,8 +272,8 @@ def render_curatorship_view():
                 st.markdown("<div style='height: 12px;'></div>", unsafe_allow_html=True)
                 st.markdown(
                     clean_html(f"""
-                    <a href="https://www.linkedin.com/feed/" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; color: #FFFFFF; background-color: #0A66C2; padding: 10px 16px; border-radius: 8px; font-size: 0.9rem; font-weight: 700; box-shadow: 0 2px 4px rgba(10,102,194,0.3);">
-                        {get_lucide('external-link', size=15, color='#FFFFFF')}
+                    <a href="https://www.linkedin.com/feed/" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; color: #FFFFFF; background-color: #0A66C2; padding: 11px 16px; border-radius: 8px; font-size: 0.92rem; font-weight: 700; box-shadow: 0 2px 4px rgba(10,102,194,0.3); transition: background 0.15s ease;">
+                        {get_lucide('external-link', size=16, color='#FFFFFF')}
                         Abrir LinkedIn
                     </a>
                     """),
@@ -221,12 +315,25 @@ def render_curatorship_view():
             nuevo_titular_nl = st.text_input("Titular destacado:", value=nl.get("titular", ""), key="nl_tit_input")
             nuevo_resumen_nl = st.text_area("Cuerpo sintetizado para el lector:", value=nl.get("resumen", ""), height=150, key="nl_res_input")
 
+            estado_nl_actual = nl.get("estado_curaduria", "Incluir en la Edición Semanal")
+            idx_nl = 0 if estado_nl_actual == "Incluir en la Edición Semanal" else 1
+
             estado_nl = st.radio(
                 "Decisión del Curador:",
                 ["Incluir en la Edición Semanal", "Omitir en este envío"],
+                index=idx_nl,
                 horizontal=True,
                 key="curaduria_nl_radio"
             )
+
+            if estado_nl != estado_nl_actual:
+                nl["seccion"] = nueva_seccion
+                nl["titular"] = nuevo_titular_nl
+                nl["resumen"] = nuevo_resumen_nl
+                nl["estado_curaduria"] = estado_nl
+                paquete["activos_distribucion_generados"]["destaque_newsletter_semanal"] = nl
+                st.session_state["curated_package"] = paquete
+                st.rerun()
 
             if st.button("Guardar Cambios de Newsletter", type="primary", use_container_width=True):
                 nl["seccion"] = nueva_seccion
@@ -310,6 +417,15 @@ def render_curatorship_view():
                 index=idx_default,
                 key="faq_status_select"
             )
+
+            if nuevo_status_faq != faq.get("status"):
+                faq["tema"] = nuevo_tema_faq
+                faq["pregunta"] = nueva_pregunta_faq
+                faq["respuesta_sugerida"] = nueva_respuesta_faq
+                faq["status"] = nuevo_status_faq
+                paquete["activos_distribucion_generados"]["sugerencia_contenido_faq"] = faq
+                st.session_state["curated_package"] = paquete
+                st.rerun()
 
             if st.button("Guardar Decisión de FAQ / Tip", type="primary", use_container_width=True):
                 faq["tema"] = nuevo_tema_faq
