@@ -275,12 +275,56 @@ def render_ingestion_view():
             unsafe_allow_html=True
         )
 
-        c1, c2, c3, c4 = st.columns(4)
-        c1.metric("Comunidad de Origen", payload.get("origen_comunidad", "N/A").replace("_", " "))
-        c2.metric("Período / Sprint", payload.get("periodo_referencia", "N/A").replace("_", " "))
-        c3.metric("Mensajes Ingeridos", len(interacciones))
+        origen_nombre = payload.get("origen_comunidad", "N/A").replace("_", " ").title()
+        periodo_nombre = payload.get("periodo_referencia", "N/A").replace("_", " ").title()
+        total_msg = len(interacciones)
         testimonios_count = sum(1 for i in interacciones if i.get("tipo") in ["testimonio", "logro"])
-        c4.metric("Testimonios para LinkedIn", testimonios_count)
+
+        c1, c2, c3, c4 = st.columns([1.3, 1.1, 0.8, 0.8])
+        with c1:
+            st.markdown(
+                clean_html(f"""
+                <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 12px 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); min-height: 88px; display: flex; flex-direction: column; justify-content: space-between;">
+                    <span style="font-size: 0.72rem; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.04em;">Comunidad de Origen</span>
+                    <div style="font-size: 1.02rem; font-weight: 700; color: #0F172A; line-height: 1.35; margin: 3px 0;">{origen_nombre}</div>
+                    <span style="font-size: 0.72rem; color: #2563EB; font-weight: 600;">Canal Verificado</span>
+                </div>
+                """),
+                unsafe_allow_html=True
+            )
+        with c2:
+            st.markdown(
+                clean_html(f"""
+                <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 12px 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); min-height: 88px; display: flex; flex-direction: column; justify-content: space-between;">
+                    <span style="font-size: 0.72rem; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.04em;">Período / Sprint</span>
+                    <div style="font-size: 1.02rem; font-weight: 700; color: #0F172A; line-height: 1.35; margin: 3px 0;">{periodo_nombre}</div>
+                    <span style="font-size: 0.72rem; color: #64748B; font-weight: 500;">Ciclo Activo</span>
+                </div>
+                """),
+                unsafe_allow_html=True
+            )
+        with c3:
+            st.markdown(
+                clean_html(f"""
+                <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 12px 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); min-height: 88px; display: flex; flex-direction: column; justify-content: space-between;">
+                    <span style="font-size: 0.72rem; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.04em;">Mensajes Ingeridos</span>
+                    <div style="font-size: 1.5rem; font-weight: 800; color: #0F172A; margin: 2px 0;">{total_msg}</div>
+                    <span style="font-size: 0.72rem; color: #059669; font-weight: 600;">Lote Completo</span>
+                </div>
+                """),
+                unsafe_allow_html=True
+            )
+        with c4:
+            st.markdown(
+                clean_html(f"""
+                <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 12px 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); min-height: 88px; display: flex; flex-direction: column; justify-content: space-between;">
+                    <span style="font-size: 0.72rem; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.04em;">Para LinkedIn</span>
+                    <div style="font-size: 1.5rem; font-weight: 800; color: #0A66C2; margin: 2px 0;">{testimonios_count}</div>
+                    <span style="font-size: 0.72rem; color: #0A66C2; font-weight: 600;">Testimonios / UGC</span>
+                </div>
+                """),
+                unsafe_allow_html=True
+            )
 
         st.markdown("<div style='height: 12px;'></div>", unsafe_allow_html=True)
 

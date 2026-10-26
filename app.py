@@ -94,11 +94,11 @@ st.markdown(
         box-shadow: 0 4px 12px rgba(224, 79, 22, 0.35) !important;
     }
     
-    /* Tarjetas de métricas */
+    /* Tarjetas de métricas Streamlit */
     .stMetric {
         background: #FFFFFF;
-        padding: 16px 18px;
-        border-radius: 14px;
+        padding: 14px 16px;
+        border-radius: 12px;
         border: 1px solid #E2E8F0;
         box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
         transition: all 0.2s ease;
@@ -106,6 +106,20 @@ st.markdown(
     .stMetric:hover {
         border-color: #CBD5E1;
         box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.06);
+    }
+    [data-testid="stMetricLabel"] {
+        font-size: 0.76rem !important;
+        font-weight: 700 !important;
+        color: #64748B !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.03em !important;
+    }
+    [data-testid="stMetricValue"] {
+        font-size: 1.15rem !important;
+        font-weight: 700 !important;
+        color: #0F172A !important;
+        line-height: 1.35 !important;
+        word-break: break-word !important;
     }
     
     /* Menú lateral estilizado como lista de navegación moderna */

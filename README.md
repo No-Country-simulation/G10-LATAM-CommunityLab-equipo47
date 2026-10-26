@@ -35,12 +35,12 @@ Sin embargo, **el 85% de este contenido de alto valor se pierde en el historial 
 
 ## 💡 La Solución: CommunityLab
 
-**CommunityLab** es una plataforma inteligente que ingesta en lote o en tiempo real las conversaciones orgánicas de una comunidad digital, las analiza semánticamente mediante Modelos de Lenguaje (LLMs) y, a través de un **Router Condicional automatizado**, bifurca la información para generar simultáneamente activos de marketing listos para publicar:
+**CommunityLab** es una plataforma inteligente que ingesta en lote las conversaciones orgánicas de una comunidad digital, las analiza semánticamente mediante Modelos de Lenguaje (LLMs) y, a través de un **Router Condicional automatizado**, bifurca la información para generar simultáneamente activos de marketing listos para publicar:
 
 1. **Detector de Historias de Éxito & UGC Marketing:** Identifica contrataciones, ascensos y proyectos destacados para redactar posts persuasivos para **LinkedIn** y redes sociales.
 2. **Resumen y Síntesis de Comunidad:** Extrae el pulso semanal y los temas en tendencia para generar el bloque principal de la **Newsletter**.
 3. **Motor de FAQ Dinámico & Tips de Cátedra:** Detecta dudas técnicas recurrentes sobre laboratorios o herramientas para derivarlas a mentoría par o material de ayuda rápida.
-4. **Dashboard de Salud y Sentimiento:** Monitorea el clima comunitario en tiempo real, detectando alertas tempranas de sobrecarga o estudiantes que requieren apoyo.
+4. **Dashboard de Salud y Sentimiento:** Monitorea el clima comunitario, detectando alertas tempranas de sobrecarga o estudiantes que requieren apoyo.
 5. **Persistencia en la Nube:** Almacena todos los paquetes de activos generados en **Oracle Cloud Infrastructure (OCI) Object Storage** bajo la capa gratuita **Always Free**.
 
 ---

@@ -200,10 +200,57 @@ def render_pipeline_view():
             unsafe_allow_html=True
         )
 
-        m1, m2, m3 = st.columns(3)
-        m1.metric("Mensajes Procesados", resumen.get("total_interacciones_procesadas", total_interacciones))
-        m2.metric("Sentimiento Predominante", resumen.get("sentimiento_predominante", "N/A"))
-        m3.metric("Temas Clave Detectados", len(resumen.get("temas_principales", [])))
+        total_proc = resumen.get("total_interacciones_procesadas", total_interacciones)
+        sentimiento_txt = resumen.get("sentimiento_predominante", "N/A")
+        temas_count = len(resumen.get("temas_principales", []))
+
+        # Determinar badge corto de sentimiento
+        sent_lower = sentimiento_txt.lower()
+        if "positivo" in sent_lower or "éxito" in sent_lower or "colaborativo" in sent_lower:
+            sent_badge = '<span style="background: #DCFCE7; color: #15803D; font-size: 0.74rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; border: 1px solid #86EFAC;">POSITIVO</span>'
+        elif "negativo" in sent_lower or "reclamo" in sent_lower or "alerta" in sent_lower:
+            sent_badge = '<span style="background: #FEE2E2; color: #DC2626; font-size: 0.74rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; border: 1px solid #FCA5A5;">ALERTA / NEGATIVO</span>'
+        else:
+            sent_badge = '<span style="background: #FEF3C7; color: #92400E; font-size: 0.74rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; border: 1px solid #FCD34D;">NEUTRAL / CONSULTA</span>'
+
+        col_diag1, col_diag2, col_diag3 = st.columns([1, 2.2, 1])
+        with col_diag1:
+            st.markdown(
+                clean_html(f"""
+                <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 12px 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); min-height: 96px; display: flex; flex-direction: column; justify-content: space-between;">
+                    <span style="font-size: 0.72rem; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.04em;">Mensajes Procesados</span>
+                    <div style="font-size: 1.55rem; font-weight: 800; color: #0F172A; margin: 2px 0;">{total_proc}</div>
+                    <span style="font-size: 0.72rem; color: #059669; font-weight: 600;">100% Inferencia Exitosa</span>
+                </div>
+                """),
+                unsafe_allow_html=True
+            )
+        with col_diag2:
+            st.markdown(
+                clean_html(f"""
+                <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 12px 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); min-height: 96px; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+                        <span style="font-size: 0.72rem; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.04em;">Sentimiento Predominante</span>
+                        {sent_badge}
+                    </div>
+                    <div style="font-size: 0.88rem; color: #334155; line-height: 1.45; font-weight: 500;">
+                        {sentimiento_txt}
+                    </div>
+                </div>
+                """),
+                unsafe_allow_html=True
+            )
+        with col_diag3:
+            st.markdown(
+                clean_html(f"""
+                <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 12px 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); min-height: 96px; display: flex; flex-direction: column; justify-content: space-between;">
+                    <span style="font-size: 0.72rem; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.04em;">Temas Clave Detectados</span>
+                    <div style="font-size: 1.55rem; font-weight: 800; color: #7C3AED; margin: 2px 0;">{temas_count}</div>
+                    <span style="font-size: 0.72rem; color: #6D28D9; font-weight: 600;">Ejes Temáticos Extraídos</span>
+                </div>
+                """),
+                unsafe_allow_html=True
+            )
 
         st.markdown("<p style='font-size: 0.88rem; font-weight: 600; color: #475569; margin-top: 0.8rem; margin-bottom: 0.4rem;'>Temas Prioritarios Extraídos por la IA:</p>", unsafe_allow_html=True)
         tags_html = "".join([render_tag(t, "#F3E8FF", "#6B21A8") for t in resumen.get("temas_principales", [])])
