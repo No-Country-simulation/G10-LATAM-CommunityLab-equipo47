@@ -93,7 +93,21 @@ def render_oci_storage_view():
             icon_name="info",
             color="#2563EB"
         )
-        return
+    # Estado de curaduría del paquete a persistir
+    estado_cur = (
+        paquete_a_guardar.get("estado_curaduria") or
+        paquete_a_guardar.get("activos_distribucion_generados", {}).get("post_linkedin", {}).get("estado_curaduria") or
+        "Aprobado para Publicar"
+    )
+    if "Rechazado" in estado_cur:
+        chip_html = '<span style="background: #FEE2E2; color: #DC2626; padding: 4px 12px; border-radius: 6px; font-weight: 700; font-size: 0.82rem; border: 1px solid #FCA5A5;">ESTADO: RECHAZADO EN CURADURÍA</span>'
+        st.markdown(f"<div style='margin-bottom: 10px; font-size: 0.92rem; color: #475569;'>Estado editorial del paquete: {chip_html} <span style='font-size: 0.82rem; color: #991B1B;'>(Se guardará en OCI para trazabilidad y auditoría)</span></div>", unsafe_allow_html=True)
+    elif "Pendiente" in estado_cur:
+        chip_html = '<span style="background: #FEF3C7; color: #92400E; padding: 4px 12px; border-radius: 6px; font-weight: 700; font-size: 0.82rem; border: 1px solid #FCD34D;">ESTADO: PENDIENTE DE MODIFICACIONES</span>'
+        st.markdown(f"<div style='margin-bottom: 10px; font-size: 0.92rem; color: #475569;'>Estado editorial del paquete: {chip_html}</div>", unsafe_allow_html=True)
+    else:
+        chip_html = '<span style="background: #DCFCE7; color: #15803D; padding: 4px 12px; border-radius: 6px; font-weight: 700; font-size: 0.82rem; border: 1px solid #86EFAC;">ESTADO: APROBADO PARA PUBLICAR</span>'
+        st.markdown(f"<div style='margin-bottom: 10px; font-size: 0.92rem; color: #475569;'>Estado editorial del paquete: {chip_html}</div>", unsafe_allow_html=True)
 
     # Formulario de persistencia
     col1, col2 = st.columns([2, 1])

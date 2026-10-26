@@ -414,6 +414,14 @@ def consultar_tabla_auditoria_oci(bucket_name: str = None) -> list:
             titular_news = "N/A"
             tema_faq = "N/A"
         
+        # Extraer estado de curaduría
+        estado_curaduria = (
+            post_lk.get("estado_curaduria") or
+            contenido_dict.get("estado_curaduria") or
+            contenido_dict.get("estado_aprobacion") or
+            ("Borrador" if "activos_distribucion_generados" in contenido_dict else "Lote de Entrada")
+        )
+        
         # Extraer fecha o semana desde la ruta
         partes = ruta_obj.split("/")
         fecha_lote = partes[1] if len(partes) > 1 else "N/A"
@@ -425,6 +433,7 @@ def consultar_tabla_auditoria_oci(bucket_name: str = None) -> list:
             "Namespace OCI": cfg["namespace"],
             "Fecha / Periodo": fecha_lote,
             "Tamaño (KB)": tamano_kb,
+            "Estado Curaduría": estado_curaduria,
             "Sentimiento Detectado": sentimiento[:35] + ("..." if len(sentimiento) > 35 else ""),
             "Temas Principales": temas[:40] + ("..." if len(temas) > 40 else ""),
             "Título Post LinkedIn": titulo_lk[:45] + ("..." if len(titulo_lk) > 45 else ""),

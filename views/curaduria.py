@@ -96,20 +96,32 @@ def render_curatorship_view():
             nuevo_titulo_lk = st.text_input("Titular de la publicación:", value=post_lk.get("titulo", ""), key="input_titulo_lk")
             nuevo_copy_lk = st.text_area("Cuerpo del post (puedes editarlo libremente):", value=post_lk.get("copy", ""), height=220, key="textarea_copy_lk")
 
+            opciones_estado_lk = ["Aprobado para Publicar", "Pendiente de Modificaciones", "Rechazado"]
+            estado_actual_lk = post_lk.get("estado_curaduria", "Aprobado para Publicar")
+            idx_lk = opciones_estado_lk.index(estado_actual_lk) if estado_actual_lk in opciones_estado_lk else 0
+
             estado_lk = st.radio(
                 "Decisión del Curador:",
-                ["Aprobado para Publicar", "Pendiente de Modificaciones", "Rechazado"],
+                opciones_estado_lk,
+                index=idx_lk,
                 horizontal=True,
                 key="curaduria_lk_radio"
             )
 
-            if st.button("Guardar Cambios de LinkedIn", type="primary", use_container_width=True):
+            if st.button("Guardar Decisión de LinkedIn", type="primary", use_container_width=True):
                 post_lk["titulo"] = nuevo_titulo_lk
                 post_lk["copy"] = nuevo_copy_lk
                 post_lk["estado_curaduria"] = estado_lk
+                paquete["estado_curaduria"] = estado_lk
                 paquete["activos_distribucion_generados"]["post_linkedin"] = post_lk
                 st.session_state["curated_package"] = paquete
-                st.success("Cambios editoriales guardados. Se reflejarán en el paquete final de OCI.")
+                if estado_lk == "Rechazado":
+                    st.error("🚫 Decisión registrada: Post RECHAZADO. Queda bloqueado para publicación y registrado en OCI como descartado.")
+                elif estado_lk == "Pendiente de Modificaciones":
+                    st.warning("⚠️ Decisión registrada: Post en REVISIÓN. Requiere modificaciones antes de ser publicado.")
+                else:
+                    st.success("✅ Decisión registrada: Post APROBADO para publicación en LinkedIn y OCI.")
+                st.rerun()
 
         with col_prev_lk:
             st.markdown(
@@ -123,25 +135,56 @@ def render_curatorship_view():
             )
             canal_mostrar = post_lk.get("canal_recomendado", "LinkedIn Institucional")
             potencial_mostrar = post_lk.get("potencial_engagement", "Alto")
-            render_linkedin_mockup(titulo=nuevo_titulo_lk, copy=nuevo_copy_lk, canal=canal_mostrar, engagement=potencial_mostrar)
+            render_linkedin_mockup(titulo=nuevo_titulo_lk, copy=nuevo_copy_lk, canal=canal_mostrar, engagement=potencial_mostrar, estado_curaduria=estado_lk)
 
-        # Sección para Copiar y Publicar en LinkedIn
+        # Sección para Copiar y Publicar en LinkedIn condicional según decisión
         st.markdown("---")
-        col_pub_izq, col_pub_der = st.columns([3, 1])
-        with col_pub_izq:
-            texto_a_copiar = f"{nuevo_titulo_lk}\n\n{nuevo_copy_lk}"
-            st.code(texto_a_copiar, language=None)
-        with col_pub_der:
-            st.markdown("<div style='height: 12px;'></div>", unsafe_allow_html=True)
+        if estado_lk == "Rechazado":
             st.markdown(
                 clean_html(f"""
-                <a href="https://www.linkedin.com/feed/" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; color: #FFFFFF; background-color: #0A66C2; padding: 10px 16px; border-radius: 8px; font-size: 0.9rem; font-weight: 700; box-shadow: 0 2px 4px rgba(10,102,194,0.3);">
-                    {get_lucide('external-link', size=15, color='#FFFFFF')}
-                    Abrir LinkedIn
-                </a>
+                <div style="background: #FEF2F2; border: 1px solid #FCA5A5; padding: 14px 18px; border-radius: 10px; display: flex; align-items: center; gap: 12px;">
+                    {get_lucide('x-circle', size=22, color='#DC2626')}
+                    <div>
+                        <strong style="color: #991B1B; font-size: 0.98rem; display: block;">Publicación Bloqueada (Post Rechazado)</strong>
+                        <span style="color: #B91C1C; font-size: 0.88rem;">
+                            El curador humano determinó que este contenido no debe publicarse en redes sociales. El paquete se conservará en OCI para fines de trazabilidad y auditoría.
+                        </span>
+                    </div>
+                </div>
                 """),
                 unsafe_allow_html=True
             )
+        elif estado_lk == "Pendiente de Modificaciones":
+            st.markdown(
+                clean_html(f"""
+                <div style="background: #FFFBEB; border: 1px solid #FCD34D; padding: 14px 18px; border-radius: 10px; display: flex; align-items: center; gap: 12px;">
+                    {get_lucide('clock', size=22, color='#D97706')}
+                    <div>
+                        <strong style="color: #92400E; font-size: 0.98rem; display: block;">Publicación en Espera (Borrador en Revisión)</strong>
+                        <span style="color: #B45309; font-size: 0.88rem;">
+                            Este post requiere confirmación de datos o ajustes editoriales antes de autorizar su publicación en LinkedIn.
+                        </span>
+                    </div>
+                </div>
+                """),
+                unsafe_allow_html=True
+            )
+        else:
+            col_pub_izq, col_pub_der = st.columns([3, 1])
+            with col_pub_izq:
+                texto_a_copiar = f"{nuevo_titulo_lk}\n\n{nuevo_copy_lk}"
+                st.code(texto_a_copiar, language=None)
+            with col_pub_der:
+                st.markdown("<div style='height: 12px;'></div>", unsafe_allow_html=True)
+                st.markdown(
+                    clean_html(f"""
+                    <a href="https://www.linkedin.com/feed/" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; color: #FFFFFF; background-color: #0A66C2; padding: 10px 16px; border-radius: 8px; font-size: 0.9rem; font-weight: 700; box-shadow: 0 2px 4px rgba(10,102,194,0.3);">
+                        {get_lucide('external-link', size=15, color='#FFFFFF')}
+                        Abrir LinkedIn
+                    </a>
+                    """),
+                    unsafe_allow_html=True
+                )
 
     # 2. TAB NEWSLETTER
     with tab_newsletter:

@@ -74,6 +74,7 @@ def render_auditing_view():
         "Namespace OCI",
         "Fecha / Periodo",
         "Tamaño (KB)",
+        "Estado Curaduría",
         "Sentimiento Detectado",
         "Temas Principales",
         "Título Post LinkedIn"
